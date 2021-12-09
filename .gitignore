@@ -17,9 +17,9 @@ database-debug.log
 .gitignore
 .firebaserc
 .env
-/.firebase
-/functions
-/src/fire.js
+.firebase
+functions
+src/fire.js
 
 
 # local env files
