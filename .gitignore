@@ -1,6 +1,25 @@
 .DS_Store
 node_modules
 /dist
+.firebaserc
+firestore.rules
+firebase.json
+firesotre-debug.log
+firestore.indexes.json
+firestore.rules
+pubsub-debug.log
+remoteconfig.template.json
+storage.rules
+ui-debug.log
+deploy.sh
+database.rules.json
+database-debug.log
+.gitignore
+.firebaserc
+.env
+/.firebase
+/functions
+/src/fire.js
 
 
 # local env files
