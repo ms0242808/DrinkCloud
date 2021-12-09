@@ -1,0 +1,12 @@
+WARNING: An illegal reflective access operation has occurred
+WARNING: Illegal reflective access by io.netty.util.internal.ReflectionUtil (file:/Users/jerry/.cache/firebase/emulators/firebase-database-emulator-v4.7.2.jar) to field sun.nio.ch.SelectorImpl.selectedKeys
+WARNING: Please consider reporting this to the maintainers of io.netty.util.internal.ReflectionUtil
+WARNING: Use --illegal-access=warn to enable warnings of further illegal reflective access operations
+WARNING: All illegal access operations will be denied in a future release
+04:51:07.990 [NamespaceSystem-akka.actor.default-dispatcher-6] INFO akka.event.slf4j.Slf4jLogger - Slf4jLogger started
+04:51:08.203 [main] INFO com.firebase.server.forge.App$ - Listening at localhost:9003
+04:51:49.921 [Thread-0] INFO com.firebase.server.forge.App$ - Attempting graceful shutdown.
+04:51:49.950 [NamespaceSystem-akka.actor.default-dispatcher-6] INFO com.firebase.core.namespace.Terminator$Terminator - 1 actors left to terminate: omica-cloud-default-rtdb
+04:51:49.963 [NamespaceSystem-akka.actor.default-dispatcher-7] INFO com.firebase.core.namespace.NamespaceActor - Stopping namespace actor for omica-cloud-default-rtdb
+04:51:49.966 [NamespaceSystem-akka.actor.default-dispatcher-7] INFO com.firebase.core.namespace.NamespaceActor - Gauges removed for omica-cloud-default-rtdb
+04:51:49.972 [Thread-0] INFO com.firebase.server.forge.App$ - Graceful shutdown complete.

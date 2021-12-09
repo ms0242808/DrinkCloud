@@ -1,0 +1,17 @@
+{
+  "projects": {
+    "default": "omica-cloud"
+  },
+  "targets": {
+    "omica-cloud": {
+      "hosting": {
+        "drinkteccloud": [
+          "drinktec-cloud"
+        ],
+        "omicacloud": [
+          "omica-cloud"
+        ]
+      }
+    }
+  }
+}

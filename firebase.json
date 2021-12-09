@@ -1,0 +1,56 @@
+{
+  "database": {
+    "rules": "database.rules.json"
+  },
+  "firestore": {
+    "rules": "firestore.rules",
+    "indexes": "firestore.indexes.json"
+  },
+  "hosting": {
+    "public": "dist",
+    "target": "drinkteccloud",
+    "ignore": [
+      "firebase.json",
+      "**/.*",
+      "**/node_modules/**"
+    ],
+    "rewrites": [{
+      "source": "**",
+      "destination": "/index.html"
+    }]
+  },
+  "storage": {
+    "rules": "storage.rules"
+  },
+  "emulators": {
+    "auth": {
+      "port": 9008
+    },
+    "functions": {
+      "port": 9001
+    },
+    "firestore": {
+      "port": 9002
+    },
+    "database": {
+      "port": 9003
+    },
+    "hosting": {
+      "port": 9004
+    },
+    "pubsub": {
+      "port": 9005
+    },
+    "storage": {
+      "port": 9006
+    },
+    "ui": {
+      "enabled": true,
+      "port": 9007
+    }
+  },
+  "remoteconfig": {},
+  "functions": {
+    "source": "functions"
+  }
+}
