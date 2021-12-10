@@ -1,0 +1,73 @@
+{
+  "name": "drinkcloud",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "serve": "vue-cli-service serve",
+    "build": "vue-cli-service build",
+    "lint": "vue-cli-service lint",
+    "dev": "vue-cli-service --production",
+    "i18n:report": "vue-cli-service i18n:report --src \"./src/**/*.?(js|vue)\" --locales \"./src/locales/**/*.json\""
+  },
+  "dependencies": {
+    "@fortawesome/fontawesome-svg-core": "^1.2.36",
+    "@fortawesome/free-solid-svg-icons": "^5.15.4",
+    "@fortawesome/vue-fontawesome": "^2.0.6",
+    "apexcharts": "^3.31.0",
+    "axios": "^0.24.0",
+    "bootstrap": "^4.5.3",
+    "bootstrap-vue": "^2.21.2",
+    "core-js": "^3.6.5",
+    "firebase": "^9.4.0",
+    "jquery": "^3.6.0",
+    "moment": "^2.29.1",
+    "popper": "^1.0.1",
+    "register-service-worker": "^1.7.1",
+    "toasts": "^1.0.0",
+    "vue": "^2.6.14",
+    "vue-apexcharts": "^1.6.2",
+    "vue-avatar": "^2.3.3",
+    "vue-class-component": "^7.2.3",
+    "vue-i18n": "^8.26.3",
+    "vue-property-decorator": "^9.1.2",
+    "vue-router": "^3.5.3",
+    "vue2-daterange-picker": "^0.6.8",
+    "vuex": "^3.6.2",
+    "webpack": "^4.46.0"
+  },
+  "devDependencies": {
+    "@vue/cli-plugin-babel": "~4.5.0",
+    "@vue/cli-plugin-eslint": "~4.5.0",
+    "@vue/cli-plugin-pwa": "~4.5.0",
+    "@vue/cli-plugin-router": "~4.5.0",
+    "@vue/cli-plugin-vuex": "~4.5.0",
+    "@vue/cli-service": "~4.5.0",
+    "babel-eslint": "^10.1.0",
+    "eslint": "^6.7.2",
+    "eslint-plugin-vue": "^6.2.2",
+    "vue-cli-plugin-bootstrap-vue": "~0.8.2",
+    "vue-cli-plugin-i18n": "~2.3.1",
+    "vue-template-compiler": "^2.6.11"
+  },
+  "eslintConfig": {
+    "root": true,
+    "env": {
+      "node": true
+    },
+    "extends": [
+      "plugin:vue/essential",
+      "eslint:recommended"
+    ],
+    "parserOptions": {
+      "parser": "babel-eslint"
+    },
+    "rules": {
+      "no-unused-vars": "off"
+    }
+  },
+  "browserslist": [
+    "> 1%",
+    "last 2 versions",
+    "not dead"
+  ]
+}
