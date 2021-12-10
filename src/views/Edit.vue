@@ -9,7 +9,7 @@
 					<h3 class="m-0">{{recipe}}</h3>
 				</b-col>
         <b-col class="no-putters text-end" cols="3">
-					<b-button>Update</b-button>
+					<b-button variant="outline-success">Update</b-button>
 				</b-col>
 
 				<!-- <b-col class="no-putters" cols="4"> -->
@@ -30,34 +30,44 @@
 			</b-row>
 		</b-container>
 		<div class="mt-3">
-      <!-- <div class='form-check form-switch'>
-        <input class='form-check-input' type='checkbox' id='activate' v-model='checked'>
-        <label class='form-check-label' for='activate'>Acitvation <b>{{ checked }}</b></label>
-      </div> -->
-
-       <b-tabs content-class="mt-3" pills>
+      <b-tabs content-class="mt-3" pills>
         <b-tab  v-for="(item,index) in recipeVal" :title="item.id" :key="index">
-          <!-- <div class='form-check form-switch'>
-            <input class='form-check-input' type='checkbox' :id="'activate'+index" v-model='item.activate'>
-            <label class='form-check-label' for='activate'>Acitvation <b>{{ item.activate }}</b></label>
-          </div> -->
-          <b-form-checkbox switch class="mr-n2" :id="'activate'+index" v-model='item.activate'>
+          <b-form-select v-model="item.supplyCode" :options="iceOpt" class="locationSelect d-inline-block"></b-form-select>
+          <b-form-checkbox switch class="mr-n2" :id="'activate'+index" v-model="item.shake">
             <span class="sr-only">Switch for following text input</span>
-            <label class='form-check-label' for='activate'>Acitvation <b>{{ item.activate }}</b></label>
+            <label class='form-check-label' for='activate'>Shake <b>{{ item.shake }}</b></label>
           </b-form-checkbox>
-          <p>{{item.val}}</p>
           <Table :val="item.val" :sticky-header="stickyHeader" :fields="fields"/>
         </b-tab>
         <template #tabs-end>
-          <!-- <b-nav-item href="#" role="presentation" @click="() => {}">
-            <font-awesome-icon fixed-width icon="cog"/>
-          </b-nav-item> -->
           <div>
             <b-button v-b-modal.modal-1 variant="transparent"><font-awesome-icon fixed-width icon="cog"/></b-button>
-            <b-modal id="modal-1" centered title="Options">
-              <p class="my-4">Hello from modal!</p>
+            <b-modal ref="setModal" id="modal-1" centered title="Drink settings">
+              <div v-for="(item,index) in settingList" :key="index">
+                <p class="mt-1" >{{item.id}}</p>
+                <hr>
+                <div class="col-12 d-flex flex-justify-between" v-for="(v,i,n) in item.opt" :key="n">
+                  <!-- mt-1 form-check custom-control custom-switch -->
+                  {{item.opt[i]}}
+                  <b-form-checkbox switch class="mr-n2" v-model="item.status[i]">
+                    <span class="sr-only">Switch for following text input</span>
+                    <label class='form-check-label' :for='item.status[i]'></label>
+                  </b-form-checkbox>
+                </div>
+              </div>
+              <template #modal-footer>
+                <div class="w-100">
+                  <b-button variant="primary" class="float-right">Save</b-button>
+                  <b-button class="float-right" @click="hideModal">cancel</b-button>
+                </div>
+              </template>
+              
             </b-modal>
           </div>
+          <b-form-checkbox switch class="mr-n2" v-model="activate">
+            <span class="sr-only">Switch for following text input</span>
+            <label class='form-check-label' for='activate'>Acitvation <b></b></label>
+          </b-form-checkbox>
         </template>
       </b-tabs>
 		</div>
@@ -87,30 +97,63 @@ export default {
       recipeVal: [{
         id: 'Normal Ice',
         val: [],
-        supplyCode:[],
-        activate: false
+        shakeVal: '',
+        shake: true,
+        supplyCode: ''
       },{
         id: 'Less Ice',
         val: [],
-        supplyCode:[],
-        activate: false
+        shakeVal: '',
+        shake: true,
+        supplyCode: ''
       },{
         id: 'Ice Free',
         val: [],
-        supplyCode:[],
-        activate: false
+        shakeVal: '',
+        shake: true,
+        supplyCode: ''
       },{
         id: 'Warm',
         val: [],
-        supplyCode:[],
-        activate: false
+        shakeVal: '',
+        shake: true,
+        supplyCode: ''
       },{
         id: 'Hot',
         val: [],
-        supplyCode:[],
-        activate: false
+        shakeVal: '',
+        shake: true,
+        supplyCode: ''
       }],
-      checked: false
+      iceOpt:[
+        { value: '0', text: 'No supply' },
+        { value: '1', text: 'Origin' },
+        { value: '2', text: 'Cold water' },
+        { value: '3', text: 'Hot water'},
+        { value: '4', text: 'Milk'}
+      ],
+      selected: '0',
+      activate: false,
+      settingList:[
+        {
+          id:'Ice',
+          val:[],
+          status:[],
+          opt:['Nomral Ice','Less Ice','Ice Free','Warm','Hot']
+        },
+        {
+          id:'Topping',
+          val:[],
+          status:[],
+          opt:['0','1','2','3','4']
+        },
+        {
+          id:'Size',
+          val:[],
+          status:[],
+          opt:['Large','Regular']
+        }
+      ]
     }
   },
   computed:{
@@ -121,14 +164,24 @@ export default {
       'getLocation'
     ])
   },
+  methods:{
+    switchVal(val){
+      if(val == '1'){return true}
+      else{return false}
+    },
+    hideModal() {
+      this.$refs['setModal'].hide()
+    },
+  },
   watch: {
     getLocation(val){
       this.brandL = val;
       // this.loadRecipe();
+      // convert mounted to function
     }
   },
   async mounted(){
-    console.log(store.getters.getRecipe.header,this.brandL,this.getLocation);
+    // console.log(store.getters.getRecipe.header,this.brandL,this.getLocation);
     var rows = [];
     var getRecipe = httpsCallable(functions,'getRecipe');
     await getRecipe({docPath:'recipes/'+this.brandL,drink:this.recipe}).then(result => {
@@ -149,6 +202,8 @@ export default {
           var n = store.getters.getRecipe.header[z];
           Object.assign(newRows, {[n]: this.recipeVal[x].val[y][z]});
         }
+        this.recipeVal[x].shake = this.switchVal(this.recipeVal[x].val[y].at(-2));        
+        this.recipeVal[x].supplyCode = this.recipeVal[x].val[y].at(-1);
         newArr.push(newRows);
       }
       this.recipeVal[x].val = newArr;
@@ -157,97 +212,30 @@ export default {
       var nx = store.getters.getRecipe.header[zx];
       if(zx==0){this.fields.push({"key":nx,'stickyColumn': true})}
       else if(zx==1){this.fields.push({"key":nx,'thClass': 'd-none', 'tdClass': 'd-none'})}
-      else if(zx==2){this.fields.push({"key":nx,'stickyColumn': true,'tdClass':'l-40','thClass':'l-40'})}
+      else if(zx==2){this.fields.push({"key":nx,'stickyColumn': true,'tdClass':'l-54','thClass':'l-54'})}
+      // else if(zx==30 || zx==31){this.fields.push({"key":nx,'thClass': 'd-none', 'tdClass': 'd-none'})}
       else{this.fields.push({"key":nx});}
     }
-    console.log(this.fields);
-    // var [i,s] = [0,0],
-    // tabHead = '',
-    // iceNo = [0,1,2,3,4],
-    // iceOpt = ['Normal Ice','Less Ice','Ice Free','Warm','Hot'],
-    // iceT = [0,1,2,3,4];
-
-    // for(var x=0; x<=34; x+=8){
-    //   for(i in iceOpt){
-    //     if(iceNo[i] === rows[x][1]){tabHead = iceOpt[i];}
-    //   }
-    //   var y = x+8,
-    //     active  = "";
-    //   if(x == 0){active = "active";}
-      // var navItem = '';
-      // navItem +='<li class="nav-item"><a class="nav-link '+active+'" href="#tab'+x+'" dlang="recipe-'+tabHead+'">'+tabHead+'</a></li>'; // rows[x][1]
-      // $(".nav-pills").append(navItem);
-      // if(!$('#activate').length){
-      //   var drinkStatus = sessionStorage.getItem('recipeStatus'),
-      //   val = function(){
-      //     var x = 0;
-      //     if(drinkStatus == "checked"){x = 1;}
-      //     return x
-      //   },
-      //   enable = function(){
-      //     var x = val(),
-      //     y = sessionStorage.getItem("recipeCount"),
-      //     z = '';
-      //     if(x==0 && y==10){z='disabled'}
-      //     return z
-      //   },
-      //   activate = `<div class="float-right" id="activate">
-      //     <h6 class="title"> <span dlang="recipe-activate">Activate</span> <i class="fas fa-info-circle" data-toggle="tooltip" data-placement="top" title="Switch on if want recipe show on the machine" dlang="recipe-hintactivate"></i></h6>
-      //     <div class="form-check custom-control custom-switch">
-      //       <input type="number" class="recipeInput" id="switchInput" value="`+val()+`" data-og="`+val()+`" hidden>
-      //       <input type="checkbox" class="custom-control-input" id="activateSwitch" value="`+val()+`" `+drinkStatus+` `+enable()+`>
-      //       <label class="custom-control-label" for="activateSwitch" value="`+val()+`" id="actlabel" data-val="`+val()+`"></label>
-      //     </div>
-      //   </div>`;
-      //   $("#editBtnG").append(activate);
-      // }
-      
-      // var tabContent ='';
-      // tabContent +='<div id="tab'+x+'" class="tab-pane tab-card shadow '+active+'"></div>';
-      // $(".tab-content").append(tabContent);
-
-      // var table = document.createElement('TABLE');
-      // setAttributes(table,{
-      //   'class':'table table-bordered tableRecipe table-responsive text-center',
-      //   'id':'dataTable',
-      //   'width':"100%",
-      //   'cellspacing':"0"
-      // });
-      // var tableHead = document.createElement('THEAD');
-      // table.appendChild(tableHead);
-      // var tr = document.createElement('TR');
-      // tableHead.appendChild(tr);
-      // for(a in header){
-      //   var th = document.createElement('TH'),
-      //   ip = document.createElement('input'),
-      //   lb = document.createElement('label');
-      //   th.setAttribute('scope','col');
-      //   setAttributes(ip,{
-      //       'class':'data readInput text-capitalize',
-      //       'id':"header-"+header[a],
-      //       'type':'text',
-      //       'value':header[a],
-      //       'readonly':true,
-      //       'style':'font-weight:bold;cursor:pointer;display:none;'
-      //     },
-      //   );
-      //   lb.innerHTML = header[a];
-      //   lb.classList.add('mb-0');
-      //   if(a == 0 || a <8 && a>1 || a == 28 || a == 29){setAttributes(lb,{'dlang':'recipe-'+header[a]});}
-      //   th.appendChild(lb);
-      //   th.appendChild(ip);
-      //   tr.appendChild(th);
-      // };
-      // AddOptions(s,x);
-      // for(var z=x; z<y; z++){renderTable(table,rows[z],z,s)}// render table content and supply code, shake
-      // $('#tab'+x).append(table);
-      // $('.tableRecipe tr > *:nth-child(2)').hide();
-      // $('.tableRecipe tr > *:nth-last-child(1)').hide();
-      // $('.tableRecipe tr > *:nth-last-child(2)').hide();
-    //   s +=1;
-    // }
-
-    // store.commit('healthUpdate', health);
+    if(store.getters.getRecipe.onDrink.includes(this.recipe)){
+      this.activate = true;
+    }
+    
+    var [settings,iceVal,sizeVal,topVal] = [[],[],[],[]];
+    var getDrinkSetting = httpsCallable(functions,'getDrinkSetting');
+    await getDrinkSetting({docPath:'recipes/'+this.brandL,drink:this.recipe}).then(result => {
+      settings = result.data.setting;
+      delete settings.no;
+      delete settings.on;
+      iceVal = settings.ice;
+      sizeVal.push(settings.L);
+      sizeVal.push(settings.M);
+      topVal = settings.topping;
+      settings = [settings.ice,topVal,[settings.L,settings.M]];
+    });
+    for(var s=0; s<3; s++){
+      this.settingList[s].val = settings[s];
+      this.settingList[s].status = settings[s].map(item => {if(item == "1"){return true}else{return false}});
+    }
   }
 }
 </script>

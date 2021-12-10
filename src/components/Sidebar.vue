@@ -8,7 +8,7 @@
 				class="close-btn"
 				v-if="showCloseButton"
 				@click="closeSidebar"
-			>X</button>
+			>x</button>
 			<slot name="header">
 				<div class="header text-center">
           <!-- <img src="@/assets/logow.png" class="logo"> -->

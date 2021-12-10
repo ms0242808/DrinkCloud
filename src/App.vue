@@ -12,9 +12,6 @@ export default {
 </script>
 
 <style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-}
 .title {
   margin-top: 15px;
 }

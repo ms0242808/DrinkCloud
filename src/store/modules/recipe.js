@@ -1,6 +1,8 @@
 const state = {
   recipeVal:[],
-  header:[]
+  header:[],
+  onDrink:[],
+  offDrink:[]
 };
 const getters = {
   getRecipe: state =>{
@@ -16,6 +18,12 @@ const mutations = {
   },
   recipeHeader(state,val){
     state.header = val;
+  },
+  onDrinkUpdate(state,val){
+    state.onDrink = val;
+  },
+  offDrinkUpdate(state,val){
+    state.offDrink = val;
   }
 };
 export default {

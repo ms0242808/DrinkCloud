@@ -77,6 +77,8 @@
 				store.commit('recipeHeader',header);
 				console.log(1, header);
 				var recipes = [],
+				onList = [],
+				offList = [],
 				c = '',
 				catTitle = await getCategory(this.brandL);
 				for(c in catTitle){
@@ -94,8 +96,12 @@
 						"status":status,
 						"class":border
 					});
+					onList = onList.concat(onDrink);
+					offList = offList.concat(offDrink);
 				}
 				store.commit('recipeChanged', recipes);
+				store.commit('onDrinkUpdate', onList);
+				store.commit('offDrinkUpdate', offList);
 				if(header.length === 0){
 					this.nodata = true;
 					this.setLoadingState(false,false);

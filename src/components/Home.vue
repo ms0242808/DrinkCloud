@@ -17,7 +17,7 @@
       <div class="vd-content" @click="pageClick">
         <slot name="main-content">
           <router-view />
-          <b-row class="justify-content-md-center mb-3 mt-5">
+          <div class="justify-content-md-center mb-3 mt-5">
             <footer class="sticky-footer">
               <div class="mx-auto">
                 <div class="copyright text-center text-dark">
@@ -25,7 +25,7 @@
                 </div>
               </div>
             </footer>
-          </b-row>
+          </div>
         </slot>
       </div>
     </div>

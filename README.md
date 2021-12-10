@@ -1,4 +1,9 @@
-# hq
+# DrinkCloud
+
+### Firebase required
+[Firebase](https://firebase.google.com/) account required
+Project is using firestore, auth, realtime  database and other services provided by Firebase
+Add fire.js with Firebase SDK and store the file in src folder
 
 ## Project setup
 ```

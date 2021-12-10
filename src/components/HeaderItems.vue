@@ -8,9 +8,9 @@
 				<b-container>
 					<b-row class="headerContent">
 						<b-col cols="9" md="11" class="brand">
-							<a>{{user.brand}}</a> -
+							<a class="d-inline-block">{{user.brand}} - </a> 
 							<!-- <div @mouseover="onOver" @mouseleave="onLeave"> -->
-								<b-form-select v-model="selected" v-on:change="location" :options="user.location" class="locationSelect"></b-form-select>
+								<b-form-select v-model="selected" v-on:change="location" :options="user.location" class="locationSelect d-inline-block"></b-form-select>
 							<!-- </div> -->
 						</b-col>
 						<b-col cols="2" md="1" class="user">
@@ -148,7 +148,8 @@
 	}
 }
 .brand{
-	margin: 20px 0;
+	margin: 12px 0;
+	padding: 0;
 }
 .user{
 	padding-left:0 !important;
@@ -156,6 +157,7 @@
 .locationSelect{
 	background-color: unset;
 	border: unset;
+	width: 97px;
 }
 .container{
 	max-width: unset !important;
