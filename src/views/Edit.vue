@@ -20,7 +20,7 @@
 				<!-- </b-col> -->
 				<!-- <b-col class="no-putters" cols="8">
 					<b-skeleton width="70%" height="30px"></b-skeleton>
-				</b-col>
+				</b-col>s
 				<b-col class="no-putters" cols="4">
 					<b-button-group class="float-right">
 						<b-skeleton width="60px" height="30px"></b-skeleton>
