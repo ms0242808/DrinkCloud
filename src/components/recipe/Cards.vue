@@ -55,7 +55,7 @@
               <font-awesome-icon fixed-width icon="trash-alt"/>
             </b-col>
             <b-col cols="12" class="mt-3 text-center">
-              <b-button @click="$router.push('/recipe/'+title)" variant="outline-primary">Edit</b-button>
+              <b-button @click="$router.push('/recipe/'+item.id+'-'+title)" variant="outline-primary">Edit</b-button>
             </b-col>
           </b-row>
         </b-card>
@@ -73,7 +73,7 @@
               <font-awesome-icon fixed-width icon="trash-alt"/>
             </b-col>
             <b-col cols="12" class="mt-3 text-center">
-              <b-button @click="$router.push('/recipe/'+title)">Edit</b-button>
+              <b-button @click="$router.push('/recipe/'+item.id+'-'+title)">Edit</b-button>
             </b-col>
           </b-row>
         </b-card>
