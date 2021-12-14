@@ -170,9 +170,9 @@ export default {
       this.$refs['setModal'].hide();
     },
     async upRecipe(){
-      // console.log(1,this.recipeVal,this.activate);
       var x = 0,
       val = [],
+      val2 = [],
       status = 0; //1 -> on to off, 0 -> off to on
       for(x in this.recipeVal){
         var y = 0;
@@ -181,31 +181,27 @@ export default {
           for(z in this.recipeVal[x].val[y]){
             if(this.recipeVal[x].shake){this.recipeVal[x].val[y].shake = 1}else{this.recipeVal[x].val[y].shake = 0}
             this.recipeVal[x].val[y].supplycode = parseInt(this.recipeVal[x].supplyCode);
-            if(z !== 'Size' && z !== 'Temperature' && z !== 'Topping'){val.push(parseInt(this.recipeVal[x].val[y][z]))}
+            var value = parseInt(this.recipeVal[x].val[y][z]) || 0;
+            if(z !== 'Size' && z !== 'Temperature' && z !== 'Topping' && y <= 3){val.push(value)}
+            if(z !== 'Size' && z !== 'Temperature' && z !== 'Topping' && y >= 4){val2.push(value)}
           }
         }
       }
-      // for(var a=0;a<1160;a+=232){
-      //   for(var b=a;b<a+116;b++){newRows.push(newRecipe[b]);}
-      //   if(a==928){a=-116}
-      // }
-      // console.log(this.ogAct,this.activate,status);
-      
-      // var addRecipe = httpsCallable(functions,'addRecipe');
-      // await addRecipe({docPath:'recipes/'+this.brandL,drink:this.recipe, status:"1", recipe:val}).then(result => {
-      //   console.log("Recipe updated");
-      // });
+      val = val.concat(val2);
+      var addRecipe = httpsCallable(functions,'addRecipe');
+      await addRecipe({docPath:'recipes/'+this.brandL,drink:this.recipe, status:"1", recipe:val}).then(result => {
+        console.log("Recipe updated");
+      });
 
-      // if(this.ogAct !== this.activate){
-      //   if(!this.activate){status = 1}
-      //   var activate = httpsCallable(functions,'activate');
-      //   await activate({docPath:'recipes/'+this.brandL, catName:this.catName, drinkName:this.recipe, status:status}).then(result => {
-      //     console.log("Activate updated");
-      //   });
-      // }
+      if(this.ogAct !== this.activate){
+        if(!this.activate){status = 1}
+        var activate = httpsCallable(functions,'activate');
+        await activate({docPath:'recipes/'+this.brandL, catName:this.catName, drinkName:this.recipe, status:status}).then(result => {
+          console.log("Activate updated");
+        });
+      }
     },
     async upSetting(){
-      // console.log(2,this.settingList);
       var x = 0,
       set = [];
       for(x in this.settingList){
@@ -215,7 +211,9 @@ export default {
           else{set.push(0)}
         }
       }
-      console.log(set,this.recipe,this.brandL);
+      set.splice(5, 0, set[9]);
+      set.splice(6, 0, set[11]);
+      set.splice(-2);
       var drinkSetting = httpsCallable(functions,'drinkSetting');
       await drinkSetting({docPath:'recipes/'+this.brandL,drink:this.recipe, setting:set}).then(result => {
         console.log("Settings updated");
