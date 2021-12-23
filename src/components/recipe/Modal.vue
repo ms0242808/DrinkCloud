@@ -4,7 +4,7 @@
       <a>{{content}}</a>
       <b-input v-if="input" v-model="inputVal"></b-input>
       <b-form-select v-if="select" v-model="switchSel"></b-form-select>
-      <!-- <div v-if="list"></div> -->
+      <div v-if="vRender" v-html="vhtml"></div>
     </div>
     <template #modal-footer>
       <div class="w-100">
@@ -24,6 +24,7 @@ export default {
       brandL: store.getters.getLocation,
       switchSel:'0',
       inputVal:'',
+      switchVal:''
     }
   },
   props:{
@@ -34,6 +35,8 @@ export default {
     select: {type: Boolean},
     btnText: {type: String},
     fnName: {type: String},
+    vRender: {type: Boolean},
+    vhtml: {type: String}
   },
   methods:{
     hideModal(id){

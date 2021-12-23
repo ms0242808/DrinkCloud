@@ -29,12 +29,11 @@
         </div>
       </b-col>
     </b-row>
-    <Modal :modalRef='modalRef' :title='title' :content='content' :input='input' :select='select' :btnText='btnText' :fnName='fnName' />
+    <Modal :modalRef='modalRef' :title='title' :content='content' :input='input' :select='select' :btnText='btnText' :fnName='fnName' :vRender='vRender' :vhtml='vhtml'/>
   </div>
 </template>
 
 <script>
-import { functions, httpsCallable, db } from "../../fire";
 import store from '../../store/store'
 import Modal from '../recipe/Modal.vue'
 
@@ -60,6 +59,8 @@ export default {
       select: false,
       btnText: 'Save',
       fnName: 'addRecipe',
+      vRender: false,
+      vhtml:''
     }
   },
   computed:{
@@ -79,55 +80,20 @@ export default {
       this.content = content;
       this.btnText = btn;
       this.fnName = name;
-    },
-    async addCat(){
-      // var recipeT = $('#recipeTitle').val();
-      // var addRecipe = httpsCallable(functions,'addRecipe'); //status=0
-      // await manageCategory({docPath:'recipes/'+brandL, category:name,drink:drink, status:i});
-      // await addRecipe({docPath:'recipes/'+brandL,drink:drink, status:0}); 
-      // await addRecipe({docPath:'recipes/'+this.brandL, category:"Drink1",drink:recipeT, status:0}).then(result => {
-      
-      // });
-    },
-    async setIngre(){
-      // var ingre = [];
-      // $('.ingreInput').map(async function(){
-      //   ingre.push($(this).val());
-      // }).get();
-      // var updateIngre = httpsCallable(functions,'updateIngre');
-      // await updateIngre({docPath:'recipes/'+this.brandL, ingre:ingre}).then(result => {
-      
-      // });
-    },
-    async setCat(){
-      // var cat = {};
-      // $('.catInput').map(async function(){
-      //   if($(this).attr('data-og')!=$(this).val()){
-      //     var tick = true;
-      //     if($(this).val() == 0){tick = false}
-      //     cat[$(this).attr('data-name')] = tick;
-      //   }
-      // }).get();
-      // var manageCategory = httpsCallable(functions,'manageCategory');
-      // await manageCategory({docPath:'recipes/'+this.brandL, category:cat, status:3}).then(result => {
-      
-      // });
-    },
-    async publish(){
-      // var publishRecipe = httpsCallable(functions,'publishRecipe');
-      // await publishRecipe({docPath:'recipes/'+this.brandL}).then(result => {
-      //   $('.modal-backdrop').remove();
-      //   $('body').removeClass('modal-open');
-      //   lbtn("recipe");
-      // });
+      this.vRender = false;
+      if(name=='setCat'){
+        this.vhtml = '<a>List of switch</a>';
+        this.vRender = true;
+        this.input = false;
+      }else if(name=='setIngre'){
+        this.vhtml = '<a>List of input</a>';
+        this.vRender = true;
+        this.input = false;
+      }else if(name=='publish'){
+        this.input = false;
+      }
+      else{this.vhtml = ''}
     }
-  //   cardStyle(i){
-  //     var style = {};
-  //     if(i === 1 || i === 2){style.margin = '0 6px'}
-  //     else if(i === 0){style.margin = '0 6px 0 0'}
-  //     else{style.margin = '0 0 0 6px'}
-  //     return style
-  //   }
   }
 }
 </script>>
