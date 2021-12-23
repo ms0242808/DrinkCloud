@@ -1,28 +1,7 @@
 <template>
   <div class="wrapper">
 		<b-container class="mt-2 noMaxWidth">
-			<b-row>
-				<b-col class="no-putters" cols="8">
-					<h3>{{$t('recipe.title')}}</h3>
-				</b-col>
-				<b-col class="no-putters" cols="4">
-					<b-button-group class="float-right">
-						<b-skeleton width="80px" height="30px"></b-skeleton>
-						<b-skeleton width="80px" height="30px"></b-skeleton>
-						<!-- <b-button variant="success">Success</b-button>
-						<b-button variant="info">Info</b-button> -->
-					</b-button-group>
-				</b-col>
-				<b-col class="no-putters" cols="8">
-					<b-skeleton width="70%" height="30px"></b-skeleton>
-				</b-col>
-				<b-col class="no-putters" cols="4">
-					<b-button-group class="float-right">
-						<b-skeleton width="60px" height="30px"></b-skeleton>
-						<b-skeleton width="60px" height="30px"></b-skeleton>
-					</b-button-group>
-				</b-col>
-			</b-row>
+			<RHeader :showSke="showSke" :showVal="showVal" :totalCat="totalCat" :totalDri="totalDri"/>
 		</b-container>
 		<div class="mt-3">
 			<Cards :showSke="showSke" :showVal="showVal" :recipes="recipes" :nodata="nodata"/>
@@ -35,10 +14,12 @@
 	import { mapGetters } from 'vuex'
   import { functions, httpsCallable } from "../fire";
   import Cards from '../components/recipe/Cards.vue'
+	import RHeader from '../components/recipe/Header.vue'
 
 	export default {
 		name: 'Recipe',
 		components:{
+			RHeader,
 			Cards
 		},
 		data(){
@@ -47,7 +28,9 @@
 				showVal: false,
 				recipes: store.getters.getRecipe.recipeVal,
 				brandL: '',
-				nodata: false
+				nodata: false,
+				totalCat: 0,
+				totalDri: 0
 			}
 		},
 		computed:{
@@ -102,6 +85,8 @@
 				store.commit('recipeChanged', recipes);
 				store.commit('onDrinkUpdate', onList);
 				store.commit('offDrinkUpdate', offList);
+				this.totalCat = catTitle.length
+				this.totalDri = onList.length + offList.length;
 				if(header.length === 0){
 					this.nodata = true;
 					this.setLoadingState(false,false);

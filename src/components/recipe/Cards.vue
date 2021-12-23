@@ -31,7 +31,7 @@
     </div>
 
     <b-row v-for="(item, index) in recipeVal" v-bind:key="index" v-show="skele[1]" class="w-100 no-gutters">
-      <b-col cols="12" class="mt-3">
+      <b-col cols="12" class="mt-3 container">
         <b-row>
           <b-col :class="item.class" cols="8">
             {{item.id}}
@@ -61,7 +61,7 @@
                 </template>
               </b-modal>
             </b-col>
-            <b-col cols="6" class="text-center no-putters" >
+            <b-col cols="6" class="text-center no-putters m-auto0">
               {{title}}
             </b-col>
             <b-col cols="3" class="text-center text-danger">
@@ -90,7 +90,7 @@
             <b-col cols="3" class="text-center">
               <b-button v-b-modal.modal-1 variant="transparent"><font-awesome-icon fixed-width icon="exchange-alt"/></b-button>
             </b-col>
-            <b-col cols="6" class="text-center no-putters" >
+            <b-col cols="6" class="text-center no-putters m-auto0">
               {{title}}
             </b-col>
             <b-col cols="3" class="text-center">
@@ -98,6 +98,15 @@
             </b-col>
             <b-col cols="12" class="mt-3 text-center">
               <b-button @click="$router.push('/recipe/'+item.id+'-'+title)">Edit</b-button>
+            </b-col>
+          </b-row>
+        </b-card>
+      </b-col>
+      <b-col lg="3" md="4" class="mt-3">
+        <b-card>
+          <b-row>
+            <b-col cols="12" class="mt-4 mb-4 text-center">
+              <b-button variant="outline-success"><font-awesome-icon fixed-width icon="plus"/>Add</b-button>
             </b-col>
           </b-row>
         </b-card>
@@ -130,10 +139,10 @@ export default {
     }
   },
   props: {
-    showSke: {type: Boolean },
-    showVal: {type: Boolean },
-    nodata: {type: Boolean },
-    recipes: {type: Array }
+    showSke: {type: Boolean},
+    showVal: {type: Boolean},
+    nodata: {type: Boolean},
+    recipes: {type: Array}
   },
   computed:{
     'skele': function(){
@@ -180,50 +189,9 @@ export default {
       //   });
       // });
     },
-    async addCat(){
-      // var recipeT = $('#recipeTitle').val();
-      // var addRecipe = httpsCallable(functions,'addRecipe'); //status=0
-      // await manageCategory({docPath:'recipes/'+brandL, category:name,drink:drink, status:i});
-      // await addRecipe({docPath:'recipes/'+brandL,drink:drink, status:0}); 
-      // await addRecipe({docPath:'recipes/'+this.brandL, category:"Drink1",drink:recipeT, status:0}).then(result => {
-      
-      // });
-    },
     async addRecipe(){
       // var addRecipe = httpsCallable(functions,'addRecipe'); //status=0
       
-    },
-    async setIngre(){
-      // var ingre = [];
-      // $('.ingreInput').map(async function(){
-      //   ingre.push($(this).val());
-      // }).get();
-      // var updateIngre = httpsCallable(functions,'updateIngre');
-      // await updateIngre({docPath:'recipes/'+this.brandL, ingre:ingre}).then(result => {
-      
-      // });
-    },
-    async setCat(){
-      // var cat = {};
-      // $('.catInput').map(async function(){
-      //   if($(this).attr('data-og')!=$(this).val()){
-      //     var tick = true;
-      //     if($(this).val() == 0){tick = false}
-      //     cat[$(this).attr('data-name')] = tick;
-      //   }
-      // }).get();
-      // var manageCategory = httpsCallable(functions,'manageCategory');
-      // await manageCategory({docPath:'recipes/'+this.brandL, category:cat, status:3}).then(result => {
-      
-      // });
-    },
-    async publish(){
-      var publishRecipe = httpsCallable(functions,'publishRecipe');
-      // await publishRecipe({docPath:'recipes/'+this.brandL}).then(result => {
-      //   $('.modal-backdrop').remove();
-      //   $('body').removeClass('modal-open');
-      //   lbtn("recipe");
-      // });
     }
   }
 }
@@ -265,5 +233,9 @@ hr{
 
 .opacity07{
   opacity: 0.7;
+}
+
+.m-auto0{
+  margin: auto 0;
 }
 </style>
