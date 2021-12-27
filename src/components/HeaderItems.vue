@@ -147,6 +147,11 @@
 		margin-left: 4.5rem;
 	}
 }
+@media screen and (min-width: 768px) {
+	.brand{
+		padding: 0 15px !important;
+	}
+}
 .brand{
 	margin: 12px 0;
 	padding: 0;

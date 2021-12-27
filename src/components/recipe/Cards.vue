@@ -31,7 +31,7 @@
     </div>
 
     <b-row v-for="(item, index) in recipeVal" v-bind:key="index" v-show="skele[1]" class="w-100 no-gutters">
-      <b-col cols="12" class="mt-3">
+      <b-col cols="12" class="mt-3 container">
         <b-row>
           <b-col :class="item.class" cols="8">
             {{item.id}}
@@ -46,16 +46,40 @@
         <b-card class="border-left-success" :class="{'opacity07':!item.status}">
           <b-row>
             <b-col cols="3" class="text-center">
-              <font-awesome-icon fixed-width icon="exchange-alt"/>
+              <b-button v-b-modal="'Switch'+title" variant="transparent"><font-awesome-icon fixed-width icon="exchange-alt"/></b-button>
+              <!-- <Modal :id="'onSwitch'+index" /> -->
+              <b-modal :ref="'Switch'+title" :id="'Switch'+title" centered :title="title+' is on '+item.id" @hide="hideModal('Switch'+title)">
+                <div >
+                  <a>change to: </a>
+                  <b-form-select v-model="switchSel" :options="switchOpt(item.id)"></b-form-select>
+                </div>
+                <template #modal-footer>
+                  <div class="w-100">
+                    <b-button variant="primary" class="float-right" @click="switchCat(title,item.id)">Switch</b-button>
+                    <b-button class="float-right" @click="hideModal('Switch'+title)">cancel </b-button>
+                  </div>
+                </template>
+              </b-modal>
             </b-col>
-            <b-col cols="6" class="text-center no-putters" >
+            <b-col cols="6" class="text-center no-putters m-auto0">
               {{title}}
             </b-col>
             <b-col cols="3" class="text-center text-danger">
-              <font-awesome-icon fixed-width icon="trash-alt"/>
+              <b-button v-b-modal="'del'+title" variant="transparent"><font-awesome-icon fixed-width icon="trash-alt"/></b-button>
+              <b-modal :ref="'del'+title" :id="'del'+title" centered title="Delete recipe" @hide="hideModal('del'+title)">
+                <div >
+                  <a>Do you want to delete {{title}}? </a>
+                </div>
+                <template #modal-footer>
+                  <div class="w-100">
+                    <b-button variant="primary" class="float-right" @click="delRecipe(title,item.id)">Delete</b-button>
+                    <b-button class="float-right" @click="hideModal('del'+title)">cancel </b-button>
+                  </div>
+                </template>
+              </b-modal>
             </b-col>
             <b-col cols="12" class="mt-3 text-center">
-              <b-button @click="$router.push('/recipe/'+title)" variant="outline-primary">Edit</b-button>
+              <b-button @click="$router.push('/recipe/'+item.id+'-'+title)" variant="outline-primary">Edit</b-button>
             </b-col>
           </b-row>
         </b-card>
@@ -64,16 +88,25 @@
         <b-card class="border-left-dark" :class="{'opacity07':!item.status}">
           <b-row>
             <b-col cols="3" class="text-center">
-              <font-awesome-icon fixed-width icon="exchange-alt"/>
+              <b-button v-b-modal.modal-1 variant="transparent"><font-awesome-icon fixed-width icon="exchange-alt"/></b-button>
             </b-col>
-            <b-col cols="6" class="text-center no-putters" >
+            <b-col cols="6" class="text-center no-putters m-auto0">
               {{title}}
             </b-col>
             <b-col cols="3" class="text-center">
-              <font-awesome-icon fixed-width icon="trash-alt"/>
+              <b-button v-b-modal.modal-1 variant="transparent"><font-awesome-icon fixed-width icon="trash-alt"/></b-button>
             </b-col>
             <b-col cols="12" class="mt-3 text-center">
-              <b-button @click="$router.push('/recipe/'+title)">Edit</b-button>
+              <b-button @click="$router.push('/recipe/'+item.id+'-'+title)">Edit</b-button>
+            </b-col>
+          </b-row>
+        </b-card>
+      </b-col>
+      <b-col lg="3" md="4" class="mt-3">
+        <b-card>
+          <b-row>
+            <b-col cols="12" class="mt-4 mb-4 text-center">
+              <b-button variant="outline-success"><font-awesome-icon fixed-width icon="plus"/>Add</b-button>
             </b-col>
           </b-row>
         </b-card>
@@ -91,14 +124,25 @@
 </template>
 
 <script>
+import { functions, httpsCallable, db } from "../../fire";
 import store from '../../store/store'
+// import Modal from '../recipe/Modal.vue'
 export default {
   name:'cards',
+  // components:{
+  //   Modal
+  // },
+  data(){
+    return{
+      brandL: store.getters.getLocation,
+      switchSel:'0',
+    }
+  },
   props: {
-    showSke: {type: Boolean },
-    showVal: {type: Boolean },
-    nodata: {type: Boolean },
-    recipes: {type: Array }
+    showSke: {type: Boolean},
+    showVal: {type: Boolean},
+    nodata: {type: Boolean},
+    recipes: {type: Array}
   },
   computed:{
     'skele': function(){
@@ -109,6 +153,45 @@ export default {
     },
     'showNodata': function(){
       return this.nodata
+    },
+  },
+  methods:{
+    hideModal(id){
+      this.$refs[id][0].hide();
+      this.switchSel = '0';
+    },
+    switchOpt(val){
+      var x = 0,
+      cat = [{value:'0',text:'Select a category',  disabled: true}];
+      for(x in this.recipeVal){
+        if(val !== this.recipeVal[x].id){
+          cat.push({value:this.recipeVal[x].id,text:this.recipeVal[x].id})
+        }
+      }
+      return cat
+    },
+    async switchCat(tea,current){
+      var val = this.switchSel;
+      console.log(this.brandL,tea,current,val);
+      // var swapRecipe = httpsCallable(functions,'swapRecipe');
+      // await swapRecipe({docPath:'recipes/'+this.brandL, tea:tea, current:current, val:val}).then(async result => {
+      //   this.hideModal('Switch'+tea);
+      // });
+
+    },
+    async delRecipe(tea,current){
+      console.log(tea,current);
+      // var manageCategory = httpsCallable(functions,'manageCategory');
+      // await manageCategory({docPath:'recipes/'+this.brandL, category:current,drink:tea, status:2}).then(async result => {
+      //   var removeRecipe = httpsCallable(functions,'removeRecipe');
+      //   await removeRecipe({docPath:'recipes/'+this.brandL,drink:tea}).then(result => {
+      //     this.hideModal('del'+tea);
+      //   });
+      // });
+    },
+    async addRecipe(){
+      // var addRecipe = httpsCallable(functions,'addRecipe'); //status=0
+      
     }
   }
 }
@@ -150,5 +233,9 @@ hr{
 
 .opacity07{
   opacity: 0.7;
+}
+
+.m-auto0{
+  margin: auto 0;
 }
 </style>
