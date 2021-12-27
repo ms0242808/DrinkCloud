@@ -2,14 +2,25 @@
   <b-modal :ref="modalRef" :id="modalRef" :title="title" @hide="hideModal(modalRef)" centered> 
     <div>
       <a>{{content}}</a>
-      <b-input v-if="input" v-model="inputVal"></b-input>
-      <b-form-select v-if="select" v-model="switchSel"></b-form-select>
-      <div v-if="vRender" v-html="vhtml"></div>
+      <b-input v-if="input" v-model="inputVal" placeholder="Enter category name" @change="btnStatus()"></b-input>
+      <b-form-select v-else-if="select" v-model="switchSel"></b-form-select>
+      <template v-else-if="vRender">
+        <div v-for="(item,index) in this.catList" :key="index">
+          <div class="col-12 d-flex flex-justify-between">
+            {{item.split('-')[0]}}
+            <hr>
+            <b-form-checkbox switch class="mr-n2" v-model="item.split('-')[1]">
+              <span class="sr-only">Switch for following text input</span>
+              <label class='form-check-label' :for="item.split('-')[1]"></label>
+            </b-form-checkbox>
+          </div>
+        </div>
+      </template>
     </div>
     <template #modal-footer>
       <div class="w-100">
-        <b-button variant="primary" class="float-right ml-1" @click="useFunction(fnName)">{{btnText}}</b-button>
-        <b-button class="float-right" @click="hideModal(modalRef)">cancel</b-button>
+        <b-button variant="success" class="float-right ml-1" @click="useFunction(fnName)" :disabled="btnState == 1 && btnText !== 'Publish' ">{{btnText}}</b-button>
+        <b-button variant="outline-dark" class="float-right" @click="hideModal(modalRef)">cancel</b-button>
       </div>
     </template>
   </b-modal>
@@ -36,7 +47,17 @@ export default {
     btnText: {type: String},
     fnName: {type: String},
     vRender: {type: Boolean},
-    vhtml: {type: String}
+    vhtml: {type: String},
+    catList: {type: Array}
+  },
+  computed:{
+    'btnState':function(){
+      if(this.inputVal.length > 0){
+        return 0
+      }else{
+        return 1
+      }
+    }
   },
   methods:{
     hideModal(id){

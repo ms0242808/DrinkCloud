@@ -1,7 +1,7 @@
 <template>
   <div class="wrapper">
 		<b-container class="mt-2 noMaxWidth">
-			<RHeader :showSke="showSke" :showVal="showVal" :totalCat="totalCat" :totalDri="totalDri"/>
+			<RHeader :showSke="showSke" :showVal="showVal" :totalCat="totalCat" :totalDri="totalDri" :catList="catList"/>
 		</b-container>
 		<div class="mt-3">
 			<Cards :showSke="showSke" :showVal="showVal" :recipes="recipes" :nodata="nodata"/>
@@ -30,7 +30,8 @@
 				brandL: '',
 				nodata: false,
 				totalCat: 0,
-				totalDri: 0
+				totalDri: 0,
+				catList: []
 			}
 		},
 		computed:{
@@ -63,7 +64,14 @@
 				onList = [],
 				offList = [],
 				c = '',
-				catTitle = await getCategory(this.brandL);
+				getCat = await getCategory(this.brandL);
+				var catTitle = getCat[0],
+				catOn = getCat[1],
+				catOff = getCat[2],
+				[x,y] = [0,0];
+				for(x in catOn){this.catList.push(catOn[x]+'-'+true)}
+				for(y in catOff){this.catList.push(catOff[y]+'-'+false)}
+
 				for(c in catTitle){
 					var drinkName = await getCategoryDrink(catTitle[c],this.brandL),
 					onDrink = drinkName[0],
@@ -77,7 +85,10 @@
 						"offDrink":offDrink,
 						"drinkCount":drinkLength,
 						"status":status,
-						"class":border
+						"class":border,
+						"addShow":false,
+						"addRecipe":'',
+						'btnState':1
 					});
 					onList = onList.concat(onDrink);
 					offList = offList.concat(offDrink);
@@ -111,11 +122,15 @@
 
 	async function getCategory(brandL){
 		const getCategory = httpsCallable(functions, 'getCategory');
-		var catName = [];
+		var catName = [],
+		catOn = [],
+		catOff = [];
 		await getCategory({docPath:'recipes/'+brandL}).then(result => {
 			catName = result.data.catName;
+			catOn= result.data.catOn;
+			catOff = result.data.catOff;
 		});
-		return catName;
+		return [catName,catOn,catOff];
 	}
 
   async function getCategoryDrink(cat,brandL){

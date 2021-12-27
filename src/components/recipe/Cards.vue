@@ -106,7 +106,12 @@
         <b-card>
           <b-row>
             <b-col cols="12" class="mt-4 mb-4 text-center">
-              <b-button variant="outline-success"><font-awesome-icon fixed-width icon="plus"/>Add</b-button>
+              <div v-if="item.addShow">
+                <b-input v-model="item.addRecipe" @change="btnStatus(item)" placeholder="Enter drink name"></b-input>
+                <b-button class="mt-1" variant="outline-dark" @click="showAdd(item)">Cancel</b-button>
+                <b-button class="ml-1 mt-1" variant="success" @click="addRecipe(item)" :disabled='item.btnState == 1'>Submit</b-button>
+              </div>
+              <b-button v-else variant="outline-success" @click="addInput(item)"><font-awesome-icon fixed-width icon="plus"/>Add</b-button>
             </b-col>
           </b-row>
         </b-card>
@@ -136,6 +141,8 @@ export default {
     return{
       brandL: store.getters.getLocation,
       switchSel:'0',
+      newRecipe:'',
+      addShow: false
     }
   },
   props: {
@@ -189,9 +196,25 @@ export default {
       //   });
       // });
     },
-    async addRecipe(){
+    async addInput(item){      
+      item.addShow = true;
+    },
+    async showAdd(item){
+      item.addShow = false;
+      item.addRecipe = '';
+      item.btnState = 1;
+    },
+    async addRecipe(item){
       // var addRecipe = httpsCallable(functions,'addRecipe'); //status=0
-      
+      // console.log(item.id);
+      item.addShow = false;
+      item.addRecipe = '';
+      item.btnState = 1;
+    },
+    async btnStatus(item){
+      // console.log(item.addRecipe.length, item.addRecipe);
+      if(item.addRecipe.length>0){item.btnState = 0}
+      else{item.btnState = 1}
     }
   }
 }

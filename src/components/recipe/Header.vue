@@ -9,7 +9,7 @@
           <b-skeleton width="80px" height="30px"></b-skeleton>
           <b-skeleton width="80px" height="30px"></b-skeleton>
         </b-button-group>
-        <div class="float-right d-flex" v-show="skele[1]">
+        <div class="float-right dflex" v-show="skele[1]">
           <b-button v-b-modal.addCat class="ml-1 mt-1" variant="outline-success" @click="showModal('addCat','Add cateogry','Add new category','Add')">Add</b-button>
           <b-button v-b-modal.publish class="ml-1 mt-1" variant="outline-primary" @click="showModal('publish','Publish recipe','Publish recipe to all machine','Publish')">Publish</b-button>
         </div>
@@ -23,13 +23,13 @@
           <b-skeleton width="60px" height="30px"></b-skeleton>
           <b-skeleton width="60px" height="30px"></b-skeleton>
         </b-button-group>
-        <div class="float-right d-flex" v-show="skele[1]">
-          <b-button v-b-modal.setCat class="ml-1 mt-1" variant="outline-dark" @click="showModal('setCat','Manage category','Cateogry order','Save')">Manage</b-button>
-          <b-button v-b-modal.setIngre class="ml-1 mt-1" variant="outline-dark" @click="showModal('setIngre','Manage ingredients','Ingredients settings','Save')">Settings</b-button>
+        <div class="float-right dflex" v-show="skele[1]">
+          <b-button v-b-modal.setCat class="ml-1 mt-1 f-12" variant="outline-dark" @click="showModal('setCat','Manage category','Cateogry order','Save')">Category</b-button>
+          <b-button v-b-modal.setIngre class="ml-1 mt-1 f-12" variant="outline-dark" @click="showModal('setIngre','Manage ingredients','Ingredients settings','Save')">Ingredients</b-button>
         </div>
       </b-col>
     </b-row>
-    <Modal :modalRef='modalRef' :title='title' :content='content' :input='input' :select='select' :btnText='btnText' :fnName='fnName' :vRender='vRender' :vhtml='vhtml'/>
+    <Modal :modalRef='modalRef' :title='title' :content='content' :input='input' :select='select' :btnText='btnText' :fnName='fnName' :vRender='vRender' :vhtml='vhtml' :catList='catList'/>
   </div>
 </template>
 
@@ -48,6 +48,7 @@ export default {
     recipes: {type: Array},
     totalCat: {type: Number},
     totalDri: {type: Number},
+    catList: {type: Array}
   },
   data(){
     return{
@@ -82,10 +83,12 @@ export default {
       this.fnName = name;
       this.vRender = false;
       if(name=='setCat'){
-        this.vhtml = '<a>List of switch</a>';
+        this.getCat();
+        // this.vhtml = '<a>List of switch</a>';
         this.vRender = true;
         this.input = false;
       }else if(name=='setIngre'){
+        this.getIng();
         this.vhtml = '<a>List of input</a>';
         this.vRender = true;
         this.input = false;
@@ -93,11 +96,31 @@ export default {
         this.input = false;
       }
       else{this.vhtml = ''}
+    },
+    async getCat(){
+      this.vhtml = `<div v-for="(item,index) in this.catList" :key="index">
+        <div class="col-12 d-flex flex-justify-between">
+          <!-- mt-1 form-check custom-control custom-switch -->
+          {{item.split('-')[0]}}
+          <b-form-checkbox switch class="mr-n2" v-model="item.status[i]">
+            <span class="sr-only">Switch for following text input</span>
+            <label class='form-check-label' :for='item.status[i]'></label>
+          </b-form-checkbox>
+        </div>
+      </div>`
+    },
+    async getIng(){
+
     }
   }
 }
 </script>>
 
 <style scoped>
-
+.dflex{
+  display: flex;
+}
+.f-12{
+  font-size: 12px;
+}
 </style>
