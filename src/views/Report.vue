@@ -1,29 +1,31 @@
 <template>
-   <div class="wrapper">
-    <h1>Report</h1>
-    <a>You can report any issues, questions or book a service driectly with us using the form below.</a>
+  <div class="wrapper">
+    <b-alert :show="dismissCountDown" dismissible fade variant="success" @dismiss-count-down="countDownChanged">
+      {{$t('report.sent')}}
+    </b-alert>
+    <h3>{{$t('report.title')}}</h3>
+    <a>{{$t('report.msg')}}</a>
     <b-form ref="form" @submit="onSubmit" @reset="onReset" class="mt-2">
-      <b-form-group id="input-group-1" label="Email:" label-for="input-1">
+      <b-form-input id="input-brand" v-model="form.brand" name="FormCompany" hidden></b-form-input>
+      <b-form-group id="input-group-1" :label="$t('report.email')" label-for="input-1">
         <b-form-input
-          id="input-1"
+          id="input-email"
           v-model="form.email"
           type="email"
           name="FormEmail"
           required
         ></b-form-input>
       </b-form-group>
-
-      <b-form-group id="catSelect" label="Category" label-for="catSelect">
+      <b-form-group id="catSelect" :label="$t('report.category')" label-for="catSelect">
         <b-form-select
           id="input-cat"
           v-model="form.cat"
-          :options="catOpt"
+          :options="getCatOpt"
           name="FormService"
           required
         ></b-form-select>
       </b-form-group>
-
-      <b-form-group id="title" label="Title" label-for="input-title">
+      <b-form-group id="title" :label="$t('report.mail title')" label-for="input-title">
         <b-form-input
           id="input-title"
           v-model="form.title"
@@ -31,8 +33,7 @@
           required
         ></b-form-input>
       </b-form-group>
-
-      <b-form-group label="Messages:" >
+      <b-form-group :label="$t('report.message')">
         <b-form-textarea
           id="textarea"
           v-model="form.text"
@@ -41,49 +42,85 @@
           max-rows="6"
         ></b-form-textarea>
       </b-form-group>
-      <b-button type="submit" variant="primary"><font-awesome-icon fixed-width icon="paper-plane"/> Send</b-button>
+      <b-button type="submit" variant="primary"><font-awesome-icon fixed-width icon="paper-plane" v-if="iconShow"/> {{btnText}} <b-spinner small v-if="btnClicked['b']"></b-spinner></b-button>
     </b-form>
-   </div>
+  </div>
 </template>
 
 <script>
 import emailjs from 'emailjs-com';
+import store from '../store/store'
+import { mapGetters } from 'vuex'
+import Vue from 'vue';
 
 export default {
   name: 'Report',
   data(){
     return {
+      iconShow: true,
+      btnText: this.$i18n.t('report.send'),
+      btnClicked : [],
+      dismissSecs: 5,
+      dismissCountDown: 0,
+      showDismissibleAlert: false,
       form: {
         email: '',
-        cat: 1,
+        cat: this.$i18n.t('report.book'),
         title: '',
-        text:''
+        text:'',
+        brand: store.getters.getLocation
       },
-      catOpt: [{ text: 'Book a service', value: 1},
-      { text: 'Pump issue', value: 2},
-      { text: 'Pipe issue', value: 3},
-      { text: 'Machine issue', value: 4},
-      {text: 'Other', value: 5}]
+      catOpt: [{text: this.$i18n.t('report.book'), value: this.$i18n.t('report.book')},
+      {text: this.$i18n.t('report.pump'), value: this.$i18n.t('report.pump')},
+      {text: this.$i18n.t('report.pipe'), value: this.$i18n.t('report.pipe')},
+      {text: this.$i18n.t('report.machine'), value: this.$i18n.t('report.machine')},
+      {text: this.$i18n.t('report.other'), value: this.$i18n.t('report.other')}]
+    }
+  },
+  computed:{
+    ...mapGetters([
+      'getLocation'
+    ]),
+    'getCatOpt': function() {
+      this.selected();
+      return [{text: this.$i18n.t('report.book'), value: this.$i18n.t('report.book')},
+      {text: this.$i18n.t('report.pump'), value: this.$i18n.t('report.pump')},
+      {text: this.$i18n.t('report.pipe'), value: this.$i18n.t('report.pipe')},
+      {text: this.$i18n.t('report.machine'), value: this.$i18n.t('report.machine')},
+      {text: this.$i18n.t('report.other'), value: this.$i18n.t('report.other')}]
+    }
+  },
+  watch: {
+    getLocation(val){
+      this.form.brand = val;
     }
   },
   methods:{
+    countDownChanged(dismissCountDown){this.dismissCountDown = dismissCountDown},
+    showAlert(){this.dismissCountDown = this.dismissSecs},
+    selected(){this.form.cat = this.$i18n.t('report.book')},
     onSubmit(event){
-      event.preventDefault()
-      // alert(JSON.stringify(this.form))
+      event.preventDefault();
+      this.iconShow = false;
+      this.btnText = '';
+      Vue.set(this.btnClicked,'b',1);
       emailjs.sendForm('service_toowmls', 'template_44gio4s', this.$refs.form, 'user_l4UA7bpMt6xQRtBmtAFZv')
       .then((result) => {
-        alert('SUCCESS!', result.text);
-        this.onReset(event)
-      }, (error) => {
+        this.showAlert();
+        this.onReset(event);
+      },(error) => {
         alert('FAILED...', error.text);
       });
     },
     onReset(event){
-      event.preventDefault()
-      this.form.email = ''
-      this.form.cat = 1
-      this.form.title = ''
-      this.form.text = ''
+      event.preventDefault();
+      this.form.email = '';
+      this.selected();
+      this.form.title = '';
+      this.form.text = '';
+      this.iconShow = true;
+      this.btnText = this.$i18n.t('report.send');
+      Vue.set(this.btnClicked,'b',0);
     }
   }
 }

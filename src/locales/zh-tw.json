@@ -177,7 +177,8 @@
     "mail title":"標題",
     "message":"訊息",
     "inputtextarea":"輸入訊息...",
-    "send":"發送"
+    "send":"發送",
+    "sent":"訊息已傳送，我們會以最快的時間內與您聯繫，謝謝您。"
   },
   "permissions":{
     "account title":"帳戶資訊",
