@@ -178,7 +178,8 @@
     "mail title":"Title",
     "message":"Message",
     "inputtextarea":"Levea a message...",
-    "send":"Send"
+    "send":"Send",
+    "sent":"Message sent, we will get back to you ASAP, thank you."
   },
   "permissions":{
     "account title":"Account Details",
