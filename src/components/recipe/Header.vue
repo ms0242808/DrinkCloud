@@ -29,7 +29,7 @@
         </div>
       </b-col>
     </b-row>
-    <Modal :modalRef='modalRef' :title='title' :content='content' :input='input' :select='select' :btnText='btnText' :fnName='fnName' :vRender='vRender' :vhtml='vhtml' :catList='catList'/>
+    <Modal :modalRef='modalRef' :title='title' :content='content' :input='input' :select='select' :btnText='btnText' :fnName='fnName' :vCat='vCat' :vIng='vIng' :catList='catList' :ingList="ingList"/>
   </div>
 </template>
 
@@ -48,7 +48,8 @@ export default {
     recipes: {type: Array},
     totalCat: {type: Number},
     totalDri: {type: Number},
-    catList: {type: Array}
+    catList: {type: Array},
+    ingList: {type: Array}
   },
   data(){
     return{
@@ -60,8 +61,8 @@ export default {
       select: false,
       btnText: 'Save',
       fnName: 'addRecipe',
-      vRender: false,
-      vhtml:''
+      vCat: false,
+      vIng: false
     }
   },
   computed:{
@@ -81,40 +82,21 @@ export default {
       this.content = content;
       this.btnText = btn;
       this.fnName = name;
-      this.vRender = false;
+      this.vCat = false;
+      this.vIng = false;
       if(name=='setCat'){
-        this.getCat();
-        // this.vhtml = '<a>List of switch</a>';
-        this.vRender = true;
+        this.vCat = true;
         this.input = false;
       }else if(name=='setIngre'){
-        this.getIng();
-        this.vhtml = '<a>List of input</a>';
-        this.vRender = true;
+        this.vIng = true;
         this.input = false;
       }else if(name=='publish'){
         this.input = false;
       }
-      else{this.vhtml = ''}
-    },
-    async getCat(){
-      this.vhtml = `<div v-for="(item,index) in this.catList" :key="index">
-        <div class="col-12 d-flex flex-justify-between">
-          <!-- mt-1 form-check custom-control custom-switch -->
-          {{item.split('-')[0]}}
-          <b-form-checkbox switch class="mr-n2" v-model="item.status[i]">
-            <span class="sr-only">Switch for following text input</span>
-            <label class='form-check-label' :for='item.status[i]'></label>
-          </b-form-checkbox>
-        </div>
-      </div>`
-    },
-    async getIng(){
-
     }
   }
 }
-</script>>
+</script>
 
 <style scoped>
 .dflex{

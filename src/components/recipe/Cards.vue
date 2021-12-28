@@ -72,7 +72,7 @@
                 </div>
                 <template #modal-footer>
                   <div class="w-100">
-                    <b-button variant="primary" class="float-right" @click="delRecipe(title,item.id)">Delete</b-button>
+                    <b-button variant="outline-danger" class="float-right" @click="delRecipe(title,item.id)">Delete</b-button>
                     <b-button class="float-right" @click="hideModal('del'+title)">cancel </b-button>
                   </div>
                 </template>
@@ -88,13 +88,36 @@
         <b-card class="border-left-dark" :class="{'opacity07':!item.status}">
           <b-row>
             <b-col cols="3" class="text-center">
-              <b-button v-b-modal.modal-1 variant="transparent"><font-awesome-icon fixed-width icon="exchange-alt"/></b-button>
+              <b-button v-b-modal="'Switch'+title" variant="transparent"><font-awesome-icon fixed-width icon="exchange-alt"/></b-button>
+              <b-modal :ref="'Switch'+title" :id="'Switch'+title" centered :title="title+' is on '+item.id" @hide="hideModal('Switch'+title)">
+                <div >
+                  <a>change to: </a>
+                  <b-form-select v-model="switchSel" :options="switchOpt(item.id)"></b-form-select>
+                </div>
+                <template #modal-footer>
+                  <div class="w-100">
+                    <b-button variant="primary" class="float-right" @click="switchCat(title,item.id)">Switch</b-button>
+                    <b-button class="float-right" @click="hideModal('Switch'+title)">cancel </b-button>
+                  </div>
+                </template>
+              </b-modal>
             </b-col>
             <b-col cols="6" class="text-center no-putters m-auto0">
               {{title}}
             </b-col>
             <b-col cols="3" class="text-center">
-              <b-button v-b-modal.modal-1 variant="transparent"><font-awesome-icon fixed-width icon="trash-alt"/></b-button>
+              <b-button v-b-modal="'del'+title" variant="transparent"><font-awesome-icon fixed-width icon="trash-alt"/></b-button>
+              <b-modal :ref="'del'+title" :id="'del'+title" centered title="Delete recipe" @hide="hideModal('del'+title)">
+                <div >
+                  <a>Do you want to delete {{title}}? </a>
+                </div>
+                <template #modal-footer>
+                  <div class="w-100">
+                    <b-button variant="outline-danger" class="float-right" @click="delRecipe(title,item.id)">Delete</b-button>
+                    <b-button class="float-right" @click="hideModal('del'+title)">cancel </b-button>
+                  </div>
+                </template>
+              </b-modal>
             </b-col>
             <b-col cols="12" class="mt-3 text-center">
               <b-button @click="$router.push('/recipe/'+item.id+'-'+title)">Edit</b-button>
@@ -205,8 +228,10 @@ export default {
       item.btnState = 1;
     },
     async addRecipe(item){
+      // var manageCategory = httpsCallable(functions,'manageCategory');
+      // await manageCategory({docPath:'recipes/'+this.brandL, category:item,drink:'', status:1});
       // var addRecipe = httpsCallable(functions,'addRecipe'); //status=0
-      // console.log(item.id);
+      // await addRecipe({docPath:'recipes/'+brandL,drink:'', status:0});
       item.addShow = false;
       item.addRecipe = '';
       item.btnState = 1;

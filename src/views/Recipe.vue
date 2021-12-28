@@ -1,7 +1,7 @@
 <template>
   <div class="wrapper">
 		<b-container class="mt-2 noMaxWidth">
-			<RHeader :showSke="showSke" :showVal="showVal" :totalCat="totalCat" :totalDri="totalDri" :catList="catList"/>
+			<RHeader :showSke="showSke" :showVal="showVal" :totalCat="totalCat" :totalDri="totalDri" :catList="catList" :ingList="ingList"/>
 		</b-container>
 		<div class="mt-3">
 			<Cards :showSke="showSke" :showVal="showVal" :recipes="recipes" :nodata="nodata"/>
@@ -31,7 +31,8 @@
 				nodata: false,
 				totalCat: 0,
 				totalDri: 0,
-				catList: []
+				catList: [],
+				ingList: []
 			}
 		},
 		computed:{
@@ -69,9 +70,9 @@
 				catOn = getCat[1],
 				catOff = getCat[2],
 				[x,y] = [0,0];
-				for(x in catOn){this.catList.push(catOn[x]+'-'+true)}
-				for(y in catOff){this.catList.push(catOff[y]+'-'+false)}
-
+				for(x in catOn){this.catList.push({title:catOn[x],state:true,og:true})}
+				for(y in catOff){this.catList.push({title:catOff[y],state:false,og:false})}
+				this.ingList = header.slice(8,-4);
 				for(c in catTitle){
 					var drinkName = await getCategoryDrink(catTitle[c],this.brandL),
 					onDrink = drinkName[0],
