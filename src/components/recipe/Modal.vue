@@ -1,31 +1,31 @@
 <template>
-  <b-modal :ref="modalRef" :id="modalRef" :title="title" @hide="hideModal(modalRef)" centered> 
+  <b-modal :ref="modalRef" :id="modalRef" :title="$t('recipe.'+title)" @hide="hideModal(modalRef)" centered> 
     <div>
-      <a v-if="modalRef!=='setCat' && modalRef!=='setIngre'">{{content}}</a>
-      <b-input v-if="input" v-model="inputVal" placeholder="Enter category name"></b-input>
+      <a v-if="modalRef!=='setCat' && modalRef!=='setIngre'" class="space">{{$t('recipe.'+content)}}</a>
+      <b-input v-if="input" v-model="inputVal" :placeholder="$t('recipe.cat label')"></b-input>
       <b-form-select v-else-if="select" v-model="switchSel"></b-form-select>
       <template v-else-if="vCat">
         <div v-for="(item,index) in catList" :key="index">
           <div class="col-12 d-flex flex-justify-between">
             {{item.title}}
-            <hr>
+            
             <b-form-checkbox switch class="mr-n2" v-model="item.state" @change="catState(item.state,item.og)">
               <span class="sr-only">Switch for following text input</span>
               <label class='form-check-label' :for="item.state"></label>
             </b-form-checkbox>
           </div>
+          <hr>
         </div>
       </template>
       <b-row v-else-if="vIng" >
         <template v-for="(item,index,a,b) in ingList">
           <b-col lg="12" md="12" :key="a" v-if="index==0 || index==2 || index==12">
-            <h5 v-if="index==0">Diary</h5>
-            <h5 v-else-if="index==2">Tea</h5>
-            <h5 v-else-if="index==12">Juice</h5>
+            <h5 v-if="index==0">{{$t('recipe.dairy')}}</h5>
+            <h5 v-else-if="index==2">{{$t('recipe.tea')}}</h5>
+            <h5 v-else-if="index==12">{{$t('recipe.juice')}}</h5>
           </b-col>
-          <b-col lg="6" md="12" :key="index">
-            <label>{{ingLabel[index]}}</label>
-            <b-input v-model="ingList[index]" :placeholder="ingLabel[index]" :value="item" @change="ingState()"></b-input>
+          <b-col cols="6" :key="index" class="mt-2">
+            <b-input v-model="ingList[index]" :placeholder="$t('recipe.'+ingLabel[index])" :value="item" @change="ingState()"></b-input>
           </b-col>
           <b-col lg="12" md="12" :key="b" v-if="index==1 || index==11">
             <hr>
@@ -35,8 +35,8 @@
     </div>
     <template #modal-footer>
       <div class="w-100">
-        <b-button variant="success" class="float-right ml-1" @click="useFunction(fnName,modalRef)" :disabled="btnState == 1 && btnText !== 'Publish' ">{{btnText}}</b-button>
-        <b-button variant="outline-dark" class="float-right" @click="hideModal(modalRef)">cancel</b-button>
+        <b-button variant="success" class="float-right ml-1" @click="useFunction(fnName,modalRef)" :disabled="btnState == 1 && btnText !== 'Publish' ">{{$t('recipe.'+btnText)}}</b-button>
+        <b-button variant="outline-dark" class="float-right" @click="hideModal(modalRef)">{{$t('recipe.cancel')}}</b-button>
       </div>
     </template>
   </b-modal>
@@ -93,45 +93,76 @@ export default {
       else{this.catSwitch = 1}
     },
     async addCat(modalRef){
-      console.log('addCat');
-      // var catT = this.inputVal;
-      // var manageCategory = httpsCallable(functions,'manageCategory'); //status=0
-      // await manageCategory({docPath:'recipes/'+this.brandL, category:catT,drink:'', status:0});
-      // hideModal(modalRef);
+      var catT = this.inputVal,
+      recipes = store.getters.getRecipe.recipeVal,
+      x = 0,
+      status = true,
+      countOn = 0;
+      var manageCategory = httpsCallable(functions,'manageCategory'); //status=0
+      await manageCategory({docPath:'recipes/'+this.brandL, category:catT,drink:'', status:0}).then(result => {
+        for(x in recipes){if(recipes[x].status){countOn++}}
+        if(countOn>=10){status  = false}
+        var border = (status) ? "border-left-success":"border-left-dark";
+        recipes.push({
+          id: catT,
+          "onDrink":[],
+          "offDrink":[],
+          "drinkCount":0,
+          "status":status,
+          "class":border,
+          "addShow":false,
+          "addRecipe":'',
+          'btnState':1
+        });
+        store.commit('recipeChanged', recipes);
+        this.hideModal(modalRef);
+      });
     },
     async setIngre(modalRef){
-      console.log('setIngre');
-      console.log(this.ingList.length,this.ingList); // cancel modal reset
-      // var updateIngre = httpsCallable(functions,'updateIngre');
-      // await updateIngre({docPath:'recipes/'+this.brandL, ingre:this.ingList}).then(result => {
-        // hideModal(modalRef);
-      // });
+      var updateIngre = httpsCallable(functions,'updateIngre');
+      await updateIngre({docPath:'recipes/'+this.brandL, ingre:this.ingList}).then(result => {
+        var header = store.getters.getRecipe.header,
+        y = 0;
+        for(var x=8; x<=27; x++){
+          header[x]= this.ingList[y];
+          y++;
+        }
+        store.commit('recipeHeader',header);
+        this.hideModal(modalRef);
+      });
     },
     async setCat(modalRef){
-      console.log('setCat');
-      // console.log(this.catList);
-      var cat = {};
-      var x = 0;
+      var cat = {},
+      rawState = [],
+      x = 0;
       for(x in this.catList){
         cat[this.catList[x].title] = this.catList[x].state
+        rawState.push(this.catList[x].state);
       }
-      console.log(cat);
-      // var manageCategory = httpsCallable(functions,'manageCategory');
-      // await manageCategory({docPath:'recipes/'+this.brandL, category:cat, status:3}).then(result => {
-        // hideModal(modalRef);
-      // });
+      var manageCategory = httpsCallable(functions,'manageCategory');
+      await manageCategory({docPath:'recipes/'+this.brandL, category:cat, status:3}).then(result => {
+        var recipes = store.getters.getRecipe.recipeVal;
+        for(x in recipes){
+          recipes[x].status = rawState[x];
+          recipes[x].class = (recipes[x].status) ? "border-left-success":"border-left-dark";
+          recipes[x].border = (recipes[x].status) ? "border-left-success":"border-left-dark";
+        }
+        store.commit('recipeChanged', recipes);
+        this.hideModal(modalRef);
+      });
     },
     async publish(modalRef){
-      console.log('publish');
-      // var publishRecipe = httpsCallable(functions,'publishRecipe');
-      // await publishRecipe({docPath:'recipes/'+this.brandL}).then(result => {
-        // hideModal(modalRef);
-      // });
+      var publishRecipe = httpsCallable(functions,'publishRecipe');
+      await publishRecipe({docPath:'recipes/'+this.brandL,brand:this.brandL}).then(result => {
+        this.hideModal(modalRef);
+      });
     }
   }
 }
 </script>
 
 <style scoped>
-
+.spcae{
+  white-space: pre-line;
+}
 </style>

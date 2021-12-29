@@ -33,11 +33,11 @@
     <b-row v-for="(item, index) in recipeVal" v-bind:key="index" v-show="skele[1]" class="w-100 no-gutters">
       <b-col cols="12" class="mt-3 container">
         <b-row>
-          <b-col :class="item.class" cols="8">
+          <b-col :class="item.class" cols="6">
             {{item.id}}
           </b-col>
-          <b-col cols="4" class="text-end">
-            {{item.onDrink.length}}/{{item.drinkCount}}
+          <b-col cols="6" class="text-end">
+            {{$t('recipe.subCountTitle')}}{{item.onDrink.length}}, {{item.drinkCount}} {{$t('recipe.subCountOn')}}
           </b-col>
         </b-row>
         <hr>
@@ -48,15 +48,15 @@
             <b-col cols="3" class="text-center">
               <b-button v-b-modal="'Switch'+title" variant="transparent"><font-awesome-icon fixed-width icon="exchange-alt"/></b-button>
               <!-- <Modal :id="'onSwitch'+index" /> -->
-              <b-modal :ref="'Switch'+title" :id="'Switch'+title" centered :title="title+' is on '+item.id" @hide="hideModal('Switch'+title)">
+              <b-modal :ref="'Switch'+title" :id="'Switch'+title" centered :title="title+$t('recipe.switch title')+item.id" @hide="hideModal('Switch'+title)">
                 <div >
-                  <a>change to: </a>
+                  <a>{{$t('recipe.switch msg')}}</a>
                   <b-form-select v-model="switchSel" :options="switchOpt(item.id)"></b-form-select>
                 </div>
                 <template #modal-footer>
                   <div class="w-100">
-                    <b-button variant="primary" class="float-right" @click="switchCat(title,item.id)">Switch</b-button>
-                    <b-button class="float-right" @click="hideModal('Switch'+title)">cancel </b-button>
+                    <b-button variant="primary" class="float-right" @click="switchCat(title,item)">{{$t('recipe.switch')}}</b-button>
+                    <b-button class="float-right" @click="hideModal('Switch'+title)">{{$t('recipe.cancel')}}</b-button>
                   </div>
                 </template>
               </b-modal>
@@ -66,20 +66,20 @@
             </b-col>
             <b-col cols="3" class="text-center text-danger">
               <b-button v-b-modal="'del'+title" variant="transparent"><font-awesome-icon fixed-width icon="trash-alt"/></b-button>
-              <b-modal :ref="'del'+title" :id="'del'+title" centered title="Delete recipe" @hide="hideModal('del'+title)">
+              <b-modal :ref="'del'+title" :id="'del'+title" centered :title="$t('recipe.delete title')" @hide="hideModal('del'+title)">
                 <div >
-                  <a>Do you want to delete {{title}}? </a>
+                  <a>{{$t('recipe.delete msg')}}: {{title}}</a>
                 </div>
                 <template #modal-footer>
                   <div class="w-100">
-                    <b-button variant="outline-danger" class="float-right" @click="delRecipe(title,item.id)">Delete</b-button>
-                    <b-button class="float-right" @click="hideModal('del'+title)">cancel </b-button>
+                    <b-button variant="outline-danger" class="float-right" @click="delRecipe(title,item)">{{$t('recipe.delete')}}</b-button>
+                    <b-button class="float-right" @click="hideModal('del'+title)">{{$t('recipe.cancel')}}</b-button>
                   </div>
                 </template>
               </b-modal>
             </b-col>
             <b-col cols="12" class="mt-3 text-center">
-              <b-button @click="$router.push('/recipe/'+item.id+'-'+title)" variant="outline-primary">Edit</b-button>
+              <b-button @click="$router.push('/recipe/'+item.id+'-'+title)" variant="outline-primary">{{$t('recipe.edit')}}</b-button>
             </b-col>
           </b-row>
         </b-card>
@@ -89,15 +89,15 @@
           <b-row>
             <b-col cols="3" class="text-center">
               <b-button v-b-modal="'Switch'+title" variant="transparent"><font-awesome-icon fixed-width icon="exchange-alt"/></b-button>
-              <b-modal :ref="'Switch'+title" :id="'Switch'+title" centered :title="title+' is on '+item.id" @hide="hideModal('Switch'+title)">
+              <b-modal :ref="'Switch'+title" :id="'Switch'+title" centered :title="title+$t('recipe.switch title')+item.id" @hide="hideModal('Switch'+title)">
                 <div >
-                  <a>change to: </a>
+                  <a>{{$t('recipe.switch msg')}}</a>
                   <b-form-select v-model="switchSel" :options="switchOpt(item.id)"></b-form-select>
                 </div>
                 <template #modal-footer>
                   <div class="w-100">
-                    <b-button variant="primary" class="float-right" @click="switchCat(title,item.id)">Switch</b-button>
-                    <b-button class="float-right" @click="hideModal('Switch'+title)">cancel </b-button>
+                    <b-button variant="primary" class="float-right" @click="switchCat(title,item)">{{$t('recipe.switch')}}</b-button>
+                    <b-button class="float-right" @click="hideModal('Switch'+title)">{{$t('recipe.cancel')}}</b-button>
                   </div>
                 </template>
               </b-modal>
@@ -107,20 +107,20 @@
             </b-col>
             <b-col cols="3" class="text-center">
               <b-button v-b-modal="'del'+title" variant="transparent"><font-awesome-icon fixed-width icon="trash-alt"/></b-button>
-              <b-modal :ref="'del'+title" :id="'del'+title" centered title="Delete recipe" @hide="hideModal('del'+title)">
+              <b-modal :ref="'del'+title" :id="'del'+title" centered :title="$t('recipe.delete title')" @hide="hideModal('del'+title)">
                 <div >
-                  <a>Do you want to delete {{title}}? </a>
+                  <a>{{$t('recipe.delete msg')}} - {{title}}</a>
                 </div>
                 <template #modal-footer>
                   <div class="w-100">
-                    <b-button variant="outline-danger" class="float-right" @click="delRecipe(title,item.id)">Delete</b-button>
-                    <b-button class="float-right" @click="hideModal('del'+title)">cancel </b-button>
+                    <b-button variant="outline-danger" class="float-right" @click="delRecipe(title,item)">{{$t('recipe.delete')}}</b-button>
+                    <b-button class="float-right" @click="hideModal('del'+title)">{{$t('recipe.cancel')}}</b-button>
                   </div>
                 </template>
               </b-modal>
             </b-col>
             <b-col cols="12" class="mt-3 text-center">
-              <b-button @click="$router.push('/recipe/'+item.id+'-'+title)">Edit</b-button>
+              <b-button @click="$router.push('/recipe/'+item.id+'-'+title)">{{$t('recipe.edit')}}</b-button>
             </b-col>
           </b-row>
         </b-card>
@@ -130,11 +130,11 @@
           <b-row>
             <b-col cols="12" class="mt-4 mb-4 text-center">
               <div v-if="item.addShow">
-                <b-input v-model="item.addRecipe" @change="btnStatus(item)" placeholder="Enter drink name"></b-input>
-                <b-button class="mt-1" variant="outline-dark" @click="showAdd(item)">Cancel</b-button>
-                <b-button class="ml-1 mt-1" variant="success" @click="addRecipe(item)" :disabled='item.btnState == 1'>Submit</b-button>
+                <b-input v-model="item.addRecipe" @change="btnStatus(item)" :placeholder="$t('recipe.inputdrink')"></b-input>
+                <b-button class="mt-1" variant="outline-dark" @click="showAdd(item)">{{$t('recipe.cancel')}}</b-button>
+                <b-button class="ml-1 mt-1" variant="success" @click="addRecipe(item)" :disabled='item.btnState == 1'>{{$t('recipe.submit')}}</b-button>
               </div>
-              <b-button v-else variant="outline-success" @click="addInput(item)"><font-awesome-icon fixed-width icon="plus"/>Add</b-button>
+              <b-button v-else variant="outline-success" @click="addInput(item)"><font-awesome-icon fixed-width icon="plus"/>{{$t('recipe.add')}}</b-button>
             </b-col>
           </b-row>
         </b-card>
@@ -143,9 +143,9 @@
 
     <div class="nodata" v-show="showNodata">
       <div class="text-center w-100">
-        <h3 class="font-weight-bold" dlang="recipe-no data">No data</h3>
-        <p dlang="recipe-step1">Clcik <b>"+ ADD"</b> button on the top right corner</p>
-        <p dlang="recipe-step2">Add a category name then add the related product</p>
+        <h3 class="font-weight-bold" dlang="recipe-no data">{{$t('recipe.no data')}}</h3>
+        <p dlang="recipe-step1">{{$t('recipe.step1')}}</p>
+        <p dlang="recipe-step2">{{$t('recipe.step2')}}</p>
       </div>
     </div>
   </b-card-group>
@@ -154,12 +154,9 @@
 <script>
 import { functions, httpsCallable, db } from "../../fire";
 import store from '../../store/store'
-// import Modal from '../recipe/Modal.vue'
+
 export default {
   name:'cards',
-  // components:{
-  //   Modal
-  // },
   data(){
     return{
       brandL: store.getters.getLocation,
@@ -183,7 +180,7 @@ export default {
     },
     'showNodata': function(){
       return this.nodata
-    },
+    }
   },
   methods:{
     hideModal(id){
@@ -192,32 +189,31 @@ export default {
     },
     switchOpt(val){
       var x = 0,
-      cat = [{value:'0',text:'Select a category',  disabled: true}];
+      cat = [{value:'0',text:this.$i18n.t('recipe.selectDefault'),  disabled: true}];
       for(x in this.recipeVal){
-        if(val !== this.recipeVal[x].id){
-          cat.push({value:this.recipeVal[x].id,text:this.recipeVal[x].id})
-        }
+        if(val !== this.recipeVal[x].id){cat.push({value:this.recipeVal[x].id,text:this.recipeVal[x].id})}
       }
       return cat
     },
-    async switchCat(tea,current){
+    async switchCat(tea,item){
       var val = this.switchSel;
-      console.log(this.brandL,tea,current,val);
-      // var swapRecipe = httpsCallable(functions,'swapRecipe');
-      // await swapRecipe({docPath:'recipes/'+this.brandL, tea:tea, current:current, val:val}).then(async result => {
-      //   this.hideModal('Switch'+tea);
-      // });
-
+      console.log(tea,item.id,val);
+      var swapRecipe = httpsCallable(functions,'swapRecipe');
+      await swapRecipe({docPath:'recipes/'+this.brandL, tea:tea, current:item.id, val:val}).then(result => {
+        this.pushRecipe(val,tea);
+        this.removeRecipe(tea,item);
+        this.hideModal('Switch'+tea);
+      });
     },
-    async delRecipe(tea,current){
-      console.log(tea,current);
-      // var manageCategory = httpsCallable(functions,'manageCategory');
-      // await manageCategory({docPath:'recipes/'+this.brandL, category:current,drink:tea, status:2}).then(async result => {
-      //   var removeRecipe = httpsCallable(functions,'removeRecipe');
-      //   await removeRecipe({docPath:'recipes/'+this.brandL,drink:tea}).then(result => {
-      //     this.hideModal('del'+tea);
-      //   });
-      // });
+    async delRecipe(tea,item){
+      var manageCategory = httpsCallable(functions,'manageCategory');
+      await manageCategory({docPath:'recipes/'+this.brandL, category:item.id,drink:tea, status:2}).then(result => {
+        var removeRecipe = httpsCallable(functions,'removeRecipe');
+        removeRecipe({docPath:'recipes/'+this.brandL,drink:tea}).then(result => {
+          this.removeRecipe(tea,item);
+          this.hideModal('del'+tea);
+        });
+      });
     },
     async addInput(item){      
       item.addShow = true;
@@ -228,18 +224,47 @@ export default {
       item.btnState = 1;
     },
     async addRecipe(item){
-      // var manageCategory = httpsCallable(functions,'manageCategory');
-      // await manageCategory({docPath:'recipes/'+this.brandL, category:item,drink:'', status:1});
-      // var addRecipe = httpsCallable(functions,'addRecipe'); //status=0
-      // await addRecipe({docPath:'recipes/'+brandL,drink:'', status:0});
-      item.addShow = false;
-      item.addRecipe = '';
-      item.btnState = 1;
+      var cat = item.id,
+      tea = item.addRecipe;
+      var manageCategory = httpsCallable(functions,'manageCategory');
+      await manageCategory({docPath:'recipes/'+this.brandL, category:cat,drink:item.addRecipe, status:1}).then(()=>{
+        var addRecipe = httpsCallable(functions,'addRecipe'); //status=0
+        addRecipe({docPath:'recipes/'+this.brandL,drink:tea, status:0}).then(()=>{
+          this.pushRecipe(cat,tea);
+          item.addShow = false;
+          item.addRecipe = '';
+          item.btnState = 1;
+        });
+      });
     },
     async btnStatus(item){
-      // console.log(item.addRecipe.length, item.addRecipe);
       if(item.addRecipe.length>0){item.btnState = 0}
       else{item.btnState = 1}
+    },
+    pushRecipe(cat,tea){
+      var x = 0;
+      for(x in this.recipeVal){
+        if(this.recipeVal[x].id == cat){
+          this.recipeVal[x].drinkCount = this.recipeVal[x].drinkCount + 1;
+          if(this.recipeVal[x].onDrink.length<10){this.recipeVal[x].onDrink.push(tea)}
+          else{this.recipeVal[x].offDrink.push(tea)}
+        }
+      }
+    },
+    removeRecipe(tea,item){
+      var x = 0;
+      for(x in this.recipeVal){
+        if(this.recipeVal[x].id == item.id){
+          if(this.recipeVal[x].onDrink.includes(tea)){this.recipeVal[x].onDrink = this.removeEle(this.recipeVal[x].onDrink,tea)}
+          else{this.recipeVal[x].offDrink = this.removeEle(this.recipeVal[x].offDrink,tea)}
+          this.recipeVal[x].drinkCount = this.recipeVal[x].drinkCount - 1;
+        }
+      }
+    },
+    removeEle(arr,val){
+      var index = arr.indexOf(val);
+      if (index > -1) {arr.splice(index, 1)}
+      return arr;
     }
   }
 }

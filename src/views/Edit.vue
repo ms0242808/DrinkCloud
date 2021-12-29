@@ -3,13 +3,13 @@
 		<b-container class="mt-3 noMaxWidth">
 			<b-row>
         <b-col class="no-putters" cols="3">
-					<b-button @click="$router.push('/recipe')">Back</b-button>
+					<b-button @click="$router.push('/recipe')">{{$t('recipe.back')}}</b-button>
 				</b-col>
 				<b-col class="no-putters text-center m-auto" cols="6">
 					<h3 class="m-0">{{recipe}}</h3>
 				</b-col>
         <b-col class="no-putters text-end" cols="3">
-					<b-button variant="outline-success" @click="upRecipe()">Update</b-button>
+					<b-button variant="outline-success" @click="upRecipe()">{{$t('recipe.update')}}</b-button>
 				</b-col>
 
 				<!-- <b-col class="no-putters" cols="4"> -->
@@ -31,20 +31,20 @@
 		</b-container>
 		<div class="mt-3">
       <b-tabs content-class="mt-3" pills>
-        <b-tab  v-for="(item,index) in recipeVal" :title="item.id" :key="index">
+        <b-tab  v-for="(item,index) in recipeVal" :title="$t('recipe.'+item.id)" :key="index">
           <b-form-select v-model="item.supplyCode" :options="iceOpt" class="locationSelect d-inline-block"></b-form-select>
           <b-form-checkbox switch class="mr-n2" :id="'activate'+index" v-model="item.shake">
             <span class="sr-only">Switch for following text input</span>
-            <label class='form-check-label' for='activate'>Shake <b>{{ item.shake }}</b></label>
+            <label class='form-check-label' for='activate'>{{$t('recipe.shake')}}</label>
           </b-form-checkbox>
           <Table :val="item.val" :sticky-header="stickyHeader" :fields="fields"/>
         </b-tab>
         <template #tabs-end>
           <div>
             <b-button v-b-modal.modal-1 variant="transparent"><font-awesome-icon fixed-width icon="cog"/></b-button>
-            <b-modal ref="setModal" id="modal-1" centered title="Drink settings">
+            <b-modal ref="setModal" id="modal-1" centered :title="$t('recipe.setting')">
               <div v-for="(item,index) in settingList" :key="index">
-                <p class="mt-1" >{{item.id}}</p>
+                <p class="mt-1" >{{$t('recipe.'+item.id)}}</p>
                 <hr>
                 <div class="col-12 d-flex flex-justify-between" v-for="(v,i,n) in item.opt" :key="n">
                   <!-- mt-1 form-check custom-control custom-switch -->
@@ -57,15 +57,15 @@
               </div>
               <template #modal-footer>
                 <div class="w-100">
-                  <b-button variant="primary" class="float-right" @click="upSetting()">Save</b-button>
-                  <b-button class="float-right" @click="hideModal">cancel</b-button>
+                  <b-button variant="primary" class="float-right" @click="upSetting()">{{$t('recipe.save')}}</b-button>
+                  <b-button class="float-right" @click="hideModal">{{$t('recipe.cancel')}}</b-button>
                 </div>
               </template>
             </b-modal>
           </div>
           <b-form-checkbox switch class="mr-n2" v-model="activate">
             <span class="sr-only">Switch for following text input</span>
-            <label class='form-check-label' for='activate'>Acitvation <b></b></label>
+            <label class='form-check-label' for='activate'>{{$t('recipe.activate')}} <b></b></label>
           </b-form-checkbox>
         </template>
       </b-tabs>
@@ -126,11 +126,11 @@ export default {
         supplyCode: ''
       }],
       iceOpt:[
-        { value: '0', text: 'No supply' },
-        { value: '1', text: 'Origin' },
-        { value: '2', text: 'Cold water' },
-        { value: '3', text: 'Hot water'},
-        { value: '4', text: 'Milk'}
+        { value: '0', text: this.$i18n.t('recipe.nothing') },
+        { value: '1', text: this.$i18n.t('recipe.original') },
+        { value: '2', text: this.$i18n.t('recipe.cold') },
+        { value: '3', text: this.$i18n.t('recipe.hot') },
+        { value: '4', text: this.$i18n.t('recipe.milk') }
       ],
       selected: '0',
       activate: false,
@@ -139,17 +139,17 @@ export default {
         id:'Ice',
         val:[],
         status:[],
-        opt:['Nomral Ice','Less Ice','Ice Free','Warm','Hot']
+        opt:[this.$i18n.t('recipe.Normal Ice'),this.$i18n.t('recipe.Less Ice'),this.$i18n.t('recipe.Ice Free'),this.$i18n.t('recipe.Warm'),this.$i18n.t('recipe.Hot')]
       },{
         id:'Topping',
         val:[],
         status:[],
-        opt:['0','1','2','3']
+        opt:[this.$i18n.t('recipe.Topping0'),this.$i18n.t('recipe.Topping1'),this.$i18n.t('recipe.Topping2'),this.$i18n.t('recipe.Topping3')]
       },{
         id:'Size',
         val:[],
         status:[],
-        opt:['Large','Regular']
+        opt:[this.$i18n.t('recipe.L'),this.$i18n.t('recipe.M')]
       }]
     }
   },
@@ -262,10 +262,12 @@ export default {
     console.log(this.recipeVal);
     for(var zx=0; zx<=31; zx++){
       var nx = store.getters.getRecipe.header[zx];
-      if(zx==0){this.fields.push({"key":nx,'stickyColumn': true})}
+      if(zx==0){this.fields.push({"key":nx,'stickyColumn': true,label:this.$i18n.t('recipe.'+nx)})}
       else if(zx==1){this.fields.push({"key":nx,'thClass': 'd-none', 'tdClass': 'd-none'})}
-      else if(zx==2){this.fields.push({"key":nx,'stickyColumn': true,'tdClass':'l-54','thClass':'l-54'})}
-      // else if(zx==30 || zx==31){this.fields.push({"key":nx,'thClass': 'd-none', 'tdClass': 'd-none'})}
+      else if(zx==2){this.fields.push({"key":nx,'stickyColumn': true,'tdClass':'l-54','thClass':'l-54',label:this.$i18n.t('recipe.'+nx)})}
+      else if(zx==3 || zx <=7 || zx == 28 || zx == 29){this.fields.push({"key":nx,label:this.$i18n.t('recipe.'+nx)})}
+      // else if(zx>=3 || zx <=7){this.fields.push({label:this.$i18n.t('recipe.'+nx)})}
+      else if(zx==30 || zx==31){this.fields.push({"key":nx,'thClass': 'd-none', 'tdClass': 'd-none'})}
       else{this.fields.push({"key":nx});}
     }
     if(store.getters.getRecipe.onDrink.includes(this.recipe)){

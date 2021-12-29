@@ -7,6 +7,7 @@
       </template> -->
       <template v-slot:cell()="{ item, field: { key }}">
         <b-form-input v-model="item[key]" :value="item[key]" class="editInput"  v-if="key !== 'Size' && key !== 'Topping'"/>
+        <label v-else-if="key == 'Size'">{{$t('recipe.'+item[key])}}</label>
         <label v-else>{{item[key]}}</label>
       </template>
     </b-table>

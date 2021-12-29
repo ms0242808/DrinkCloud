@@ -1,7 +1,7 @@
 <template>
   <div class="wrapper">
 		<b-container class="mt-2 noMaxWidth">
-			<RHeader :showSke="showSke" :showVal="showVal" :totalCat="totalCat" :totalDri="totalDri" :catList="catList" :ingList="ingList"/>
+			<RHeader :showSke="showSke" :showVal="showVal" :totalCat="allCount[0]" :totalDri="allCount[1]" :catList="catList" :ingList="ingList"/>
 		</b-container>
 		<div class="mt-3">
 			<Cards :showSke="showSke" :showVal="showVal" :recipes="recipes" :nodata="nodata"/>
@@ -28,19 +28,35 @@
 				showVal: false,
 				recipes: store.getters.getRecipe.recipeVal,
 				brandL: '',
-				nodata: false,
-				totalCat: 0,
-				totalDri: 0,
-				catList: [],
-				ingList: []
+				nodata: false
 			}
 		},
 		computed:{
 			...mapGetters([
 				'getLocation'
-			])
+			]),
+			allCount:function(){
+				var recipes = store.getters.getRecipe.recipeVal,
+				countCat = recipes.length,
+				countDrink = 0,
+				x = 0;
+				for(x in recipes){countDrink += recipes[x].onDrink.length + recipes[x].offDrink.length;}
+				return [countCat,countDrink]
+			},
+			catList:function(){
+				var recipes = store.getters.getRecipe.recipeVal,
+				cat = [],
+				x = 0;
+				for(x in recipes){cat.push({title:recipes[x].id,state:recipes[x].status,og:recipes[x].status})}
+				return cat
+			},
+			ingList:function(){
+				var header = store.getters.getRecipe.header;
+				header = header.slice(8,-4);
+				return header
+			}
 		},
-		watch: {
+		watch:{
 			getLocation(val){
 				this.brandL = val;
 				this.loadRecipe();
@@ -66,13 +82,7 @@
 				offList = [],
 				c = '',
 				getCat = await getCategory(this.brandL);
-				var catTitle = getCat[0],
-				catOn = getCat[1],
-				catOff = getCat[2],
-				[x,y] = [0,0];
-				for(x in catOn){this.catList.push({title:catOn[x],state:true,og:true})}
-				for(y in catOff){this.catList.push({title:catOff[y],state:false,og:false})}
-				this.ingList = header.slice(8,-4);
+				var catTitle = getCat[0];
 				for(c in catTitle){
 					var drinkName = await getCategoryDrink(catTitle[c],this.brandL),
 					onDrink = drinkName[0],
@@ -97,8 +107,6 @@
 				store.commit('recipeChanged', recipes);
 				store.commit('onDrinkUpdate', onList);
 				store.commit('offDrinkUpdate', offList);
-				this.totalCat = catTitle.length
-				this.totalDri = onList.length + offList.length;
 				if(header.length === 0){
 					this.nodata = true;
 					this.setLoadingState(false,false);
