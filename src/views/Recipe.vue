@@ -72,11 +72,8 @@
 				this.setLoadingState(true,false);
 				const getRecipeHeader = httpsCallable(functions, 'getRecipeHeader');
 				var header = [];
-				await getRecipeHeader({docPath:'recipes/'+this.brandL}).then(result => {
-					header = result.data.header.slice(1,-1);// remove first and last item
-				});
+				await getRecipeHeader({docPath:'recipes/'+this.brandL}).then(result => {header = result.data.header.slice(1,-1)})
 				store.commit('recipeHeader',header);
-				console.log(1, header);
 				var recipes = [],
 				onList = [],
 				offList = [],
@@ -125,7 +122,6 @@
 				this.brandL = this.getLocation;
 				this.loadRecipe();
 			} 
-			
 		}
   }
 
@@ -141,7 +137,7 @@
 		});
 		return [catName,catOn,catOff];
 	}
-
+	
   async function getCategoryDrink(cat,brandL){
 		const getCategoryDrink = httpsCallable(functions, 'getCategoryDrink');
 		var [onDrink,offDrink,status] = [[],[],''];

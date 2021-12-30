@@ -2,15 +2,13 @@
   <b-modal :ref="modalRef" :id="modalRef" :title="$t('recipe.'+title)" @hide="hideModal(modalRef)" centered> 
     <div>
       <a v-if="modalRef!=='setCat' && modalRef!=='setIngre'" class="space">{{$t('recipe.'+content)}}</a>
-      <b-input v-if="input" v-model="inputVal" :placeholder="$t('recipe.cat label')"></b-input>
+      <b-input v-if="input" v-model="inputVal" :placeholder="$t('recipe.cat label')" class="mt-2"></b-input>
       <b-form-select v-else-if="select" v-model="switchSel"></b-form-select>
       <template v-else-if="vCat">
         <div v-for="(item,index) in catList" :key="index">
           <div class="col-12 d-flex flex-justify-between">
             {{item.title}}
-            
             <b-form-checkbox switch class="mr-n2" v-model="item.state" @change="catState(item.state,item.og)">
-              <span class="sr-only">Switch for following text input</span>
               <label class='form-check-label' :for="item.state"></label>
             </b-form-checkbox>
           </div>
@@ -35,8 +33,8 @@
     </div>
     <template #modal-footer>
       <div class="w-100">
-        <b-button variant="success" class="float-right ml-1" @click="useFunction(fnName,modalRef)" :disabled="btnState == 1 && btnText !== 'Publish' ">{{$t('recipe.'+btnText)}}</b-button>
-        <b-button variant="outline-dark" class="float-right" @click="hideModal(modalRef)">{{$t('recipe.cancel')}}</b-button>
+        <b-button variant="success" class="float-right ml-1 text-14" @click="useFunction(fnName,modalRef)" :disabled="btnState == 1 && btnText !== 'Publish' ">{{$t('recipe.'+btnText)}}</b-button>
+        <b-button variant="outline-dark text-14" class="float-right" @click="hideModal(modalRef)">{{$t('recipe.cancel')}}</b-button>
       </div>
     </template>
   </b-modal>
@@ -164,5 +162,11 @@ export default {
 <style scoped>
 .spcae{
   white-space: pre-line;
+}
+a{
+  color:initial;
+}
+.text-14{
+  font-size: 14px;
 }
 </style>

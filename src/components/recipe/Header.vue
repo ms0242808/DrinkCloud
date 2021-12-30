@@ -1,7 +1,7 @@
 <template>
   <div>
     <b-row>
-      <b-col class="no-putters" cols="6">
+      <b-col class="no-putters container" cols="6">
         <h3>{{$t('recipe.title')}}</h3>
       </b-col>
       <b-col class="no-putters" cols="6">
@@ -10,15 +10,15 @@
           <b-skeleton width="80px" height="30px"></b-skeleton>
         </b-button-group>
         <div class="float-right dflex" v-show="skele[1]">
-          <b-button v-b-modal.addCat class="ml-1 mt-1" variant="outline-success" @click="showModal('addCat','cat title','cat title','add')">{{$t('recipe.add')}}</b-button>
-          <b-button v-b-modal.publish class="ml-1 mt-1" variant="outline-primary" @click="showModal('publish','publish','publish msg','publish')">{{$t('recipe.publish')}}</b-button>
+          <b-button v-b-modal.addCat class="ml-1 mt-1 f-12" variant="outline-success" @click="showModal('addCat','cat title','cat title','add')"><font-awesome-icon fixed-width icon="plus"/> {{$t('recipe.add')}}</b-button>
+          <b-button v-b-modal.publish class="ml-1 mt-1 f-12" variant="outline-primary" @click="showModal('publish','publish','publish msg','publish')"><font-awesome-icon fixed-width icon="upload"/> {{$t('recipe.publish')}}</b-button>
         </div>
       </b-col>
-      <b-col class="no-putters" cols="6">
+      <b-col class="no-putters container" cols="6">
         <b-skeleton width="70%" height="30px" v-show="skele[0]"></b-skeleton>
-        <a v-show="skele[1]">{{$t('recipe.totalCat')}} {{counts[0]}},<br /> {{$t('recipe.totalDrinks')}} {{counts[1]}}</a>
+        <a v-show="skele[1]">{{$t('recipe.totalCat')}} {{counts[0]}}<br /> {{$t('recipe.totalDrinks')}} {{counts[1]}}</a>
       </b-col>
-      <b-col class="no-putters" cols="6">
+      <b-col class="no-putters container" cols="6">
         <b-button-group class="float-right" v-show="skele[0]">
           <b-skeleton width="60px" height="30px"></b-skeleton>
           <b-skeleton width="60px" height="30px"></b-skeleton>
@@ -104,5 +104,8 @@ export default {
 }
 .f-12{
   font-size: 12px;
+}
+a {
+  color:initial !important;
 }
 </style>
