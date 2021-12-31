@@ -1,6 +1,6 @@
 <template>
   <b-card-group deck>
-    <div :class="item.class" v-for="(item, index) in statsChart" v-bind:key="index" >
+    <div :class="item.class" class="no-putters" v-for="(item, index) in statsChart" v-bind:key="index" >
       <b-card v-show="skele[0]">
         <b-card-title>
           <b-skeleton width="50%"/>
@@ -9,7 +9,7 @@
           <b-skeleton height="150px" />
         </b-card-text>
       </b-card>
-      <b-card bg-variant="light" :header="$t('dashboard.'+item.title)" :style="chartStyle(index)" v-show="skele[1]">
+      <b-card bg-variant="light" :header="$t('dashboard.'+item.title)" :style="chartStyle(index)" v-show="skele[1]" class="text-dark text-bold mt-2">
         <b-card-text>
           <apexchart :height="item.height" width="100%" :type="item.type" :options="item.options" :series="item.series"></apexchart>
         </b-card-text>
@@ -160,24 +160,19 @@ export default {
 	.card-deck{
 		display: flex;
     flex-flow: row wrap;
-    /* margin-right: -15px; */
-    /* margin-left: -15px; */
 	}
 	.card{
 		max-width: 100%;
 	}
 }
-
 @media (max-width: 576px){	
 	.card{
 		margin: 10px 0 !important;
 	}
 }
-
 .col-xl-3{
 	flex: 0 0 25%;
 }
-
 .card{
 	position: relative;
 	display: flex;
@@ -190,7 +185,6 @@ export default {
 	border-radius: 0.35rem;
 	box-shadow: 0 0.15rem 1.75rem 0 rgba(58, 59, 69, 0.15) !important;
 }
-
 .card-title{
 	font-size: .7rem !important;
 }

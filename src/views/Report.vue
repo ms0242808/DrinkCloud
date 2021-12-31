@@ -4,45 +4,22 @@
       {{$t('report.sent')}}
     </b-alert>
     <h3>{{$t('report.title')}}</h3>
-    <a>{{$t('report.msg')}}</a>
+    <a class="text-dark">{{$t('report.msg')}}</a>
     <b-form ref="form" @submit="onSubmit" @reset="onReset" class="mt-2">
       <b-form-input id="input-brand" v-model="form.brand" name="FormCompany" hidden></b-form-input>
-      <b-form-group id="input-group-1" :label="$t('report.email')" label-for="input-1">
-        <b-form-input
-          id="input-email"
-          v-model="form.email"
-          type="email"
-          name="FormEmail"
-          required
-        ></b-form-input>
+      <b-form-group id="input-group-1" :label="$t('report.email')" label-for="input-1" class="text-dark">
+        <b-form-input id="input-email" v-model="form.email" type="email" name="FormEmail" required ></b-form-input>
       </b-form-group>
-      <b-form-group id="catSelect" :label="$t('report.category')" label-for="catSelect">
-        <b-form-select
-          id="input-cat"
-          v-model="form.cat"
-          :options="getCatOpt"
-          name="FormService"
-          required
-        ></b-form-select>
+      <b-form-group id="catSelect" :label="$t('report.category')" label-for="catSelect" class="text-dark">
+        <b-form-select id="input-cat" v-model="form.cat" :options="getCatOpt" name="FormService" required></b-form-select>
       </b-form-group>
-      <b-form-group id="title" :label="$t('report.mail title')" label-for="input-title">
-        <b-form-input
-          id="input-title"
-          v-model="form.title"
-          name="FormTitle"
-          required
-        ></b-form-input>
+      <b-form-group id="title" :label="$t('report.mail title')" label-for="input-title" class="text-dark">
+        <b-form-input id="input-title" v-model="form.title" name="FormTitle" required></b-form-input>
       </b-form-group>
-      <b-form-group :label="$t('report.message')">
-        <b-form-textarea
-          id="textarea"
-          v-model="form.text"
-          name="FormMessage"
-          rows="3"
-          max-rows="6"
-        ></b-form-textarea>
+      <b-form-group :label="$t('report.message')" class="text-dark">
+        <b-form-textarea id="textarea" v-model="form.text" name="FormMessage" rows="3" max-rows="6" required></b-form-textarea>
       </b-form-group>
-      <b-button type="submit" variant="primary"><font-awesome-icon fixed-width icon="paper-plane" v-if="iconShow"/> {{btnText}} <b-spinner small v-if="btnClicked['b']"></b-spinner></b-button>
+      <b-button type="submit" variant="outline-success"><font-awesome-icon fixed-width icon="paper-plane" v-if="iconShow"/> {{$t('report.'+btnText)}} <b-spinner small v-if="btnClicked['b']"></b-spinner></b-button>
     </b-form>
   </div>
 </template>
@@ -58,7 +35,7 @@ export default {
   data(){
     return {
       iconShow: true,
-      btnText: this.$i18n.t('report.send'),
+      btnText: 'send',
       btnClicked : [],
       dismissSecs: 5,
       dismissCountDown: 0,
@@ -119,7 +96,7 @@ export default {
       this.form.title = '';
       this.form.text = '';
       this.iconShow = true;
-      this.btnText = this.$i18n.t('report.send');
+      this.btnText = 'send';
       Vue.set(this.btnClicked,'b',0);
     }
   }

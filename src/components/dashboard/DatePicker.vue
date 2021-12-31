@@ -9,15 +9,15 @@
   @update='update'>
     <template #input="picker" :id="picker" style="min-width: 350px;">
       <font-awesome-icon fixed-width icon="calendar"/>
-				<a v-if="customRange"> {{$t('dashboard.'+dateRange.label)}} </a>
-				<a v-else>{{dateRange.label}}</a>
+			<a v-if="customRange"> {{dateRange.label}} </a>
+			<a v-else>{{$t('dashboard.'+dateRange.label)}} </a>
       <font-awesome-icon fixed-width icon="caret-down"/>
     </template>
     <template #ranges="ranges">
       <div class="ranges">
         <ul class="labels">
           <li v-for="(range, name, index) in ranges.ranges" :key="name" @click="ranges.clickRange(range); setActive(index)" :class="{ 'active': activeIndex === index }">
-            <b>{{ $t('dashboard.'+name) }}</b>
+            <b>{{$t('dashboard.'+name)}}</b>
           </li>
         </ul>
       </div>
@@ -80,6 +80,7 @@
 			update(date){
 				var start = date.startDate.toLocaleDateString(),
 				end = date.endDate.toLocaleDateString();
+				this.customRange = false;
 				if(start == this.ranges['Today'][0].toLocaleDateString() && end == this.ranges['Today'][1].toLocaleDateString()){this.dateRange.label = "Today"}
 				else if(start == this.ranges['Yesterday'][0].toLocaleDateString() && end == this.ranges['Yesterday'][1].toLocaleDateString()){this.dateRange.label = "Yesterday"}
 				else if(start == this.ranges['This Week'][0].toLocaleDateString() && end == this.ranges['This Week'][1].toLocaleDateString()){this.dateRange.label = "This Week"}
@@ -90,7 +91,6 @@
 					this.customRange = true;
 					this.dateRange.label = start + ' - ' + end;
 				}
-				this.customRange = false;
 				var x = date.startDate.toISOString().split('T')[0],
 				y = date.endDate.toISOString().split('T')[0];
 				this.rangeVal = [x.replace(/-/g,''), y.replace(/-/g,'')];
@@ -107,11 +107,9 @@
 	display: flex;
 	flex-wrap: wrap;
 }
-
 .vue-daterange-picker{
 	float: right !important;
 }
-
 .daterangepicker .ranges li{
 	width: 100%;
 }

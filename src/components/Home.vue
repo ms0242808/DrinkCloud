@@ -21,7 +21,7 @@
             <footer class="sticky-footer">
               <div class="mx-auto">
                 <div class="copyright text-center text-dark">
-                  <span>Copyright &copy; DRINKTEC 2021</span>
+                  <small>Copyright &copy; DRINKTEC 2022</small>
                 </div>
               </div>
             </footer>
@@ -33,8 +33,8 @@
 </template>
 
 <script>
-import HeaderItems from '@/components//HeaderItems.vue'
-import SidebarItems from '@/components//Sidebar.vue'
+import HeaderItems from '@/components/HeaderItems.vue'
+import SidebarItems from '@/components/Sidebar.vue'
 
 export default {
   name: 'Home',
@@ -80,9 +80,6 @@ export default {
 </script>
 
 <style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-}
 .title {
   margin-top: 15px;
 }

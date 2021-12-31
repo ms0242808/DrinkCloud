@@ -1,6 +1,6 @@
 <template>
   <b-card-group deck>
-    <div class="col-xl-3" v-for="(item, index) in statsCard" v-bind:key="index">
+    <div class="col-xl-3 no-putters" v-for="(item, index) in statsCard" v-bind:key="index">
       <b-card class="mb-2" v-show="skele[0]">
         <b-row class="align-items-center">
           <b-col class="col-auto">
@@ -12,17 +12,17 @@
           </b-col>
         </b-row>
       </b-card>
-      <b-card  class="mb-2" :class="item.border" :style="cardStyle(index)" v-show="skele[1]">
+      <b-card class="mb-2" :class="item.border" :style="cardStyle(index)" v-show="skele[1]">
         <b-row class="align-items-center">
           <b-col class="col-auto">
-            <b-icon :icon="item.icon" :class="item.color" font-scale="1.5"></b-icon>
+            <b-icon :icon="item.icon" :class="item.color" font-scale="2"></b-icon>
           </b-col>
           <b-col class="col">
             <b-card-title :title="$t('dashboard.'+item.title)"></b-card-title>
-            <b-card-text v-if="item.value == 'No data'">
+            <b-card-text v-if="item.value == 'No data'" class="text-dark">
               {{$t('dashboard.'+item.value)}}
             </b-card-text>
-            <b-card-text v-else>
+            <b-card-text v-else  class="text-dark">
               {{item.value}}
             </b-card-text>
           </b-col>
@@ -93,24 +93,19 @@ export default {
 	.card-deck{
 		display: flex;
     flex-flow: row wrap;
-    /* margin-right: -15px; */
-    /* margin-left: -15px; */
 	}
 	.card{
 		max-width: 100%;
 	}
 }
-
 @media (max-width: 576px){	
 	.card{
 		margin: 10px 0 !important;
 	}
 }
-
 .fourCards{
 	width: fit-content;
 }
-
 .card{
 	position: relative;
 	display: flex;
@@ -123,7 +118,6 @@ export default {
 	border-radius: 0.35rem;
 	box-shadow: 0 0.15rem 1.75rem 0 rgba(58, 59, 69, 0.15) !important;
 }
-
 .card-title{
 	font-size: .7rem !important;
   font-weight: bold;

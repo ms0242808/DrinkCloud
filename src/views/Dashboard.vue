@@ -11,11 +11,11 @@
 			</b-row>
 		</b-container>
 
-		<div class="mt-2">
+		<div class="mt-2 noMaxWidth container no-padding">
 			<Cards :showSke="showSke" :showStats="showStats" :madeVal="madeVal" :topVal="topVal" :hrVal="hrVal" :healthVal="healthVal"></Cards>
 		</div>
 
-		<div>
+		<div class="noMaxWidth container no-padding">
 			<Charts :showSke="showSke"
 			:showStats="showStats" 
 			:overviewVal= 'overviewVal'
@@ -349,6 +349,12 @@
 </script>
 
 <style scoped>
+@media (max-width: 768px){	
+	.no-padding{
+		padding-left: 0;
+		padding-right: 0;
+	}
+}
 .noMaxWidth{
 	max-width: unset !important;
 }

@@ -8,18 +8,22 @@
 				<b-container>
 					<b-row class="headerContent">
 						<b-col cols="9" md="11" class="brand">
-							<a class="d-inline-block">{{user.brand}} - </a> 
-							<!-- <div @mouseover="onOver" @mouseleave="onLeave"> -->
-								<b-form-select v-model="selected" v-on:change="location" :options="user.location" class="locationSelect d-inline-block"></b-form-select>
-							<!-- </div> -->
+							<a class="d-inline-block text-dark va-m">{{user.brand}} - </a>
+							<div class="d-inline-block" @mouseover="onOver" @mouseleave="onLeave">
+								<b-dropdown :text="selected" ref="dropdown" variant="transparent" size="sm" no-caret>
+									<template #button-content>{{selected}} <font-awesome-icon fixed-width icon="map-marker-alt"/></template>
+									<b-dropdown-header><small class="ft-10" ><font-awesome-icon fixed-width icon="map-marker-alt"/> {{$t('nav.location')}}:</small></b-dropdown-header>
+									<b-dropdown-item-button v-for="item in user.location" :key="item" @click="location(item)" class="ft-14">{{item}}</b-dropdown-item-button>
+								</b-dropdown>
+							</div>
 						</b-col>
 						<b-col cols="2" md="1" class="user">
 							<b-button variant="link" id="popover-target-2">
 								<b-skeleton type="avatar" v-show="avatarSke"></b-skeleton>
-								<avatar :username="user.name" v-show="avatarShow"></avatar>
+								<avatar :username="user.name" v-show="avatarShow" :size="35" :lighten="1000"></avatar>
 							</b-button>
 							<b-popover target="popover-target-2" triggers="hover" placement="top">
-								<b-btn variant="primary" @click.prevent.stop="logout">Logout</b-btn>
+								<b-btn variant="primary" @click.prevent.stop="logout">{{$t('nav.logout')}}</b-btn>
 							</b-popover>
 						</b-col>
 					</b-row>
@@ -31,8 +35,6 @@
 
 <script>
 	import {auth, db} from '../fire'
-	// import { collection, getDocs, getFirestore} from "firebase/firestore";
-	// import 'firebase/compat/firestore'
 	import Avatar from 'vue-avatar'
 	import { mapGetters } from 'vuex'
 	import store from '../store/store'
@@ -86,13 +88,14 @@
 			}, 1000)
 		},
 		methods: {
-			// onOver() {
-			// this.$refs.option.autofocus = true;
-			// },
-			// onLeave() {
-			// this.$refs.option.autofocus = false;
-			// },
-			location(){
+			onOver() {
+			this.$refs.dropdown.visible = true;
+			},
+			onLeave() {
+			this.$refs.dropdown.visible = false;
+			},
+			location(item){
+				this.selected = item;
 				store.commit('locationChanged', this.selected);
 			},
 			openMenu() {
@@ -147,24 +150,34 @@
 		margin-left: 4.5rem;
 	}
 }
+@media screen and (max-width: 768px) {
+	.user{
+		margin-right: 8px;
+	}
+}
 @media screen and (min-width: 768px) {
 	.brand{
 		padding: 0 15px !important;
 	}
 }
 .brand{
-	margin: 12px 0;
+	margin: auto;
 	padding: 0;
+}
+.va-m{
+	vertical-align: middle;
 }
 .user{
 	padding-left:0 !important;
-}
-.locationSelect{
-	background-color: unset;
-	border: unset;
-	width: 97px;
+	margin-top: 8px;
 }
 .container{
 	max-width: unset !important;
+}
+.ft-14{
+	font-size: 14px;
+}
+.ft-10{
+	font-size: 10px;
 }
 </style>

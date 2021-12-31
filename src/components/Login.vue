@@ -2,7 +2,7 @@
   <div class="wrapper">
     <b-container>
       <div class="mx-auto" style="width:300px;margin-top:50px">
-        <img src="@/assets/logow.png" style="width:100%">
+        <img src="@/assets/pic/logow.png" style="width:100%">
       </div>
     </b-container>
     <b-container class="bv-example-row">
