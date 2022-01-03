@@ -190,7 +190,7 @@ export default {
       if(val == '1'){return true}
       else{return false}
     },
-    hideModal() {
+    hideModal(){
       this.$refs['setModal'].hide();
     },
     countDownChanged(dismissCountDown){this.dismissCountDown = dismissCountDown},

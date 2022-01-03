@@ -200,14 +200,20 @@
     "add staff title":"添加新帳號",
     "inputstaffname":"名字",
     "choose":"選擇...",
-    "admin":"管理者",
-    "manager":"管理者",
-    "staff":"員工",
+    "Admin":"管理者",
+    "Manager":"管理者",
+    "Staff":"員工",
     "inputemail":"Email 地址",
     "inputpassword":"密碼",
     "inputpassword2":"重複密碼",
     "locations":"地點",
     "add account":"添加帳號",
-    "action":"編輯"
+    "search":"收尋:",
+    "action":"編輯",
+    "delete title":"刪除帳號",
+    "delete msg":"確定要刪除帳號: ",
+    "delete": "刪除",
+    "update title": "更新帳號",
+    "update":"更新"
   }
 }

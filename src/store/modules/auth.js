@@ -2,7 +2,10 @@ const state = {
   isInited: false,
   isAuthed: false,
   email: '',
+  name: '',
+  role: '',
   brand: '',
+  location: [],
   selected: ''
 };
 const getters = {
@@ -12,9 +15,18 @@ const getters = {
   getAuthState: state => {
     return state.isAuthed
   },
+  getUsername: state => {
+    return state.name
+  },
+  getRole: state => {
+    return state.role
+  },
   getLocation: state => {
     return state.brand + "-" + state.selected
-  }
+  },
+  getLocationList:state => {
+    return state.location
+  },
 };
 const actions = {
 };
@@ -27,7 +39,10 @@ const mutations = {
     }
   },
   brandChanged(state,val){
-    state.brand = val;
+    state.brand = val.brand;
+    state.name = val.name;
+    state.role = val.role;
+    state.location = val.location;
   },
   locationChanged(state,val){
     state.selected = val;

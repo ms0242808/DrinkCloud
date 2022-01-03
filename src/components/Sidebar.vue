@@ -41,7 +41,7 @@
             <hr class="sidebar-divider">
 						<div><font-awesome-icon fixed-width icon="globe"/><small class="text-uppercase">{{$t('nav.languages')}}</small></div>
 						<b-form-group class="text-center mt-3">
-							<b-form-radio-group v-model="$i18n.locale" :options="langs" button-variant="outline-light" buttons></b-form-radio-group>
+							<b-form-radio-group v-model="$i18n.locale" :options="langs" button-variant="outline-light" size="sm" buttons></b-form-radio-group>
 						</b-form-group>
           </b-nav>
         </div>

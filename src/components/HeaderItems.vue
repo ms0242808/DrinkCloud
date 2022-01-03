@@ -77,7 +77,7 @@
 					this.user.role = doc.data()['role'];
 					this.user.location = doc.data()['location'];
 					this.selected= this.user.location[0];
-					store.commit('brandChanged', doc.data()['brand']);
+					store.commit('brandChanged', this.user);
 					store.commit('locationChanged', doc.data()['location'][0]);
 				});
 			});

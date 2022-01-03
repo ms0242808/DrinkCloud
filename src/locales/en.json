@@ -201,14 +201,20 @@
     "add staff title":"Add new staff account",
     "inputstaffname":"Staff name",
     "choose":"Choose...",
-    "admin":"Admin",
-    "manager":"Manager",
-    "staff":"Staff",
+    "Admin":"Admin",
+    "Manager":"Manager",
+    "Staff":"Staff",
     "inputemail":"Email address",
     "inputpassword":"Password",
     "inputpassword2":"Repeat password",
     "locations":"Locations",
     "add account":"Add Account",
-    "action":"Action"
+    "search":"Search:",
+    "action":"Action",
+    "delete title":"Delete account",
+    "delete msg":"Are sure you want to delete this account: ",
+    "delete": "Delete",
+    "update title": "Update account",
+    "update":"Update"
   }
 }
