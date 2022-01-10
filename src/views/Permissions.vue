@@ -65,8 +65,9 @@
           </b-card-header>
           <b-collapse id="add-account" accordion="my-accordion" role="tabpanel">
             <b-card-body>
-              <b-form ref="form" @submit="createUser" @reset="onReset" class="mt-2">
-                <b-row>
+              <!-- <b-form ref="form" @reset="onReset" class="mt-2"> -->
+              <!-- <div class="mt-2"> -->
+                <b-row class="mt-2">
                   <b-col cols="12" lg="6">
                     <b-form-group id="cname" :label="$t('permissions.name')" label-for="cname" class="text-dark text-bold">
                       <b-form-input id="cnameInp" v-model="createU.name" type="text" required></b-form-input>
@@ -98,11 +99,11 @@
                     </b-form-group>
                   </b-col>
                   <b-col cols="12">
-                    <b-button type="submit" size="sm" variant="outline-success" class="float-right" @click="createUser()">{{$t('permissions.'+btnText)}} <b-spinner small v-if="btnClicked['b']"></b-spinner></b-button>
+                    <b-button size="sm" variant="outline-success" class="float-right" @click.prevent="createNewUser()">{{$t('permissions.'+btnText)}} <b-spinner small v-if="btnClicked['b']"></b-spinner></b-button>
                     <b-button size="sm" variant="outline-dark" class="float-right mr-2" @click="onReset" v-b-toggle.add-account>{{$t('permissions.cancel')}}</b-button>
                   </b-col>
                 </b-row>
-              </b-form>
+              <!-- </div> -->
             </b-card-body>
             <hr>
           </b-collapse>
@@ -133,8 +134,8 @@
                     <b-form-group id="erole" :label="$t('permissions.role')" label-for="erole" class="text-dark text-bold">
                       <b-form-select id="eroleInp" v-model="data.item.Role" :options="roleOpt" required></b-form-select>
                     </b-form-group> 
-                    <b-form-group id="elocation" :label="$t('permissions.locations')" label-for="elocation" class="text-dark text-bold">
-                      <b-form-checkbox-group id="elocationInp" v-model="data.item.Locations" :options="locationList" required></b-form-checkbox-group>
+                    <b-form-group id="elocation" :label="$t('permissions.locations')" label-for="elocation" class="text-dark text-bold" required>
+                      <b-form-checkbox-group id="elocationInp" v-model="data.item.Locations" :options="locationList" ></b-form-checkbox-group>
                     </b-form-group>
                   </div>
                   <template #modal-footer>
@@ -166,6 +167,7 @@
 
 <script>
 import { functions, httpsCallable, db, auth} from "../fire";
+import firebase from 'firebase/compat/app'
 import store from '../store/store'
 import { mapGetters } from 'vuex'
 import Vue from 'vue';
@@ -247,46 +249,54 @@ export default {
       Vue.set(this.btnClicked,'b',0);
     },
     selected(){this.createU.role = 'Admin'},
-    async createUser(){
+    async createNewUser(){
+      // event.preventDefault();
       var email = this.createU.email,
       pass = this.createU.pass1;
-      // var createuser = httpsCallable(functions,'createuser');
-      // createuser({email,pass}).then(({data:user}) => {
-      //   db.collection('users').doc(user.uid).set({
-      //     email: this.createU.email,
+      console.log('new',email,pass);
+      
+      // await auth.createUserWithEmailAndPassword(email,pass).then(async function(credential) {
+      //   console.log("Created new user:", credential.user.uid);
+      //   await db.collection('users').doc(credential.user.uid).set({
+      //     email: email,
       //     brand: this.brandL.split('-')[0],
       //     role: this.createU.role,
       //     location: this.createU.locations,
       //     name: this.createU.name
+      //   }).then(() => {
+      //     console.log('created');
       //   });
-      // })
-      // .catch((error) => {
-      //   console.log(error);
+      // }).catch(function(error) {
+      //   console.log("Error creating new user:", error);
       // });
+      
+      var createuser = httpsCallable(functions,'createuser');
+      await createuser({email,pass}).then(({data:user}) => {
+        console.log('newUser',email,pass,user);
+        db.collection('users').doc(user.uid).set({
+          email: this.createU.email,
+          brand: this.brandL.split('-')[0],
+          role: this.createU.role,
+          location: this.createU.locations,
+          name: this.createU.name
+        });
+      }).catch((error) => {
+        console.log(error);
+      });
     },
     async updateUser(){
-      // const user = auth.currentUser;
-      // if(name !== null && $("#userName").text() !== name){
-        // await db.collection('users').doc(user.uid).update({name: this.editP.name}).then(()=>{
-        // });
-      // }
-      // if(this.editP.oldPass.length > 5){
-      //   var credential = auth.EmailAuthProvider.credential(user.email,this.editP.oldPass);
-      //   user.reauthenticateWithCredential(credential).then(async() => {
-      //     if(this.editP.oldPass !== this.editP.newPass){
-      //       user.updatePassword(this.editP.newPass).then(async () => {
-              
-      //       }).catch((error) => {
-              
-      //       });
-      //     }else{
-      //       console.log('error');
-      //     }
-      //     this.profile = !this.profile;
-      //   }).catch((error) => {
-
-      //   });
-      // }
+      const user = auth.currentUser;
+      if(this.user !== this.editP.name){
+        await db.collection('users').doc(user.uid).update({name: this.editP.name}).then(()=>{store.commit('userNameChanged',this.editP.name)});
+      }
+      if(this.editP.oldPass.length > 5 && this.editP.oldPass !== this.editP.newPass){
+        var credential = firebase.auth.EmailAuthProvider.credential(user.email,this.editP.oldPass);
+        user.reauthenticateWithCredential(credential).then(async() => {
+          user.updatePassword(this.editP.newPass).then(async () => {
+          }).catch((error) => {console.log(error)});
+        }).catch((error) => {console.log(error);});
+      }
+      this.profile = !this.profile;
     },
     async getStaff(){
       let requests =  [];
@@ -329,17 +339,16 @@ export default {
           locations = this.staff[x].Locations;
         }
       }
-      // var userUpdate = httpsCallable(functions,'userUpdate');
-      // await userUpdate({name:id, role:role, location:locations}).then(result =>{
-      //   this.hideModal('edit'+id);
-      // });
+      var userUpdate = httpsCallable(functions,'userUpdate');
+      await userUpdate({name:'a'+id, role:role, location:locations}).then(result =>{
+        this.hideModal('edit'+id);
+      });
     },
     async delStaff(id){
-      // var seledUser = $(this).attr('id');
-      // var adminDelete = httpsCallable(functions,'adminDelete');
-      // await adminDelete({name:id}).then(result => {
+      var adminDelete = httpsCallable(functions,'adminDelete');
+      await adminDelete({name:'a'+id}).then(result => {
         this.hideModal('del'+id);
-      // });
+      });
     }
   },
   watch: {

@@ -46,6 +46,9 @@ const mutations = {
   },
   locationChanged(state,val){
     state.selected = val;
+  },
+  userNameChanged(state,val){
+    state.name = val;
   }
 };
 export default {

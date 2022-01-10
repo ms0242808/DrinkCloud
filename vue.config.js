@@ -8,9 +8,7 @@ module.exports = {
       enableBridge: false
     }
   },
-
   assetsDir: 'src/assets',
-
   pwa: {
     themeColor: '#084e74'
   }
