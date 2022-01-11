@@ -13,7 +13,7 @@
               <div class="col-lg-11" style="margin: 30px auto;">
                 <div class="text-center mb-4">
                   <h3 class="font-weight-bold" dlang="login-title">{{$t('login.title')}}</h3>
-                  <p dlang="login-msg">{{$t('login.msg')}}</p>
+                  <p dlang="login-msg" class="text-dark">{{$t('login.msg')}}</p>
                   <hr>
                 </div>
                 <b-form @submit.prevent="onSubmit" v-if="show">
@@ -31,15 +31,15 @@
           </b-card>
         </b-col>
       </b-row>
-      <b-row class="justify-content-md-center">
+      <div class="justify-content-md-center">
         <footer class="sticky-footer">
           <div class="mx-auto">
-            <div class="copyright text-center text-white">
-              <span>Copyright &copy; DRINKTEC 2021</span>
+            <div class="copyright text-center text-light">
+              <small>Copyright &copy; DRINKTEC 2022</small>
             </div>
           </div>
         </footer>
-      </b-row>
+      </div>
     </b-container>
   </div>
 </template>
@@ -74,10 +74,8 @@
         Vue.set(this.btnClicked,'b',1);
         auth.signInWithEmailAndPassword(this.form.email, this.form.password)
         .then(() => {
-          // this.$router.replace('dashboard');
           this.btn.text = this.$i18n.t('login.login');
           Vue.set(this.btnClicked,'b',0);
-          // this.$router.push('/dashboard');
           this.$router.replace({name: "Dashboard"});
         }).catch((error) => {
           this.msg.err = error.code.replace('auth/','').split('-').join(' ');

@@ -43,7 +43,7 @@
           <div>
             <b-button v-b-modal.modal-1 variant="transparent"><font-awesome-icon fixed-width icon="cog"/> {{$t('recipe.setting')}}</b-button>
             <b-modal ref="setModal" id="modal-1" centered :title="$t('recipe.setting')" class="text-i">
-              <div v-for="(item,index) in settingList" :key="index" class="mt-2">
+              <div v-for="(item,index) in settingList" :key="index" class="mt-2 text-dark">
                 <b>{{$t('recipe.'+item.id)}}</b>
                 <hr>
                 <div class="col-12 d-flex flex-justify-between mt-2" v-for="(v,i,n) in item.opt" :key="n">
@@ -156,7 +156,7 @@ export default {
     }
   },
   computed:{
-    'skele': function(){
+    'skele':function(){
       return [this.showSke,this.showVal]
     },
     ...mapGetters([
@@ -320,7 +320,7 @@ export default {
       });
     }
   },
-  watch: {
+  watch:{
     getLocation(val){
       this.brandL = val;
       // this.loadTable();

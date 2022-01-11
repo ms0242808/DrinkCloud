@@ -33,7 +33,7 @@
     <b-row v-for="(item, index) in recipeVal" v-bind:key="index" v-show="skele[1]" class="w-100 no-gutters noMaxWidth container">
       <b-col cols="12" class="mt-3 container">
         <b-row class="catRow">
-          <b-col :class="item.class" cols="6">
+          <b-col :class="item.class" cols="6" class="text-dark text-bold">
             {{item.id}}
           </b-col>
           <b-col cols="6" class="text-end text-i">
@@ -49,36 +49,36 @@
               <b-button v-b-modal="'Switch'+title" variant="transparent" class="switch"><font-awesome-icon fixed-width icon="exchange-alt"/></b-button>
               <b-modal :ref="'Switch'+title" :id="'Switch'+title" centered :title="title+$t('recipe.switch title')+item.id" @hide="hideModal('Switch'+title)">
                 <div >
-                  <a>{{$t('recipe.switch msg')}}</a>
-                  <b-form-select v-model="switchSel" :options="switchOpt(item.id)"></b-form-select>
+                  <a class="text-dark">{{$t('recipe.switch msg')}}</a>
+                  <b-form-select class="mt-2" v-model="switchSel" :options="switchOpt(item.id)"></b-form-select>
                 </div>
                 <template #modal-footer>
                   <div class="w-100">
-                    <b-button variant="primary" class="ml-1 float-right text-14" @click="switchCat(title,item)">{{$t('recipe.switch')}}</b-button>
-                    <b-button class="ml-1 float-right text-14" @click="hideModal('Switch'+title)">{{$t('recipe.cancel')}}</b-button>
+                    <b-button variant="outline-success" class="ml-1 float-right text-14" @click="switchCat(title,item)" :disabled="switchDis">{{$t('recipe.switch')}}</b-button>
+                    <b-button variant="outline-dark" class="ml-1 float-right text-14" @click="hideModal('Switch'+title)">{{$t('recipe.cancel')}}</b-button>
                   </div>
                 </template>
               </b-modal>
             </b-col>
-            <b-col cols="6" class="text-center no-putters m-auto0 text-14">
+            <b-col cols="6" class="text-center no-putters m-auto0 text-14 text-dark">
               {{title}}
             </b-col>
             <b-col cols="3" class="text-center text-danger no-putters">
               <b-button v-b-modal="'del'+title" variant="transparent" class="bin"><font-awesome-icon fixed-width icon="trash-alt"/></b-button>
               <b-modal :ref="'del'+title" :id="'del'+title" centered :title="$t('recipe.delete title')" @hide="hideModal('del'+title)">
                 <div >
-                  <a>{{$t('recipe.delete msg')}}: {{title}}</a>
+                  <a class="text-dark">{{$t('recipe.delete msg')}}: <b>{{title}}</b></a>
                 </div>
                 <template #modal-footer>
                   <div class="w-100">
                     <b-button variant="outline-danger" class="ml-1 float-right text-14" @click="delRecipe(title,item)">{{$t('recipe.delete')}}</b-button>
-                    <b-button class="ml-1 float-right text-14" @click="hideModal('del'+title)">{{$t('recipe.cancel')}}</b-button>
+                    <b-button variant="outline-dark" class="ml-1 float-right text-14" @click="hideModal('del'+title)">{{$t('recipe.cancel')}}</b-button>
                   </div>
                 </template>
               </b-modal>
             </b-col>
             <b-col cols="12" class="mt-3 text-center">
-              <b-button @click="$router.push('/recipe/'+item.id+'-'+title)" variant="outline-primary" class="text-14">{{$t('recipe.edit')}}</b-button>
+              <b-button @click="$router.push('/recipe/'+item.id+'-'+title)" variant="outline-dark" class="text-14">{{$t('recipe.edit')}}</b-button>
             </b-col>
           </b-row>
         </b-card>
@@ -90,36 +90,36 @@
               <b-button v-b-modal="'Switch'+title" variant="transparent" class="switch"><font-awesome-icon fixed-width icon="exchange-alt"/></b-button>
               <b-modal :ref="'Switch'+title" :id="'Switch'+title" centered :title="title+$t('recipe.switch title')+item.id" @hide="hideModal('Switch'+title)">
                 <div >
-                  <a>{{$t('recipe.switch msg')}}</a>
-                  <b-form-select v-model="switchSel" :options="switchOpt(item.id)"></b-form-select>
+                  <a class="text-dark">{{$t('recipe.switch msg')}}</a>
+                  <b-form-select class="mt-2" v-model="switchSel" :options="switchOpt(item.id)"></b-form-select>
                 </div>
                 <template #modal-footer>
                   <div class="w-100">
-                    <b-button variant="primary" class="ml-1 float-right text-14" @click="switchCat(title,item)">{{$t('recipe.switch')}}</b-button>
-                    <b-button class="ml-1 float-right text-14" @click="hideModal('Switch'+title)">{{$t('recipe.cancel')}}</b-button>
+                    <b-button variant="outline-success" class="ml-1 float-right text-14" @click="switchCat(title,item)">{{$t('recipe.switch')}}</b-button>
+                    <b-button variant="outline-dark" class="ml-1 float-right text-14" @click="hideModal('Switch'+title)">{{$t('recipe.cancel')}}</b-button>
                   </div>
                 </template>
               </b-modal>
             </b-col>
-            <b-col cols="6" class="text-center no-putters m-auto0 text-14">
+            <b-col cols="6" class="text-center no-putters m-auto0 text-14 text-dark">
               {{title}}
             </b-col>
             <b-col cols="3" class="text-center no-putters">
               <b-button v-b-modal="'del'+title" variant="transparent" class="bin"><font-awesome-icon fixed-width icon="trash-alt"/></b-button>
               <b-modal :ref="'del'+title" :id="'del'+title" centered :title="$t('recipe.delete title')" @hide="hideModal('del'+title)">
                 <div >
-                  <a>{{$t('recipe.delete msg')}}: {{title}}</a>
+                  <a class="text-dark">{{$t('recipe.delete msg')}}: <b>{{title}}</b></a>
                 </div>
                 <template #modal-footer>
                   <div class="w-100">
                     <b-button variant="outline-danger text-14" class="ml-1 float-right" @click="delRecipe(title,item)">{{$t('recipe.delete')}}</b-button>
-                    <b-button class="ml-1 float-righ text-14" @click="hideModal('del'+title)">{{$t('recipe.cancel')}}</b-button>
+                    <b-button variant="outline-dark" class="ml-1 float-righ text-14" @click="hideModal('del'+title)">{{$t('recipe.cancel')}}</b-button>
                   </div>
                 </template>
               </b-modal>
             </b-col>
             <b-col cols="12" class="mt-3 text-center">
-              <b-button @click="$router.push('/recipe/'+item.id+'-'+title)" class="text-14">{{$t('recipe.edit')}}</b-button>
+              <b-button @click="$router.push('/recipe/'+item.id+'-'+title)" variant="outline-dark" class="text-14">{{$t('recipe.edit')}}</b-button>
             </b-col>
           </b-row>
         </b-card>
@@ -163,21 +163,26 @@ export default {
       addShow: false
     }
   },
-  props: {
+  props:{
     showSke: {type: Boolean},
     showVal: {type: Boolean},
     nodata: {type: Boolean},
     recipes: {type: Array}
   },
   computed:{
-    'skele': function(){
+    'skele':function(){
       return [this.showSke,this.showVal]
     },
-    'recipeVal': function(){
+    'recipeVal':function(){
       return store.getters.getRecipe.recipeVal
     },
-    'showNodata': function(){
+    'showNodata':function(){
       return this.nodata
+    },
+    'switchDis':function(){
+      var dis = true;
+      if(this.switchSel !== '0'){dis = false}
+      return dis
     }
   },
   methods:{

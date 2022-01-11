@@ -1,10 +1,10 @@
 <template>
   <div>
     <b-row>
-      <b-col class="no-putters container" cols="6">
+      <b-col class="no-putters container" cols="5">
         <h3>{{$t('recipe.title')}}</h3>
       </b-col>
-      <b-col class="no-putters" cols="6">
+      <b-col class="no-putters" cols="7">
         <b-button-group class="float-right" v-show="skele[0]">
           <b-skeleton width="80px" height="30px"></b-skeleton>
           <b-skeleton width="80px" height="30px"></b-skeleton>
@@ -42,7 +42,7 @@ export default {
   components:{
     Modal
   },
-  props: {
+  props:{
     showSke: {type: Boolean},
     showVal: {type: Boolean},
     recipes: {type: Array},
@@ -66,10 +66,10 @@ export default {
     }
   },
   computed:{
-    'skele': function(){
+    'skele':function(){
       return [this.showSke,this.showVal]
     },
-    'counts': function(){
+    'counts':function(){
       return [this.totalCat,this.totalDri]
     }
   },

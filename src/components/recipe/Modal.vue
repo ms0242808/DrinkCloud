@@ -6,7 +6,7 @@
       <b-form-select v-else-if="select" v-model="switchSel"></b-form-select>
       <template v-else-if="vCat">
         <div v-for="(item,index) in catList" :key="index">
-          <div class="col-12 d-flex flex-justify-between">
+          <div class="col-12 d-flex flex-justify-between text-dark">
             {{item.title}}
             <b-form-checkbox switch class="mr-n2" v-model="item.state" @change="catState(item.state,item.og)">
               <label class='form-check-label' :for="item.state"></label>
@@ -33,7 +33,7 @@
     </div>
     <template #modal-footer>
       <div class="w-100">
-        <b-button variant="success" class="float-right ml-1 text-14" @click="useFunction(fnName,modalRef)" :disabled="btnState == 1 && btnText !== 'Publish' ">{{$t('recipe.'+btnText)}}</b-button>
+        <b-button variant="outline-success" class="float-right ml-1 text-14" @click="useFunction(fnName,modalRef)" :disabled="btnState == 1 && btnText !== 'Publish' ">{{$t('recipe.'+btnText)}}</b-button>
         <b-button variant="outline-dark text-14" class="float-right" @click="hideModal(modalRef)">{{$t('recipe.cancel')}}</b-button>
       </div>
     </template>

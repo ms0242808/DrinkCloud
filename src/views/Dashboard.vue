@@ -75,14 +75,14 @@
 				'getLocation'
 			])
 		},
-		watch: {
+		watch:{
 			getLocation(val){
 				this.brandL = val;
 				this.getHealth();
 				this.dateClicked(this.rangeVal);
 			}
 		},
-		methods: {
+		methods:{
 			setLoadingState(v1,v2){
 				this.showSke = v1;
 				this.showStats = v2;
