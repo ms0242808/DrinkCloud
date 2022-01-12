@@ -17,6 +17,7 @@
 
 		<div class="noMaxWidth container no-padding">
 			<Charts :showSke="showSke"
+			:rangeVal="rangeVal"
 			:showStats="showStats" 
 			:overviewVal= 'overviewVal'
 			:tpieVal= 'tpieVal'
@@ -140,6 +141,7 @@
 		console.log(getList);
 		if(getList.length>0){stats = await sortList(getList, s, e, brandL)}
 		else{stats = ['','No data','No data','No data','100%']}
+		store.commit('updateStats', getList);
 		return stats;
 	}
 
@@ -241,15 +243,6 @@
 		
 		var sugarTop = sortTop(sugarValue);
 		for(x in sugarTop){sugarRank.push(x)}
-		
-		// await ordersLine(counthr);
-		// await renderList('tea',teaTop);
-		// await renderList('juice',juiceTop);
-		// await renderList('sugar',sugarTop);
-		// await radarList('sugarR',sugarSize);
-		// await radarList('iceR',iceSize);
-		// await renderList('size',sizeValue);
-		// await renderList('temp', tempValue);
 
 		return [header,drinkCount,topCat[0],machineTime,health,counthr,teaTop,juiceTop,sugarSize,iceSize,tempValue]
   }

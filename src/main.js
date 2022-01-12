@@ -5,6 +5,7 @@ import { routes } from './routes'
 import store from './store/store'
 import firebase from 'firebase/compat/app'
 import VueApexCharts from 'vue-apexcharts'
+import VueExcelXlsx from "vue-excel-xlsx"
 import PortalVue from 'portal-vue'
 import { library } from '@fortawesome/fontawesome-svg-core'
 import { fas } from '@fortawesome/free-solid-svg-icons'
@@ -19,6 +20,7 @@ import { auth } from './fire'
 
 Vue.use(VueRouter)
 Vue.use(VueApexCharts)
+Vue.use(VueExcelXlsx)
 Vue.use(PortalVue)
 Vue.use(BootstrapVue)
 Vue.use(IconsPlugin)

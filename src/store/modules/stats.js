@@ -1,5 +1,5 @@
 const state = {
-  // stats: []
+  stats: [],
   madeVal : 'No data',
   topVal : 'No data',
   hrVal : 'No data',
@@ -42,6 +42,9 @@ const mutations = {
     state.iradarVal2 = stats[12];
     state.ipieLab = stats[13];
     state.ipieVal = stats[14];
+  },
+  updateStats(state,val){
+    state.stats = val;
   },
   healthUpdate(state,val){
     state.healthVal = val;

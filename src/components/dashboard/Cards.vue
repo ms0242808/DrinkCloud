@@ -36,7 +36,7 @@
 import store from '../../store/store'
 export default {
   name:'cards',
-  props: {
+  props:{
     showSke: {type: Boolean },
 		showStats: {type: Boolean },
     madeVal: { type: String },
@@ -45,10 +45,10 @@ export default {
     healthVal: { type: String }
   },
   computed:{
-    'skele': function(){
+    'skele':function(){
       return [this.showSke,this.showStats]
     },
-    'statsCard': function(){
+    'statsCard':function(){
       return [{
         title: 'drinks made',
         value: store.getters.getStats.madeVal,

@@ -50,7 +50,14 @@
     "no data":"暫無數據",
     "No data":"暫無數據",
     "Total":"總數:",
-    "Cups":"杯數"
+    "Cups":"杯數",
+    "Large":"大",
+    "Regular":"小",
+    "Normal Ice":"正常冰",
+    "Less Ice":"少冰",
+    "Ice Free":"去冰",
+    "Warm":"溫",
+    "Hot":"熱"
   },
   "stats":{
     "back":"返回",
@@ -61,13 +68,22 @@
     "name":"名稱",
     "size":"尺寸",
     "ice":"冰度",
-    "sugar":"甜度",
+    "sugar":"甜度%",
     "sugar used":"糖量",
     "tea":"茶量",
     "juice":"果汁",
     "milk":"牛奶",
     "cold":"冷水",
-    "hot":"熱水"
+    "hot":"熱水",
+    "Large":"大",
+    "Small":"小",
+    "Normal":"正常冰",
+    "Less":"少冰",
+    "No Ice":"去冰",
+    "Warm":"溫",
+    "Hot":"熱",
+    "total":"總計:",
+    "search":"收尋:"
   },
   "recipe":{
     "title":"配方",

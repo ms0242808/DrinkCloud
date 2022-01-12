@@ -6,7 +6,12 @@ export const routes = [{
 		children:[{
 			path: 'dashboard',
 			name: 'Dashboard',
-			component: () => import(/* webpackChunkName: "Dashboard" */ '@/views/Dashboard.vue')
+			component: () => import(/* webpackChunkName: "Dashboard" */ '@/views/Dashboard.vue'),
+			children:[]
+		},{
+			path: 'dashboard/stats/:id',
+			name: 'Stats',
+			component: () => import(/* webpackChunkName: "Stats" */ '@/views/Stats.vue')
 		},{
 			path:'recipe',
 			name:'Recipe',

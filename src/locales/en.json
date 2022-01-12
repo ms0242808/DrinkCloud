@@ -51,7 +51,14 @@
     "no data":"No data to display",
     "No data":"No data",
     "Total":"Total:",
-    "Cups":"Cups"
+    "Cups":"Cups",
+    "Large":"Large",
+    "Regular":"Regular",
+    "Normal Ice":"Normal Ice",
+    "Less Ice":"Less Ice",
+    "Ice Free":"Ice Free",
+    "Warm":"Warm",
+    "Hot":"Hot"
   },
   "stats":{
     "back":"Back",
@@ -68,7 +75,16 @@
     "juice":"Juice",
     "milk":"Milk",
     "cold":"Cold water",
-    "hot":"Hot water"
+    "hot":"Hot water",
+    "Large":"Large",
+    "Small":"Regular",
+    "Normal":"Normal Ice",
+    "Less":"Less Ice",
+    "No Ice":"Ice Free",
+    "Warm":"Warm",
+    "Hot":"Hot",
+    "total":"Total:",
+    "search":"Search:"
   },
   "recipe":{
     "title":"Recipe",
