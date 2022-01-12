@@ -163,11 +163,11 @@
 </template>
 
 <script>
-import { functions, httpsCallable, db, auth} from "../fire";
+import { functions, httpsCallable, db, auth} from "../fire"
 import firebase from 'firebase/compat/app'
 import store from '../store/store'
 import { mapGetters } from 'vuex'
-import Vue from 'vue';
+import Vue from 'vue'
 
 export default {
   name: 'Permissions',
