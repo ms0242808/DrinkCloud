@@ -49,6 +49,9 @@
 .nav-link.active{
   color:white !important;
 }
+.nav-pills .nav-link.active, .nav-pills .show > .nav-link{
+  background-color:#2760A3 !important;
+}
 .nav-pills .nav-link,.nav-link {
   color:initial;
 }
