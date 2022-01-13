@@ -33,6 +33,20 @@
             <b-nav-item class="mt-2">
               <router-link to="/permissions" class="va-m"><font-awesome-icon fixed-width icon="user-shield"/>{{$t('nav.permissions')}}</router-link>
             </b-nav-item>
+						<hr class="sidebar-divider">
+            <div><font-awesome-icon fixed-width icon="check-circle"/><small class="text-uppercase">{{$t('nav.status')}}</small></div>
+            <b-nav-item class="mt-2">
+							<div class="d-flex flex-justify-between text-bold">
+								<router-link to="/dashboard" class="va-m text-white p-t-b-0"><font-awesome-icon fixed-width icon="robot"/>{{$t('nav.machine')}}</router-link>
+								<router-link to="/dashboard" class="va-m text-white p-t-b-0" :class="mClass">{{$t('nav.'+mStatus)}} <font-awesome-icon fixed-width icon="power-off"/></router-link>
+							</div>
+            </b-nav-item>
+						<b-nav-item>
+							<div class="d-flex flex-justify-between text-bold">
+								<router-link to="/recipe" class="va-m text-white p-t-b-0"><font-awesome-icon fixed-width icon="lemon"/>{{$t('nav.recipe')}}</router-link>
+								<router-link to="/recipe" class="va-m text-white p-t-b-0" :class="rClass">{{$t('nav.'+rStatus)}} <font-awesome-icon fixed-width icon="link"/></router-link>
+							</div>
+            </b-nav-item>
             <hr class="sidebar-divider">
             <div><font-awesome-icon fixed-width icon="hdd"/><small class="text-uppercase">{{$t('nav.others')}}</small></div>
             <b-nav-item class="mt-2">
@@ -51,24 +65,63 @@
 </template>
 
 <script>
+import { db } from "../fire"
+import store from '../store/store'
+import { mapGetters } from 'vuex'
+
 export default {
   name:'sidebbar',
   props:{
-		isVisible: { type: Boolean , default: true },
-		showCloseButton: { type: Boolean, default: false }
+		isVisible:{type:Boolean,default:true},
+		showCloseButton:{type:Boolean,default:false}
 	},
   data(){
     return{
+			brandL: store.getters.getLocation,
 			background: 'white',
-      langs: [
-				{ text: 'EN', value: 'en' },
-				{ text: '中文', value: 'zh-tw' }
+			mStatus: 'offline',
+			mClass: 's-off',
+			rStatus: 'not synced',
+			rClass: 's-off',
+      langs:[
+				{text:'EN',value:'en'},
+				{text:'中文',value:'zh-tw'}
 			]
     }
   },
+	computed:{
+		...mapGetters([
+      'getLocation'
+    ])
+	},
+	watch:{
+    getLocation(val){
+      this.brandL = val;
+			if(val !== '-'){
+				this.getMStatus();
+				this.getRStatus();
+			}
+    }
+  },
 	methods:{
-		closeSidebar() {
-			this.$emit('close-sidebar');
+		closeSidebar(){this.$emit('close-sidebar')},
+		getMStatus(){
+			db.doc('status/'+this.brandL).onSnapshot((doc)=>{
+				this.mStatus = doc.data()['state'];
+				if(this.mStatus == "online"){this.mClass = 's-on'}
+				else{this.mClass = 's-off'}
+			});
+		},
+		getRStatus(){
+			db.collection('status').doc(this.brandL).onSnapshot((doc)=>{
+				if(doc.data()['Recipe-Update']){
+					this.rStatus = 'synced';
+					this.rClass = 's-on';
+				}else{
+					this.rStatus = 'not synced';
+					this.rClass = 's-off';
+				}
+			});
 		}
 	}
 }
@@ -151,6 +204,19 @@ export default {
 }
 .va-m{
 	vertical-align: middle !important;
+}
+.m-t-4{
+	margin-top: 4px;
+}
+.p-t-b-0{
+	padding-top: 0 !important;
+	padding-bottom: 0 !important;
+}
+.s-on{
+	color:#00ff09 !important;
+}
+.s-off{
+	color: #eaeaea !important;
 }
 small{
 	font-weight: bold !important;
