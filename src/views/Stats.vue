@@ -72,18 +72,18 @@ export default {
     },
     'fields':function(){
       return [
-        {"key":"Date",label:this.$i18n.t('stats.date'),sortable: true},
-        {"key":"Time",label:this.$i18n.t('stats.time'),sortable: true},
-        {"key":"Name",label:this.$i18n.t('stats.name'),sortable: true},
-        {"key":"Size",label:this.$i18n.t('stats.size'),sortable: true},
-        {"key":"Ice",label:this.$i18n.t('stats.ice'),sortable: true},
-        {"key":"Sugar",label:this.$i18n.t('stats.sugar'),sortable: true},
-        {"key":"SugarU",label:this.$i18n.t('stats.sugar used'),sortable: true},
-        {"key":"Tea",label:this.$i18n.t('stats.tea'),sortable: true},
-        {"key":"Juice",label:this.$i18n.t('stats.juice'),sortable: true},
-        {"key":"Milk",label:this.$i18n.t('stats.milk'),sortable: true},
-        {"key":"Cold",label:this.$i18n.t('stats.cold'),sortable: true},
-        {"key":"Hot",label:this.$i18n.t('stats.hot'),sortable: true}
+        {"key":"Date",label:this.$i18n.t('stats.date')},//sortable: true},
+        {"key":"Time",label:this.$i18n.t('stats.time')},//sortable: true},
+        {"key":"Name",label:this.$i18n.t('stats.name')},//sortable: true},
+        {"key":"Size",label:this.$i18n.t('stats.size')},//sortable: true},
+        {"key":"Ice",label:this.$i18n.t('stats.ice')},//sortable: true},
+        {"key":"Sugar",label:this.$i18n.t('stats.sugar')},//sortable: true},
+        {"key":"SugarU",label:this.$i18n.t('stats.sugar used')},//sortable: true},
+        {"key":"Tea",label:this.$i18n.t('stats.tea')},//sortable: true},
+        {"key":"Juice",label:this.$i18n.t('stats.juice')},//sortable: true},
+        {"key":"Milk",label:this.$i18n.t('stats.milk')},//sortable: true},
+        {"key":"Cold",label:this.$i18n.t('stats.cold')},//sortable: true},
+        {"key":"Hot",label:this.$i18n.t('stats.hot')},//sortable: true}
       ]
     },
     'rednerTable':function(){
