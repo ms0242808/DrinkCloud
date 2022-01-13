@@ -1,7 +1,7 @@
 <template>
   <div class="vd-header-container">
     <div class="vd-header">
-      <button class="menu-btn" v-if="showMenuButton"  @click="openMenu">
+      <button class="menu-btn" v-if="showMenuButton" @click="openMenu">
         |||
       </button>
 			<header>
@@ -9,8 +9,8 @@
 					<b-row class="headerContent">
 						<b-col cols="9" md="11" class="brand">
 							<a class="d-inline-block text-dark va-m">{{user.brand}} - </a>
-							<div class="d-inline-block" @mouseover="onOver" @mouseleave="onLeave">
-								<b-dropdown :text="selected" ref="dropdown" variant="transparent" size="sm" no-caret>
+							<div class="d-inline-block" @mouseover="onOver('locationD')" @mouseleave="onLeave('locationD')">
+								<b-dropdown :text="selected" ref="locationD" variant="transparent" size="sm" no-caret>
 									<template #button-content>{{selected}} <font-awesome-icon fixed-width icon="map-marker-alt"/></template>
 									<b-dropdown-header><small class="ft-10" ><font-awesome-icon fixed-width icon="map-marker-alt"/> {{$t('nav.location')}}:</small></b-dropdown-header>
 									<b-dropdown-item-button v-for="item in user.location" :key="item" @click="location(item)" class="ft-14">{{item}}</b-dropdown-item-button>
@@ -18,13 +18,17 @@
 							</div>
 						</b-col>
 						<b-col cols="2" md="1" class="user">
-							<b-button variant="link" id="popover-target-2">
+							<template>
 								<b-skeleton type="avatar" v-show="avatarSke"></b-skeleton>
-								<avatar :username="user.name" v-show="avatarShow" :size="35" :lighten="1000"></avatar>
-							</b-button>
-							<b-popover target="popover-target-2" triggers="hover" placement="top">
-								<b-btn variant="primary" @click.prevent.stop="logout">{{$t('nav.logout')}}</b-btn>
-							</b-popover>
+								<div @mouseover="onOver('avatarD')" @mouseleave="onLeave('avatarD')">
+								<b-dropdown size="sm" right ref="avatarD" variant="link" toggle-class="text-decoration-none" no-caret v-show="avatarShow">
+									<template #button-content><avatar :username="user.name" :size="35" :lighten="1000" backgroundColor="#2760A3"></avatar></template>
+									<b-dropdown-item><router-link to="/permissions" class="va-m text-dark ft-14"><font-awesome-icon fixed-width icon="user-shield"/> {{$t('nav.profile')}}</router-link></b-dropdown-item>
+									<hr class="dhr">
+									<b-dropdown-item @click.prevent.stop="logout" class="va-m text-dark ft-14"><font-awesome-icon fixed-width icon="sign-out-alt"/> {{$t('nav.logout')}}</b-dropdown-item>
+								</b-dropdown>
+								</div>
+							</template>
 						</b-col>
 					</b-row>
 				</b-container>
@@ -42,7 +46,7 @@
 	export default {
 		name:"HeaderItems",
 		props:{
-			showMenuButton: { type: Boolean , default: true }
+			showMenuButton: {type:Boolean,default:true}
 		},
 		data(){
 			return {
@@ -83,33 +87,21 @@
 			});
 		},
 		mounted(){
-			setTimeout(() => {
-				this.setLoadingState(false,true)
-			}, 1000)
+			setTimeout(()=>{this.setLoadingState(false,true)}, 1000)
 		},
 		methods: {
-			onOver() {
-			this.$refs.dropdown.visible = true;
-			},
-			onLeave() {
-			this.$refs.dropdown.visible = false;
-			},
+			onOver(id){this.$refs[id].visible = true},
+			onLeave(id){this.$refs[id].visible = false},
 			location(item){
 				this.selected = item;
 				store.commit('locationChanged', this.selected);
 			},
-			openMenu() {
-				this.$emit('open-menu');
-			},
+			openMenu(){this.$emit('open-menu')},
 			setLoadingState (value1,value2) {
 				this.avatarSke = value1;
 				this.avatarShow = value2;
 			},
-			logout(){
-				auth.signOut().then(() => {
-					this.$router.replace('login');
-				});
-			}
+			logout(){auth.signOut().then(() => {this.$router.replace('login')})}
 		}
 	}
 </script>
@@ -170,6 +162,11 @@
 .user{
 	padding-left:0 !important;
 	margin-top: 8px;
+}
+.dhr{
+	width: 80% !important;
+  margin-top: 10px;
+  margin-bottom: 10px;
 }
 .container{
 	max-width: unset !important;
