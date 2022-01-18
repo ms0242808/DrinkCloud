@@ -7,6 +7,7 @@
   },
   "nav":{
     "general":"一般",
+    "overview":"概覽",
     "dashboard":"儀表板",
     "recipe":"配方",
     "report":"回報",
@@ -29,6 +30,9 @@
     "logout title":"確定要登出嗎?",
     "logout msg":"如果要登出請點擊右下角<b>\"登出\"</b>按鈕",
     "cancel":"取消"
+  },
+  "overview":{
+    "title":"概覽"
   },
   "dashboard":{
     "title":"儀錶板",

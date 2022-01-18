@@ -7,6 +7,7 @@
   },
   "nav":{
     "general":"General",
+    "overview":"Overview",
     "dashboard":"Dashboard",
     "recipe":"Recipe",
     "report":"Report",
@@ -29,6 +30,9 @@
     "logout title":"Ready to Leave?",
     "logout msg":"Select <b>\"Logout\"</b> below if you are ready to end your current session.",
     "cancel":"Cancel"
+  },
+  "overview":{
+    "title":"Overview"
   },
   "dashboard":{
     "title":"Dashboard",

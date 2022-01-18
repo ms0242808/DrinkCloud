@@ -19,6 +19,9 @@
 				<div class="margin-top">
           <b-nav vertical>
             <div><font-awesome-icon fixed-width icon="stream"/><small class="text-uppercase">{{$t('nav.general')}}</small></div>
+						<b-nav-item class="mt-2">
+              <router-link to="/overview" class="va-m"><font-awesome-icon fixed-width icon="map"/>{{$t('nav.overview')}}</router-link>
+            </b-nav-item>
             <b-nav-item class="mt-2">
               <router-link to="/dashboard" class="va-m"><font-awesome-icon fixed-width icon="tachometer-alt"/>{{$t('nav.dashboard')}}</router-link>
             </b-nav-item>

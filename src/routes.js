@@ -4,6 +4,10 @@ export const routes = [{
 		redirect: {name:'Dashboard'},
 		component: () => import(/* webpackChunkName: "Home" */ '@/components/Home.vue'),
 		children:[{
+			path: 'overview',
+			name: 'Overview',
+			component: () => import(/* webpackChunkName: "Dashboard" */ '@/views/Overview.vue')
+		},{
 			path: 'dashboard',
 			name: 'Dashboard',
 			component: () => import(/* webpackChunkName: "Dashboard" */ '@/views/Dashboard.vue'),
