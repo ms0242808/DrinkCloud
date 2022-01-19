@@ -32,7 +32,8 @@
     "cancel":"Cancel"
   },
   "overview":{
-    "title":"Overview"
+    "title":"Overview",
+    "enter":"Enter"
   },
   "dashboard":{
     "title":"Dashboard",

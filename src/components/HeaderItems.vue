@@ -10,8 +10,8 @@
 						<b-col cols="9" md="11" class="brand">
 							<a class="d-inline-block text-dark va-m">{{user.brand}} - </a>
 							<div class="d-inline-block" @mouseover="onOver('locationD')" @mouseleave="onLeave('locationD')">
-								<b-dropdown :text="selected" ref="locationD" variant="transparent" size="sm" no-caret>
-									<template #button-content>{{selected}} <font-awesome-icon fixed-width icon="map-marker-alt"/></template>
+								<b-dropdown :text="locationSel" ref="locationD" variant="transparent" size="sm" no-caret>
+									<template #button-content>{{locationSel}} <font-awesome-icon fixed-width icon="map-marker-alt"/></template>
 									<b-dropdown-header><small class="ft-10" ><font-awesome-icon fixed-width icon="map-marker-alt"/> {{$t('nav.location')}}:</small></b-dropdown-header>
 									<b-dropdown-item-button v-for="item in user.location" :key="item" @click="location(item)" class="ft-14">{{item}}</b-dropdown-item-button>
 								</b-dropdown>
@@ -67,7 +67,10 @@
 		computed:{
 			...mapGetters([
 				'getEmail'
-			])
+			]),
+			'locationSel':function(){
+				return store.getters.getLocation.split('-')[1]
+			}
 		},
 		components: {
 			Avatar

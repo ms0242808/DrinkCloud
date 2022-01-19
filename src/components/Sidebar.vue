@@ -102,7 +102,7 @@ export default {
       this.brandL = val;
 			if(val !== '-'){
 				this.getMStatus();
-				this.getRStatus();
+				// this.getRStatus();
 			}
     }
   },
@@ -110,22 +110,41 @@ export default {
 		closeSidebar(){this.$emit('close-sidebar')},
 		getMStatus(){
 			db.doc('status/'+this.brandL).onSnapshot((doc)=>{
-				this.mStatus = doc.data()['state'];
-				if(this.mStatus == "online"){this.mClass = 's-on'}
-				else{this.mClass = 's-off'}
-			});
-		},
-		getRStatus(){
-			db.collection('status').doc(this.brandL).onSnapshot((doc)=>{
-				if(doc.data()['Recipe-Update']){
-					this.rStatus = 'synced';
-					this.rClass = 's-on';
+				if(doc.exists){
+					this.mStatus = doc.data()['state'];
+					if(this.mStatus == "online"){this.mClass = 's-on'}
+					else{this.mClass = 's-off'}
+					if(doc.data()['Recipe-Update']){
+						this.rStatus = 'synced';
+						this.rClass = 's-on';
+					}else{
+						this.rStatus = 'not synced';
+						this.rClass = 's-off';
+					}
 				}else{
+					this.mStatus = 'offline';
+					this.mClass = 's-off';
 					this.rStatus = 'not synced';
 					this.rClass = 's-off';
 				}
 			});
-		}
+		},
+		// getRStatus(){
+		// 	db.collection('status').doc(this.brandL).onSnapshot((doc)=>{
+		// 		if(doc.exists){
+		// 			if(doc.data()['Recipe-Update']){
+		// 				this.rStatus = 'synced';
+		// 				this.rClass = 's-on';
+		// 			}else{
+		// 				this.rStatus = 'not synced';
+		// 				this.rClass = 's-off';
+		// 			}
+		// 		}else{
+		// 			this.rStatus = 'not synced';
+		// 			this.rClass = 's-off';
+		// 		}
+		// 	});
+		// }
 	}
 }
 </script>>
