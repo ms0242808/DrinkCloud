@@ -6,7 +6,8 @@ const state = {
   role: '',
   brand: '',
   location: [],
-  selected: ''
+  selected: '',
+  accType: false
 };
 const getters = {
   getEmail: state => {
@@ -27,6 +28,9 @@ const getters = {
   getLocationList:state => {
     return state.location
   },
+  getAccType:state => {
+    return state.accType
+  },
 };
 const actions = {
 };
@@ -42,6 +46,11 @@ const mutations = {
     state.brand = val.brand;
     state.name = val.name;
     state.role = val.role;
+    state.location = val.location;
+    state.accType = val.accType;
+  },
+  brandUpdated(state,val){
+    state.brand = val.brand;
     state.location = val.location;
   },
   locationChanged(state,val){

@@ -8,12 +8,12 @@
 				<b-container>
 					<b-row class="headerContent">
 						<b-col cols="9" md="11" class="brand">
-							<a class="d-inline-block text-dark va-m">{{user.brand}} - </a>
+							<a class="d-inline-block text-dark va-m">{{locationSel[0]}} - </a>
 							<div class="d-inline-block" @mouseover="onOver('locationD')" @mouseleave="onLeave('locationD')">
-								<b-dropdown :text="locationSel" ref="locationD" variant="transparent" size="sm" no-caret>
-									<template #button-content>{{locationSel}} <font-awesome-icon fixed-width icon="map-marker-alt"/></template>
+								<b-dropdown :text="locationSel[1]" ref="locationD" variant="transparent" size="sm" no-caret>
+									<template #button-content>{{locationSel[1]}} <font-awesome-icon fixed-width icon="map-marker-alt"/></template>
 									<b-dropdown-header><small class="ft-10" ><font-awesome-icon fixed-width icon="map-marker-alt"/> {{$t('nav.location')}}:</small></b-dropdown-header>
-									<b-dropdown-item-button v-for="item in user.location" :key="item" @click="location(item)" class="ft-14">{{item}}</b-dropdown-item-button>
+									<b-dropdown-item-button v-for="item in locationSel[2]" :key="item" @click="location(item)" class="ft-14">{{item}}</b-dropdown-item-button>
 								</b-dropdown>
 							</div>
 						</b-col>
@@ -54,10 +54,11 @@
 				background: 'white',
 				user:{
 					email: store.getters.getEmail,
-					name:'',
-					brand:'',
-					role:'',
-					location:[]
+					name: '',
+					brand: '',
+					role: '',
+					location: [],
+					accType: false
 				},
 				selected: '',
 				avatarSke: true,
@@ -69,7 +70,7 @@
 				'getEmail'
 			]),
 			'locationSel':function(){
-				return store.getters.getLocation.split('-')[1]
+				return [store.getters.getLocation.split('-')[0],store.getters.getLocation.split('-')[1],store.getters.getLocationList]
 			}
 		},
 		components: {
@@ -84,6 +85,7 @@
 					this.user.role = doc.data()['role'];
 					this.user.location = doc.data()['location'];
 					this.selected= this.user.location[0];
+					this.user.accType = (doc.data()['brand']==="Drinktec") ? true:false;
 					store.commit('brandChanged', this.user);
 					store.commit('locationChanged', doc.data()['location'][0]);
 				});

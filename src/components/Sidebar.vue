@@ -102,7 +102,6 @@ export default {
       this.brandL = val;
 			if(val !== '-'){
 				this.getMStatus();
-				// this.getRStatus();
 			}
     }
   },
@@ -128,23 +127,7 @@ export default {
 					this.rClass = 's-off';
 				}
 			});
-		},
-		// getRStatus(){
-		// 	db.collection('status').doc(this.brandL).onSnapshot((doc)=>{
-		// 		if(doc.exists){
-		// 			if(doc.data()['Recipe-Update']){
-		// 				this.rStatus = 'synced';
-		// 				this.rClass = 's-on';
-		// 			}else{
-		// 				this.rStatus = 'not synced';
-		// 				this.rClass = 's-off';
-		// 			}
-		// 		}else{
-		// 			this.rStatus = 'not synced';
-		// 			this.rClass = 's-off';
-		// 		}
-		// 	});
-		// }
+		}
 	}
 }
 </script>>
