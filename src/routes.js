@@ -11,7 +11,6 @@ export const routes = [{
 			path: 'dashboard',
 			name: 'Dashboard',
 			component: () => import(/* webpackChunkName: "Dashboard" */ '@/views/Dashboard.vue'),
-			children:[]
 		},{
 			path: 'dashboard/stats/:id',
 			name: 'Stats',
