@@ -9,9 +9,9 @@
           <b-skeleton width="80px" height="30px"></b-skeleton>
           <b-skeleton width="80px" height="30px"></b-skeleton>
         </b-button-group>
-        <div class="float-right dflex" v-show="skele[1]">
+        <div class="float-right dflex" v-show="skele[1] || showNodata">
           <b-button v-b-modal.addCat class="ml-1 mt-1 f-12" variant="outline-success" @click="showModal('addCat','cat title','cat title','add')"><font-awesome-icon fixed-width icon="plus"/> {{$t('recipe.add')}}</b-button>
-          <b-button v-b-modal.publish class="ml-1 mt-1 f-12" variant="outline-primary" @click="showModal('publish','publish','publish msg','publish')"><font-awesome-icon fixed-width icon="upload"/> {{$t('recipe.publish')}}</b-button>
+          <b-button v-b-modal.publish v-show="skele[1]" class="ml-1 mt-1 f-12" variant="outline-primary" @click="showModal('publish','publish','publish msg','publish')"><font-awesome-icon fixed-width icon="upload"/> {{$t('recipe.publish')}}</b-button>
         </div>
       </b-col>
       <b-col class="no-putters container" cols="6">
@@ -44,6 +44,7 @@ export default {
   },
   props:{
     showSke: {type: Boolean},
+    nodata: {type: Boolean},
     showVal: {type: Boolean},
     recipes: {type: Array},
     totalCat: {type: Number},
@@ -68,6 +69,9 @@ export default {
   computed:{
     'skele':function(){
       return [this.showSke,this.showVal]
+    },
+    'showNodata':function(){
+      return this.nodata
     },
     'counts':function(){
       return [this.totalCat,this.totalDri]
