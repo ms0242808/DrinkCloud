@@ -4,7 +4,24 @@
       <h3>{{$t('overview.title')}}</h3>
 		</b-container>
 		<div class="mt-2 noMaxWidth container no-padding no-putters">
-      <b-row v-show="skele[0]"><b-col cols="12" lg="6"><b-skeleton height="200px"></b-skeleton></b-col></b-row>
+      <b-row v-show="skele[0]">
+        <b-col cols="12" lg="6" class="mt-2">
+          <b-card no-body img-top>
+            <b-skeleton-img card-img="top" aspect="3:1"></b-skeleton-img>
+            <b-card-footer>
+              <b-skeleton ></b-skeleton>
+            </b-card-footer>
+          </b-card>
+        </b-col>
+        <b-col cols="12" lg="6" class="mt-2">
+          <b-card no-body img-top>
+            <b-skeleton-img card-img="top" aspect="3:1"></b-skeleton-img>
+            <b-card-footer>
+              <b-skeleton ></b-skeleton>
+            </b-card-footer>
+          </b-card>
+        </b-col>
+      </b-row>
       <template v-if="superAdmin">
         <template v-for="item,index in allbrand">
           <b-row v-show="skele[1]" :key="index" class="mt-2">
