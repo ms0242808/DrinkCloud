@@ -43,6 +43,14 @@ router.beforeEach((to, from, next) => {
   else next();
 });
 
+router.afterEach((to, from) => {
+	// Use next tick to handle router history correctly
+	// see: https://github.com/vuejs/vue-router/issues/914#issuecomment-384477609
+	Vue.nextTick(() => {
+			document.title = to.meta.title || 'Drinktec Cloud';
+	});
+});
+
 firebase.getCurrentUser = () => {
 	return new Promise((resolve, reject) => {
 		const unsubscribe = auth.onAuthStateChanged(user => {
