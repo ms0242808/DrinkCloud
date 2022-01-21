@@ -1,13 +1,15 @@
 <template>
   <div class="vd-header-container">
     <div class="vd-header">
-      <button class="menu-btn" v-if="showMenuButton" @click="openMenu">
-        |||
-      </button>
 			<header>
 				<b-container>
 					<b-row class="headerContent">
-						<b-col cols="9" md="11" class="brand">
+						<b-col cols="2" v-if="showMenuButton">
+							<button class="menu-btn" @click="openMenu">
+								|||
+							</button>
+						</b-col>
+						<b-col cols="8" md="11" class="brand">
 							<a class="d-inline-block text-dark va-m">{{locationSel[0]}} - </a>
 							<div class="d-inline-block" @mouseover="onOver('locationD')" @mouseleave="onLeave('locationD')">
 								<b-dropdown :text="locationSel[1]" ref="locationD" variant="transparent" size="sm" no-caret>
@@ -17,7 +19,7 @@
 								</b-dropdown>
 							</div>
 						</b-col>
-						<b-col cols="2" md="1" class="user">
+						<b-col cols="1" class="user">
 							<template>
 								<b-skeleton type="avatar" v-show="avatarSke"></b-skeleton>
 								<div @mouseover="onOver('avatarD')" @mouseleave="onLeave('avatarD')">
@@ -120,8 +122,6 @@
   border: none;
   cursor: pointer;
   height: 100%;
-  float: left;
-  margin-left: 1.5rem;
 }
 .vd-header-container {
   z-index: 30;
@@ -143,13 +143,13 @@
   .vd-header-container {
     width: 100%;
   }
-	.headerContent{
-		margin-left: 4.5rem;
-	}
 }
 @media screen and (max-width: 768px) {
 	.user{
 		margin-right: 8px;
+	}
+	.brand{
+		text-align: center;
 	}
 }
 @media screen and (min-width: 768px) {
@@ -158,7 +158,7 @@
 	}
 }
 .brand{
-	margin: auto;
+	margin: auto 0;
 	padding: 0;
 }
 .va-m{
