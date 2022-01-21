@@ -1,7 +1,7 @@
 <template>
   <div class="wrapper">
 		<b-container class="mt-2 noMaxWidth">
-			<RHeader :showSke="showSke" :showVal="showVal" :totalCat="allCount[0]" :totalDri="allCount[1]" :catList="catList" :ingList="ingList"/>
+			<RHeader :showSke="showSke" :nodata="nodata" :showVal="showVal" :totalCat="allCount[0]" :totalDri="allCount[1]" :catList="catList" :ingList="ingList"/>
 		</b-container>
 		<div class="mt-3">
 			<Cards :showSke="showSke" :showVal="showVal" :recipes="recipes" :nodata="nodata"/>

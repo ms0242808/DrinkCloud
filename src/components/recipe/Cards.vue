@@ -8,26 +8,43 @@
         <b-col cols="4">
           <b-skeleton height="30px"></b-skeleton>
         </b-col>
+        <b-col lg="3" md="4">
+          <b-card class="no-gutters container no-putters mt-2">
+            <b-row>
+              <b-col cols="3">
+                <b-skeleton height="30px"></b-skeleton>
+              </b-col>
+              <b-col cols="6">
+                <b-skeleton height="30px"></b-skeleton>
+              </b-col>
+              <b-col cols="3">
+                <b-skeleton height="30px"></b-skeleton>
+              </b-col>
+              <b-col cols="12" class="mt-3">
+                <b-skeleton height="50px"></b-skeleton>
+              </b-col>
+            </b-row>
+          </b-card>
+        </b-col>
+        <b-col lg="3" md="4">
+          <b-card class="no-gutters container no-putters mt-2">
+            <b-row>
+              <b-col cols="3">
+                <b-skeleton height="30px"></b-skeleton>
+              </b-col>
+              <b-col cols="6">
+                <b-skeleton height="30px"></b-skeleton>
+              </b-col>
+              <b-col cols="3">
+                <b-skeleton height="30px"></b-skeleton>
+              </b-col>
+              <b-col cols="12" class="mt-3">
+                <b-skeleton height="50px"></b-skeleton>
+              </b-col>
+            </b-row>
+          </b-card>
+        </b-col>
       </b-row>
-      <hr>
-      <b-col lg="3" md="4">
-        <b-card class="no-gutters container">
-          <b-row>
-            <b-col cols="3">
-              <b-skeleton height="30px"></b-skeleton>
-            </b-col>
-            <b-col cols="6">
-              <b-skeleton height="30px"></b-skeleton>
-            </b-col>
-            <b-col cols="3">
-              <b-skeleton height="30px"></b-skeleton>
-            </b-col>
-            <b-col cols="12" class="mt-3">
-              <b-skeleton height="50px"></b-skeleton>
-            </b-col>
-          </b-row>
-        </b-card>
-      </b-col>
     </div>
 
     <b-row v-for="(item, index) in recipeVal" v-bind:key="index" v-show="skele[1]" class="w-100 no-gutters noMaxWidth container">
