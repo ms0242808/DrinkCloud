@@ -1,7 +1,7 @@
 <template>
 	<div class="vd-sidebar-container" :class="{hidden: !isVisible}">
 		<div class="vd-sidebar-header" :class="{hidden: !isVisible}">
-			<button class="close-btn" v-if="showCloseButton" @click="closeSidebar">x</button>
+			<button class="close-btn" v-if="showCloseButton" @click="closeSidebar"><font-awesome-icon fixed-width icon="times"/></button>
 			<slot name="header">
 				<div class="header text-center">
 					<div class="d-flex align-items-center justify-content-center">
@@ -68,7 +68,7 @@
 </template>
 
 <script>
-import { db } from "../fire"
+import { db, perf } from "../fire"
 import store from '../store/store'
 import { mapGetters } from 'vuex'
 
@@ -108,6 +108,8 @@ export default {
 	methods:{
 		closeSidebar(){this.$emit('close-sidebar')},
 		getMStatus(){
+			const trace = perf.trace("getMachineStatus");
+			trace.start();
 			db.doc('status/'+this.brandL).onSnapshot((doc)=>{
 				if(doc.exists){
 					this.mStatus = doc.data()['state'];
@@ -127,6 +129,7 @@ export default {
 					this.rClass = 's-off';
 				}
 			});
+			trace.stop();
 		}
 	}
 }
@@ -134,7 +137,7 @@ export default {
 
 <style scoped>
 .vd-sidebar-container{
-	z-index: 40;
+	z-index: 1000;
 	position: fixed;
 	left: 0;
 	top: 0;
@@ -162,14 +165,13 @@ export default {
 }
 .close-btn{
 	color:#eaeaea;
-}
-.close-btn{
 	position: absolute;
 	z-index: 200;
-	right: 10px;
+	right: 1px;
 	top: 0;
 	background-color: transparent !important;
-	font-size: 2rem;
+	/* font-size: 2rem; */
+	font-size: 20px;
 	border: none;
 	cursor: pointer;
 }
@@ -180,10 +182,12 @@ export default {
 	top: 0;
 	right: 0;
 	width: 250px;
-	height: 130px;
+	height: 100px; /*130*/
 	overflow-y: auto;
 	transition: all 0.5s;
 	-webkit-transition: all 0.5s;
+	background-color: inherit;
+	overflow: hidden;
 }
 .vd-sidebar-header.hidden{
 	left: -250px;
@@ -192,6 +196,7 @@ export default {
 .vd-sidebar-content{
 	padding: 100px 1rem 0rem 1rem;
 	width: 250px;
+	overflow: scroll;
 }
 .header{
 	padding: 1rem;
