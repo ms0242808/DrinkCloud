@@ -51,7 +51,8 @@ export default {
       sidebarIsVisible: true,
       isCollapse: false,
       brand: '',
-      location: ''
+      location: '',
+      opened: false
     }
   },
   mounted(){
@@ -65,15 +66,16 @@ export default {
   methods:{
     onResize(){
       if(window.innerWidth <= 1200){
-        this.sidebarIsVisible = false;
+        if(this.opened){this.sidebarIsVisible = true}
+        else{this.sidebarIsVisible = false}
         this.isCollapse = true;
       } else {
         this.sidebarIsVisible = true;
         this.isCollapse = false;
       }
     },
-    openMenu(){this.sidebarIsVisible = true},
-    closeSidebar(){this.sidebarIsVisible = false},
+    openMenu(){this.sidebarIsVisible = true;this.opened=true;},
+    closeSidebar(){this.sidebarIsVisible = false;this.opened=false;},
     pageClick(){if(this.isCollapse && this.sidebarIsVisible){this.closeSidebar()}}
   }
 }

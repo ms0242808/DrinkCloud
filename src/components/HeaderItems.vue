@@ -6,7 +6,8 @@
 					<b-row class="headerContent">
 						<b-col cols="2" v-if="showMenuButton">
 							<button class="menu-btn" @click="openMenu">
-								|||
+								<!-- ||| -->
+								<font-awesome-icon fixed-width icon="bars"/>
 							</button>
 						</b-col>
 						<b-col cols="8" md="11" class="brand">
@@ -40,7 +41,7 @@
 </template>
 
 <script>
-	import {auth, db} from '../fire'
+	import {auth, db, perf} from '../fire'
 	import Avatar from 'vue-avatar'
 	import { mapGetters } from 'vuex'
 	import store from '../store/store'
@@ -80,6 +81,8 @@
 		},
 		async created(){
 			var email = this.getEmail;
+			const trace = perf.trace("getLoginData");
+			trace.start();
 			await db.collection("users").where('email','==',email).get().then((querySnapshot) => {
 				querySnapshot.forEach((doc) => {
 					this.user.name = doc.data()['name'];
@@ -92,6 +95,7 @@
 					store.commit('locationChanged', doc.data()['location'][0]);
 				});
 			});
+			trace.stop();
 		},
 		mounted(){
 			setTimeout(()=>{this.setLoadingState(false,true)}, 1000)
@@ -116,12 +120,14 @@
 <style scoped>
 .menu-btn {
   background-color: transparent !important;
-  transform: rotate(90deg);
-  -webkit-transform: rotate(90deg);
-  font-size: 2rem;
+  /* transform: rotate(90deg); */
+  /* -webkit-transform: rotate(90deg); */
+  font-size: 20px;
   border: none;
   cursor: pointer;
   height: 100%;
+	color: #2d2d2d;
+	padding-top: 10px;
 }
 .vd-header-container {
   z-index: 30;
