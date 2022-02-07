@@ -71,7 +71,7 @@
 </template>
 
 <script>
-import { functions, httpsCallable, db } from "../fire";
+import { functions, httpsCallable, db, perf } from "../fire";
 import store from '../store/store'
 import { mapGetters } from 'vuex'
 import Table from '@/components/Table.vue'
@@ -197,6 +197,8 @@ export default {
     showAlert(){this.dismissCountDown = this.dismissSecs},
     async loadTable(){
       var rows = [];
+      const trace1 = perf.trace("getClickedRecipe");
+			trace1.start();
       var getRecipe = httpsCallable(functions,'getRecipe');
       await getRecipe({docPath:'recipes/'+this.brandL,drink:this.recipe}).then(result => {
         rows = result.data.recipe.slice(0,-1);
@@ -228,6 +230,9 @@ export default {
         this.activate = true;
         this.ogAct = true;
       }
+      trace1.stop();
+      const trace2 = perf.trace("getDrinkSetting");
+			trace2.start();
       var [settings,iceVal,sizeVal,topVal] = [[],[],[],[]];
       var getDrinkSetting = httpsCallable(functions,'getDrinkSetting');
       await getDrinkSetting({docPath:'recipes/'+this.brandL,drink:this.recipe}).then(result => {
@@ -244,10 +249,13 @@ export default {
         this.settingList[s].val = settings[s];
         this.settingList[s].status = settings[s].map(item => {if(item == "1"){return true}else{return false}});
       }
+      trace2.stop();
       this.showSke = false;
       this.showVal = true;
     },
     async upRecipe(){
+      const trace = perf.trace("updateClickedRecipe");
+			trace.start();
       this.btn.update = '';
       Vue.set(this.btnClicked,'b',1);
       var x = 0,
@@ -293,8 +301,11 @@ export default {
       }
       this.btn.update = 'update';
       Vue.set(this.btnClicked,'b',0);
+      trace.stop();
     },
     async upSetting(){
+      const trace = perf.trace("updateDrinkSetting");
+			trace.start();
       this.btn.save = '';
       Vue.set(this.btnClicked,'b',1);
       var x = 0,
@@ -318,6 +329,7 @@ export default {
         this.btn.save = 'save';
         Vue.set(this.btnClicked,'b',0);
       });
+      trace.stop();
     }
   },
   watch:{

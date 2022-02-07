@@ -37,7 +37,7 @@
 
 <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
 <script>
-	import { functions, httpsCallable, db } from "../fire";
+	import { functions, httpsCallable, db, perf } from "../fire";
 	import store from '../store/store'
 	import { mapGetters } from 'vuex'
 	import Cards from '../components/dashboard/Cards.vue'
@@ -96,6 +96,8 @@
 				store.commit('healthUpdate', health);
 			},
 			async dateClicked(val){
+				const trace = perf.trace("getStats");
+				trace.start();
 				this.setLoadingState(true,false);
 				this.rangeVal = val;
 				var stats = await getStats(val[0],val[1],this.brandL);
@@ -103,6 +105,7 @@
 				sorted = await sorted.then(result =>{return result});
 				store.commit('statsChanged', sorted);
 				this.setLoadingState(false,true);
+				trace.stop();
 			},
 			async renderStats(stats){
 				var hours = exeractVal(stats[5]),

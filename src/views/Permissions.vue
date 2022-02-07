@@ -163,7 +163,7 @@
 </template>
 
 <script>
-import { functions, httpsCallable, db, auth} from "../fire"
+import { functions, httpsCallable, db, auth, perf} from "../fire"
 import firebase from 'firebase/compat/app'
 import store from '../store/store'
 import { mapGetters } from 'vuex'
@@ -264,6 +264,8 @@ export default {
       var email = this.createU.email,
       pass = this.createU.pass,
       newuser = httpsCallable(functions,'createUser');
+      const trace = perf.trace("addNewUser");
+			trace.start();
       await newuser({email,pass}).then(({data:user}) => {
         db.collection('users').doc(user.uid).set({
           email: this.createU.email,
@@ -285,10 +287,13 @@ export default {
       }).catch((error) => {
         console.log(error);
       });
+      trace.stop();
     },
     async updateUser(){
       Vue.set(this.btn.editP.btnClicked,'b',1);
       const user = auth.currentUser;
+      const trace = perf.trace("updateCurrentUser");
+			trace.start();
       if(this.user !== this.editP.name){
         await db.collection('users').doc(user.uid).update({name: this.editP.name}).then(()=>{store.commit('userNameChanged',this.editP.name)});
       }
@@ -299,11 +304,14 @@ export default {
           }).catch((error) => {console.log(error)});
         }).catch((error) => {console.log(error);});
       }
+      trace.stop();
       this.profile = !this.profile;
       Vue.set(this.btn.editP.btnClicked,'b',0);
     },
     async getStaff(){
       let requests =  [];
+      const trace = perf.trace("getStaff");
+			trace.start();
       db.collection('users').where('brand','==',this.brandL.split('-')[0]).onSnapshot(function(snapshot){
         let changes = snapshot.docChanges();
         var locationList = store.getters.getLocationList;
@@ -323,6 +331,7 @@ export default {
           }
         });
       });
+      trace.stop();
       this.staff = requests;
     },
     async updateStaff(id){
@@ -337,19 +346,25 @@ export default {
         }
       }
       var userUpdate = httpsCallable(functions,'userUpdate');
+      const trace = perf.trace("updateStaff");
+			trace.start();
       await userUpdate({name:'a'+id, role:role, location:locations}).then(result =>{
         this.hideModal('edit'+id);
         Vue.set(this.btn.upS.btnClicked,'b',0);
       });
+      trace.stop();
     },
     async delStaff(id,index){
       Vue.set(this.btn.delS.btnClicked,'b',1);
       var adminDelete = httpsCallable(functions,'adminDelete');
+      const trace = perf.trace("removeStaff");
+			trace.start();
       await adminDelete({name:'a'+id}).then(result => {
         this.staff.splice(index, 1);
         this.hideModal('del'+id);
         Vue.set(this.btn.delS.btnClicked,'b',0);
       });
+      trace.stop();
     }
   },
   watch:{

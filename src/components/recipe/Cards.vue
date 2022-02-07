@@ -167,7 +167,7 @@
 </template>
 
 <script>
-import { functions, httpsCallable, db } from "../../fire";
+import { functions, httpsCallable, db, perf } from "../../fire";
 import store from '../../store/store'
 
 export default {
@@ -216,6 +216,8 @@ export default {
       return cat
     },
     async switchCat(tea,item){
+      const trace = perf.trace("switchRecipe");
+			trace.start();
       var val = this.switchSel;
       var swapRecipe = httpsCallable(functions,'swapRecipe');
       await swapRecipe({docPath:'recipes/'+this.brandL, tea:tea, current:item.id, val:val}).then(result => {
@@ -223,8 +225,11 @@ export default {
         this.removeRecipe(tea,item);
         this.hideModal('Switch'+tea);
       });
+      trace.stop();
     },
     async delRecipe(tea,item){
+      const trace = perf.trace("removeRecipe");
+			trace.start();
       var manageCategory = httpsCallable(functions,'manageCategory');
       await manageCategory({docPath:'recipes/'+this.brandL, category:item.id,drink:tea, status:2}).then(result => {
         var removeRecipe = httpsCallable(functions,'removeRecipe');
@@ -233,6 +238,7 @@ export default {
           this.hideModal('del'+tea);
         });
       });
+      trace.stop();
     },
     async addInput(item){      
       item.addShow = true;
@@ -243,6 +249,8 @@ export default {
       item.btnState = 1;
     },
     async addRecipe(item){
+      const trace = perf.trace("addNewRecipe");
+			trace.start();
       var cat = item.id,
       tea = item.addRecipe;
       var manageCategory = httpsCallable(functions,'manageCategory');
@@ -255,6 +263,7 @@ export default {
           item.btnState = 1;
         });
       });
+      trace.stop();
     },
     async btnStatus(item){
       if(item.addRecipe.length>0){item.btnState = 0}

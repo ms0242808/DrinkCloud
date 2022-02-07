@@ -26,6 +26,7 @@
 
 <script>
 import emailjs from 'emailjs-com';
+import { perf } from "../fire";
 import store from '../store/store'
 import { mapGetters } from 'vuex'
 import Vue from 'vue';
@@ -78,6 +79,8 @@ export default {
     selected(){this.form.cat = this.$i18n.t('report.book')},
     onSubmit(event){
       event.preventDefault();
+      const trace = perf.trace("sendEmail");
+			trace.start();
       this.iconShow = false;
       this.btnText = '';
       Vue.set(this.btnClicked,'b',1);
@@ -88,6 +91,7 @@ export default {
       },(error) => {
         alert('FAILED...', error.text);
       });
+      trace.stop();
     },
     onReset(event){
       event.preventDefault();
