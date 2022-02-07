@@ -14,8 +14,8 @@
           <b-row>
             <b-col cols="6">{{$t('dashboard.'+item.title)}}</b-col>
             <b-col cols="6">
-              <b-button variant="transparent" v-if="index==0" class="float-right text-dark no-pad" @click="$router.push('/dashboard/stats/'+dateRange)"><font-awesome-icon fixed-width icon="eye"/></b-button>              
-              <b-button v-else class="float-right no-pad" variant="transparent" @click="toggleView(index)"><font-awesome-icon fixed-width icon="chart-pie" v-show="switchV[index-1]"/><font-awesome-icon fixed-width icon="list-ol" v-show="!switchV[index-1]"/></b-button>
+              <b-button variant="transparent" v-if="index==0 && item.dataL>0" class="float-right text-dark no-pad" @click="$router.push('/dashboard/stats/'+dateRange)"><font-awesome-icon fixed-width icon="eye"/></b-button>              
+              <b-button v-else-if="index>0" class="float-right no-pad" variant="transparent" @click="toggleView(index)"><font-awesome-icon fixed-width icon="chart-pie" v-show="switchV[index-1]"/><font-awesome-icon fixed-width icon="list-ol" v-show="!switchV[index-1]"/></b-button>
             </b-col> 
           </b-row>
         </template>
