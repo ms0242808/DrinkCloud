@@ -115,7 +115,7 @@
 				iradar = exeractRadar(stats[9]),
 				ice = exeractVal(stats[10]);
 				var sorted = [
-					stats[1].toString(),stats[2],'',hours[1],hours[0],
+					stats[1].toString(),stats[2],stats[3],hours[1],hours[0],
 					tea[0],tea[1],juice[0],juice[1],
 					sradar[0],sradar[1],iradar[0],iradar[1],
 					ice[0],ice[1]
@@ -141,7 +141,6 @@
 			// const data = result.data.header.slice(1,-1);
 			getList = result.data.list;
 		});
-		console.log(getList);
 		if(getList.length>0){stats = await sortList(getList, s, e, brandL)}
 		else{stats = ['','No data','No data','No data','100%']}
 		store.commit('updateStats', getList);
@@ -212,16 +211,24 @@
 		}
 		var teaTop = sortTop(teaVal);
 		for(x in teaTop){teaRank.push(x)}
-
-		// var duration = JSON.parse(sessionStorage.getItem('dlist'));
-		var totalHours = 0;
-		// for(var d=parseInt(start);d<=parseInt(end);d++){
-		// 	// if(duration[d.toString()]){
-		// 	// 	totalHours += duration[d.toString()];
-		// 	// }
-		// }
-		var machineTime = msToTime(totalHours);
 		
+		var machineTime = 0;
+		await db.doc('/status/'+brandL).get().then((doc) => {
+			var list = doc.data()['duration'],
+			totalHours = 0;
+			if(start == end){
+				var current = doc.data()['onTime'],
+				now = Date.now();
+				if(doc.data()['state']=="online"){totalHours = now - current[start]}
+				if(list[start]>0){totalHours = totalHours + parseInt(list[start])}
+				list[start]=totalHours;
+				machineTime = msToTime(totalHours);
+			}else{
+				for(var d=parseInt(start);d<=parseInt(end);d++){if(list[d.toString()]){totalHours += parseInt(list[d.toString()])}}
+				machineTime = msToTime(totalHours);
+			}
+		});
+
 		if(teaRank[0]){
 			var topCat = [];
 			var totalCat = {};

@@ -29,7 +29,7 @@ const mutations = {
   statsChanged(state, stats) {
     state.madeVal = stats[0];
     state.topVal = stats[1];
-    // state.hrVal = stats[2];
+    state.hrVal = stats[2];
     state.overviewLab = stats[3];
     state.overviewVal = stats[4];
     state.tpieLab = stats[5];
