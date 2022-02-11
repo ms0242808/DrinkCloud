@@ -9,9 +9,8 @@
   @update='update'>
     <template #input="picker" :id="picker" style="min-width: 350px;">
       <font-awesome-icon fixed-width icon="calendar"/>
-			<a v-if="customRange"> {{dateRange.label}} </a>
-			<a v-else>{{$t('dashboard.'+dateRange.label)}} </a>
-      <font-awesome-icon fixed-width icon="caret-down"/>
+			<a>{{$t('dashboard.'+dateRange.label)}}</a>
+      <font-awesome-icon fixed-width icon="caret-down" size="xs"/>
     </template>
     <template #ranges="ranges">
       <div class="ranges">
@@ -48,7 +47,6 @@
 				rangeVal:[startDate, startDate],
 				maxDate:startDate,
 				opens: "left",
-				customRange: false,
 				locale: {
 					direction: 'ltr',
 					format: 'YYYY-MM-DD',
@@ -86,11 +84,7 @@
 				else if(start == this.ranges['This Week'][0].toLocaleDateString() && end == this.ranges['This Week'][1].toLocaleDateString()){this.dateRange.label = "This Week"}
 				else if(start == this.ranges['This Month'][0].toLocaleDateString() && end == this.ranges['This Month'][1].toLocaleDateString()){this.dateRange.label = "This Month"}
 				else if(start == this.ranges['Last Month'][0].toLocaleDateString() && end == this.ranges['Last Month'][1].toLocaleDateString()){this.dateRange.label = "Last Month"}
-				else{
-					this.activeIndex = '';
-					this.customRange = true;
-					this.dateRange.label = start + ' - ' + end;
-				}
+				else{this.activeIndex = '';this.dateRange.label = 'Custom Range';}
 				var x = date.startDate.toISOString().split('T')[0],
 				y = date.endDate.toISOString().split('T')[0];
 				this.rangeVal = [x.replace(/-/g,''), y.replace(/-/g,'')];
