@@ -38,6 +38,11 @@ export const routes = [{
 			name:'Report',
 			component: () => import(/* webpackChunkName: "Report" */ '@/views/Report.vue'),
 			meta:{title: 'Report'}
+		},{
+			path:'log',
+			name:'Changelog',
+			component: () => import(/* webpackChunkName: "Report" */ '@/views/Log.vue'),
+			meta:{title: 'Changelog'}
 		}],
 		meta: {
 			requiresAuth: true
