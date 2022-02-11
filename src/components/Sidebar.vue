@@ -53,7 +53,7 @@
             <hr class="sidebar-divider">
             <div><font-awesome-icon fixed-width icon="hdd"/><small class="text-uppercase">{{$t('nav.others')}}</small></div>
             <b-nav-item class="mt-2">
-              <router-link to="/" class="va-m"><font-awesome-icon fixed-width icon="server"/>{{$t('nav.changelog')}}</router-link>
+              <router-link to="/log" class="va-m"><font-awesome-icon fixed-width icon="server"/>{{$t('nav.changelog')}}</router-link>
             </b-nav-item>
             <hr class="sidebar-divider">
 						<div><font-awesome-icon fixed-width icon="globe"/><small class="text-uppercase">{{$t('nav.languages')}}</small></div>
@@ -159,7 +159,7 @@ export default {
 	padding: 8px 0;
 	color:#eaeaeae0;
 }
-.nav-item a:hover{
+.nav-item a:hover,.router-link-active{
 	color: white !important;
 	font-weight: bold;
 }
