@@ -165,7 +165,7 @@
 }
 .brand{
 	margin: auto 0;
-	padding: 0;
+	padding-top: 10px;
 }
 .va-m{
 	vertical-align: middle;

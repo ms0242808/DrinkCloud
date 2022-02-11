@@ -10,11 +10,11 @@
         <b-card class="text-center">
           <b-button class="float-right" size="sm" variant="transparent" @click="eidtProfile()"><font-awesome-icon fixed-width icon="cog" v-show="profile"/><font-awesome-icon fixed-width icon="times" v-show="!profile"/></b-button>
           <b-row v-show="profile">
-            <b-col cols="12" lg="6">
+            <b-col cols="6">
               <p class="text-bold"><font-awesome-icon fixed-width icon="id-badge"/> {{$t('permissions.role')}}</p>
               <p>{{$t('permissions.'+role)}}</p>
             </b-col>
-            <b-col cols="12" lg="6">
+            <b-col cols="6">
               <p class="text-bold"><font-awesome-icon fixed-width icon="user"/> {{$t('permissions.name')}}</p>
               <p>{{user}}</p>
             </b-col>

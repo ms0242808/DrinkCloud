@@ -1,6 +1,6 @@
 <template>
   <b-card-group deck>
-    <div v-show="skele[0]" class="w-100 no-gutters noMaxWidth container">
+    <div v-show="skele[0]" class="w-100 no-gutters noMaxWidth">
       <b-row>
         <b-col cols="8">
           <b-skeleton height="30px"></b-skeleton>

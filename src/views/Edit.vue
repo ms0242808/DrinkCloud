@@ -21,7 +21,7 @@
         <b-row>
           <b-col cols="12"><b-skeleton height="30px" width="55%"></b-skeleton></b-col>
           <b-col cols="7" lg="3"><b-skeleton height="30px"></b-skeleton></b-col>
-          <b-col cols="5" lg="9" class="m-auto"><b-skeleton height="30px" width="100px"></b-skeleton></b-col>
+          <b-col cols="5" lg="9" class="m-auto"><b-skeleton height="30px" width="120px"></b-skeleton></b-col>
         </b-row>
         <b-skeleton height="500px"></b-skeleton>
       </div>
