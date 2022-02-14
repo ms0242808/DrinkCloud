@@ -12,7 +12,7 @@
 <script>
   import store from '../store/store'
 	import { mapGetters } from 'vuex'
-  import { functions, httpsCallable, perf } from "../fire";
+  import { functions, httpsCallable, perf, trace } from "../fire";
   import Cards from '../components/recipe/Cards.vue'
 	import RHeader from '../components/recipe/Header.vue'
 
@@ -68,8 +68,8 @@
 				this.showVal = v2;
 			},
 			async loadRecipe(){
-				const trace = perf.trace("getRecipe");
-				trace.start();
+				const t = trace(perf,"getRecipe");
+				t.start();
 				this.nodata = false;
 				this.setLoadingState(true,false);
 				const getRecipeHeader = httpsCallable(functions, 'getRecipeHeader');
@@ -113,7 +113,7 @@
 					this.setLoadingState(false,true);
 					this.nodata = false;
 				}
-				trace.stop();
+				t.stop();
 			}
 		},
 		async created(){

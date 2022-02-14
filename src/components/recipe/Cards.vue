@@ -1,6 +1,6 @@
 <template>
   <b-card-group deck>
-    <div v-show="skele[0]" class="w-100 no-gutters noMaxWidth">
+    <div v-show="skele[0]" class="w-100 no-gutters container noMaxWidth">
       <b-row>
         <b-col cols="8">
           <b-skeleton height="30px"></b-skeleton>
@@ -157,7 +157,7 @@
       </b-col>
     </b-row>
     <div class="nodata" v-show="showNodata">
-      <div class="text-center w-100">
+      <div class="text-center w-100 text-dark">
         <h3 class="font-weight-bold" dlang="recipe-no data">{{$t('recipe.no data')}}</h3>
         <p dlang="recipe-step1">{{$t('recipe.step1')}}</p>
         <p dlang="recipe-step2">{{$t('recipe.step2')}}</p>
@@ -167,7 +167,7 @@
 </template>
 
 <script>
-import { functions, httpsCallable, db, perf } from "../../fire";
+import { functions, httpsCallable, perf, trace } from "../../fire";
 import store from '../../store/store'
 
 export default {
@@ -216,8 +216,8 @@ export default {
       return cat
     },
     async switchCat(tea,item){
-      const trace = perf.trace("switchRecipe");
-			trace.start();
+      const t = trace(perf,"switchRecipe");
+			t.start();
       var val = this.switchSel;
       var swapRecipe = httpsCallable(functions,'swapRecipe');
       await swapRecipe({docPath:'recipes/'+this.brandL, tea:tea, current:item.id, val:val}).then(result => {
@@ -225,11 +225,11 @@ export default {
         this.removeRecipe(tea,item);
         this.hideModal('Switch'+tea);
       });
-      trace.stop();
+      t.stop();
     },
     async delRecipe(tea,item){
-      const trace = perf.trace("removeRecipe");
-			trace.start();
+      const t = trace(perf,"removeRecipe");
+			t.start();
       var manageCategory = httpsCallable(functions,'manageCategory');
       await manageCategory({docPath:'recipes/'+this.brandL, category:item.id,drink:tea, status:2}).then(result => {
         var removeRecipe = httpsCallable(functions,'removeRecipe');
@@ -238,7 +238,7 @@ export default {
           this.hideModal('del'+tea);
         });
       });
-      trace.stop();
+      t.stop();
     },
     async addInput(item){      
       item.addShow = true;
@@ -249,8 +249,8 @@ export default {
       item.btnState = 1;
     },
     async addRecipe(item){
-      const trace = perf.trace("addNewRecipe");
-			trace.start();
+      const t = trace(perf,"addNewRecipe");
+			t.start();
       var cat = item.id,
       tea = item.addRecipe;
       var manageCategory = httpsCallable(functions,'manageCategory');
@@ -263,7 +263,7 @@ export default {
           item.btnState = 1;
         });
       });
-      trace.stop();
+      t.stop();
     },
     async btnStatus(item){
       if(item.addRecipe.length>0){item.btnState = 0}
