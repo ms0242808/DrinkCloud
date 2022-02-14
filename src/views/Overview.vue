@@ -76,7 +76,7 @@
 </template>
 
 <script>
-	import { functions, httpsCallable, db } from "../fire";
+	import { db, collection, doc, getDoc, query, where, getDocs } from "../fire";
 	import store from '../store/store'
 	import { mapGetters } from 'vuex'
   import axios from "axios";
@@ -135,41 +135,33 @@
         var name = [],
         x = 0,
         API_KEY = '25303151-143204abac5b7d04c9fb83b36';
-        await db.collection('users').where('type','==','master').get().then((querySnapshot) => {
-          querySnapshot.forEach(async function(doc){
-            name.push({
-              brand:doc.data()['brand'],
-              locations:doc.data()['location'],
-              city: [],
-              mStatus:[],
-              rStatus:[],
-              rClass:[],
-              mClass:[],
-              cityImg:[]
-            });
+        const q = query(collection(db, "users"), where("type", "==", 'master'));
+        const querySnapshot = await getDocs(q);
+        querySnapshot.forEach((doc) => {
+          name.push({
+            brand:doc.data()['brand'],
+            locations:doc.data()['location'],
+            city: [],
+            mStatus:[],
+            rStatus:[],
+            rClass:[],
+            mClass:[],
+            cityImg:[]
           });
-        }).catch((error) => {console.log("Error getting document:", error)});
+        });
         for(x in name){
           var y = 0;
           for(y in name[x].locations){
-            await db.doc('status/'+name[x].brand+'-'+name[x].locations[y]).get().then((doc) => {
-              if(doc.exists){
-                name[x].mStatus.push(doc.data()['state']);
-                // name[x].mClass.push('s-on');
-                if(doc.data()['Recipe-Update']){
-                  name[x].rStatus.push('synced');
-                  // name[x].rClass.push('s-on');
-                }else{
-                  name[x].rStatus.push('not synced');
-                  // name[x].rClass.push('s-off');
-                }
+            const docRef = doc(db, "status", name[x].brand+'-'+name[x].locations[y]);
+            const docSnap = await getDoc(docRef);
+            if(docSnap.exists){
+              name[x].mStatus.push(docSnap.data()['state']);// name[x].mClass.push('s-on');
+              if(docSnap.data()['Recipe-Update']){
+                name[x].rStatus.push('synced');// name[x].rClass.push('s-on');
               }else{
-                name[x].mStatus.push('offline');
-                // name[x].mClass.push('s-off');
-                name[x].rStatus.push('not synced');
-                // name[x].rClass.push('s-off');
+                name[x].rStatus.push('not synced');// name[x].rClass.push('s-off');
               }
-            }).catch((error) => {console.log("Error getting document:", error)});
+            }
 
             var URL = "https://pixabay.com/api/?key="+API_KEY+"&q="+encodeURIComponent(name[x].locations[y]);
             await axios.get(URL).then(response => {name[x].cityImg.push(response.data.hits[0].webformatURL)})

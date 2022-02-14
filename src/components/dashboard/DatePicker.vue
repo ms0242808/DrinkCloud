@@ -27,7 +27,8 @@
 <script>
   import DateRangePicker from 'vue2-daterange-picker'
 	import 'vue2-daterange-picker/dist/vue2-daterange-picker.css'
-	import moment from 'moment'
+	import moment from 'moment/src/moment'
+	import 'moment/src/lib/locale/locale'
 	import store from '../../store/store'
 
   export default ({

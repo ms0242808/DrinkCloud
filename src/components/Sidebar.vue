@@ -68,7 +68,7 @@
 </template>
 
 <script>
-import { db, perf } from "../fire"
+import { db, onSnapshot, doc, perf, trace } from "../fire"
 import store from '../store/store'
 import { mapGetters } from 'vuex'
 
@@ -108,9 +108,9 @@ export default {
 	methods:{
 		closeSidebar(){this.$emit('close-sidebar')},
 		getMStatus(){
-			const trace = perf.trace("getMachineStatus");
-			trace.start();
-			db.doc('status/'+this.brandL).onSnapshot((doc)=>{
+			const t = trace(perf,"getMachineStatus");
+			t.start();
+			const unsub = onSnapshot(doc(db, "status", this.brandL), (doc) => {
 				if(doc.exists){
 					this.mStatus = doc.data()['state'];
 					if(this.mStatus == "online"){this.mClass = 's-on'}
@@ -129,7 +129,7 @@ export default {
 					this.rClass = 's-off';
 				}
 			});
-			trace.stop();
+			t.stop();
 		}
 	}
 }

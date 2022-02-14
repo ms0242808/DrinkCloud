@@ -15,7 +15,10 @@
       <b-card class="mb-2" :class="item.border" :style="cardStyle(index)" v-show="skele[1]">
         <b-row class="align-items-center">
           <b-col class="col-auto">
-            <b-icon :icon="item.icon" :class="item.color" font-scale="2"></b-icon>
+            <template v-if="index==0"><BIconCupStraw :class="item.color" font-scale="2"/></template>
+            <template v-else-if="index==1"><BIconTrophyFill :class="item.color" font-scale="2"/></template>
+            <template v-else-if="index==2"><BIconHourglassSplit :class="item.color" font-scale="2"/></template>
+            <template v-else-if="index==3"><BIconShieldFillCheck :class="item.color" font-scale="2"/></template>
           </b-col>
           <b-col class="col">
             <b-card-title :title="$t('dashboard.'+item.title)"></b-card-title>
@@ -34,8 +37,15 @@
 
 <script>
 import store from '../../store/store'
+import { BIconCupStraw,BIconTrophyFill,BIconHourglassSplit,BIconShieldFillCheck } from 'bootstrap-vue'
 export default {
   name:'cards',
+  components: {
+    BIconCupStraw,
+    BIconTrophyFill,
+    BIconHourglassSplit,
+    BIconShieldFillCheck
+  },
   props:{
     showSke: {type: Boolean },
 		showStats: {type: Boolean },

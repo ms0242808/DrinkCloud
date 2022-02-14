@@ -40,7 +40,7 @@
   </b-modal>
 </template>
 <script>
-import { functions, httpsCallable, db, perf } from "../../fire";
+import { functions, httpsCallable, perf, trace } from "../../fire";
 import store from '../../store/store'
 export default {
   name:'modal',
@@ -91,8 +91,8 @@ export default {
       else{this.catSwitch = 1}
     },
     async addCat(modalRef){
-      const trace = perf.trace("addCategory");
-			trace.start();
+      const t = trace(perf,"addCategory");
+			t.start();
       var catT = this.inputVal,
       recipes = store.getters.getRecipe.recipeVal,
       x = 0,
@@ -117,11 +117,11 @@ export default {
         store.commit('recipeChanged', recipes);
         this.hideModal(modalRef);
       });
-      trace.stop();
+      t.stop();
     },
     async setIngre(modalRef){
-      const trace = perf.trace("updateIngre");
-			trace.start();
+      const t = trace(perf,"updateIngre");
+			t.start();
       var updateIngre = httpsCallable(functions,'updateIngre');
       await updateIngre({docPath:'recipes/'+this.brandL, ingre:this.ingList}).then(result => {
         var header = store.getters.getRecipe.header,
@@ -133,11 +133,11 @@ export default {
         store.commit('recipeHeader',header);
         this.hideModal(modalRef);
       });
-      trace.stop();
+      t.stop();
     },
     async setCat(modalRef){
-      const trace = perf.trace("setCategory");
-			trace.start();
+      const t = trace(perf,"setCategory");
+			t.start();
       var cat = {},
       rawState = [],
       x = 0;
@@ -156,16 +156,16 @@ export default {
         store.commit('recipeChanged', recipes);
         this.hideModal(modalRef);
       });
-      trace.stop();
+      t.stop();
     },
     async publish(modalRef){
-      const trace = perf.trace("publishRecipe");
-			trace.start();
+      const t = trace(perf,"publishRecipe");
+			t.start();
       var publishRecipe = httpsCallable(functions,'publishRecipe');
       await publishRecipe({docPath:'recipes/'+this.brandL,brand:this.brandL}).then(result => {
         this.hideModal(modalRef);
       });
-      trace.stop();
+      t.stop();
     }
   }
 }

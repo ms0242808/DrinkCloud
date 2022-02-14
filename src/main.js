@@ -3,29 +3,25 @@ import App from './App.vue'
 import VueRouter from 'vue-router'
 import { routes } from './routes'
 import store from './store/store'
-import firebase from 'firebase/compat/app'
-import VueApexCharts from 'vue-apexcharts'
 import VueExcelXlsx from "vue-excel-xlsx"
 import PortalVue from 'portal-vue'
 import { library } from '@fortawesome/fontawesome-svg-core'
-import { fas } from '@fortawesome/free-solid-svg-icons'
+import { faBars,faMapMarkerAlt,faUserShield,faSignOutAlt,faStream,faMap,faTachometerAlt,faFileAlt,faTools,faCog,faCheckCircle,faRobot,faPowerOff,faLemon,faLink,faHdd,faServer,faGlobe,faEye,faChartPie,faListOl,faCalendar,faCaretDown,faExchangeAlt,faTrashAlt,faPlus,faUpload,faLongArrowAltRight,faTimes,faIdBadge,faUser,faUserPlus,faEnvelope,faLock,faEdit,faPaperPlane } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
-import { BootstrapVue, IconsPlugin } from 'bootstrap-vue'
+import { BootstrapVue } from 'bootstrap-vue'
 import 'bootstrap/dist/css/bootstrap.css'
 import 'bootstrap-vue/dist/bootstrap-vue.css'
 import './assets/css/theme.css'
 import './registerServiceWorker'
 import i18n from './i18n'
-import { auth } from './fire'
+import "./infire"
+import { getAuth,onAuthStateChanged } from 'firebase/auth'
 
 Vue.use(VueRouter)
-Vue.use(VueApexCharts)
 Vue.use(VueExcelXlsx)
 Vue.use(PortalVue)
 Vue.use(BootstrapVue)
-Vue.use(IconsPlugin)
-library.add(fas)
-Vue.component('apexchart', VueApexCharts)
+library.add(faBars,faMapMarkerAlt,faUserShield,faSignOutAlt,faStream,faMap,faTachometerAlt,faFileAlt,faTools,faCog,faUserShield,faCheckCircle,faRobot,faPowerOff,faLemon,faLink,faHdd,faServer,faGlobe,faEye,faChartPie,faListOl,faCalendar,faCaretDown,faExchangeAlt,faTrashAlt,faPlus,faUpload,faLongArrowAltRight,faTimes,faIdBadge,faUser,faUserPlus,faEnvelope,faLock,faEdit,faPaperPlane)
 Vue.component('font-awesome-icon', FontAwesomeIcon)
 Vue.config.productionTip = false
 
@@ -35,8 +31,9 @@ const router = new VueRouter({
 	routes
 });
 
+const auth = getAuth();
 router.beforeEach((to, from, next) => {
-  const currentUser = firebase.auth().currentUser;
+  const currentUser = auth.currentUser;
   const requiresAuth = to.matched.some(record => record.meta.requiresAuth);
   if (requiresAuth && !currentUser) next('Login');
   else if (!requiresAuth && currentUser) next('Home');
@@ -47,23 +44,13 @@ router.afterEach((to, from) => {
 	Vue.nextTick(() => {document.title = to.meta.title + ' | Drinktec Cloud' || 'Drinktec Cloud'});
 });
 
-firebase.getCurrentUser = () => {
-	return new Promise((resolve, reject) => {
-		const unsubscribe = auth.onAuthStateChanged(user => {
-			unsubscribe();
-			resolve(user);
-		}, reject);
-	})
-};
-
 let app = '';
-auth.onAuthStateChanged(async user => {
-	await store.commit('authStateChanged', user);
+onAuthStateChanged(auth,user => {
+	store.commit('authStateChanged', user);
 	if(!app){
 		app = new Vue({
 			router,
 			store,
-			firebase,
 			i18n,
 			render: h => h(App)
 		}).$mount('#app')

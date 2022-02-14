@@ -2,7 +2,7 @@
   <div class="wrapper">
     <b-container>
       <div class="mx-auto" style="width:300px;margin-top:50px">
-        <img src="@/assets/pic/logow.png" style="width:100%">
+        <img src="@/assets/pic/logow.webp" style="width:100%; height:100%">
       </div>
     </b-container>
     <b-container class="bv-example-row">
@@ -45,7 +45,7 @@
 </template>
 
 <script>
-  import {auth, perf} from '../fire';
+  import {auth, signInWithEmailAndPassword, perf, trace} from '../fire';
   import Vue from 'vue';
 
   export default {
@@ -69,12 +69,12 @@
     methods: {
       async onSubmit(event) {
         event.preventDefault();
-        const trace = perf.trace("loginClicked");
-        trace.start();
+        const t = trace(perf,"loginClicked");
+        t.start();
         this.btn.text = '';
         this.msg.err = '';
         Vue.set(this.btnClicked,'b',1);
-        auth.signInWithEmailAndPassword(this.form.email, this.form.password)
+        signInWithEmailAndPassword(auth, this.form.email, this.form.password)
         .then(() => {
           this.btn.text = this.$i18n.t('login.login');
           Vue.set(this.btnClicked,'b',0);
@@ -84,7 +84,7 @@
           this.btn.text = this.$i18n.t('login.login');
           Vue.set(this.btnClicked,'b',0);
         });
-        trace.stop();
+        t.stop();
       }
     }
   }

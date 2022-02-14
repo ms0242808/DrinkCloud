@@ -163,8 +163,7 @@
 </template>
 
 <script>
-import { functions, httpsCallable, db, auth, perf} from "../fire"
-import firebase from 'firebase/compat/app'
+import { functions, httpsCallable, db, doc, setDoc, updateDoc, collection, query, where, onSnapshot, auth, updatePassword,EmailAuthProvider,reauthenticateWithCredential, perf, trace} from "../fire"
 import store from '../store/store'
 import { mapGetters } from 'vuex'
 import Vue from 'vue'
@@ -264,16 +263,17 @@ export default {
       var email = this.createU.email,
       pass = this.createU.pass,
       newuser = httpsCallable(functions,'createUser');
-      const trace = perf.trace("addNewUser");
-			trace.start();
+      const t = trace(perf,"addNewUser");
+			t.start();
       await newuser({email,pass}).then(({data:user}) => {
-        db.collection('users').doc(user.uid).set({
+        const userRef = doc(db, 'users', user.uid);
+        setDoc(userRef, { 
           email: this.createU.email,
           brand: this.brandL.split('-')[0],
           role: this.createU.role,
           location: this.createU.locations,
           name: this.createU.name
-        }).then(()=>{
+        },{ merge: true }).then(()=>{
           this.$root.$emit('bv::toggle::collapse', 'add-account');
           this.createU={
             name: '',
@@ -287,36 +287,47 @@ export default {
       }).catch((error) => {
         console.log(error);
       });
-      trace.stop();
+      t.stop();
     },
     async updateUser(){
       Vue.set(this.btn.editP.btnClicked,'b',1);
       const user = auth.currentUser;
-      const trace = perf.trace("updateCurrentUser");
-			trace.start();
+      const t = trace(perf,"updateCurrentUser");
+			t.start();
       if(this.user !== this.editP.name){
-        await db.collection('users').doc(user.uid).update({name: this.editP.name}).then(()=>{store.commit('userNameChanged',this.editP.name)});
+        const editUser = doc(db, "users", user.uid);
+        await updateDoc(editUser, {
+          name: this.editP.name
+        }).then(()=>{store.commit('userNameChanged',this.editP.name)});
       }
       if(this.editP.oldPass.length > 5 && this.editP.oldPass !== this.editP.newPass){
-        var credential = firebase.auth.EmailAuthProvider.credential(user.email,this.editP.oldPass);
-        user.reauthenticateWithCredential(credential).then(async() => {
-          user.updatePassword(this.editP.newPass).then(async () => {
-          }).catch((error) => {console.log(error)});
-        }).catch((error) => {console.log(error);});
+        const user = auth.currentUser;
+        const credential = EmailAuthProvider.credential(user.email,this.editP.oldPass);
+        reauthenticateWithCredential(user, credential).then(() => {
+          const newPassword = this.editP.newPass;
+          updatePassword(user, newPassword).then(() => {
+          console.log('SUCCESS');
+          }).catch((error) => {
+            console.log(error);
+          });
+        }).catch((error) => {
+          console.log(error);
+        });
       }
-      trace.stop();
+      t.stop();
       this.profile = !this.profile;
       Vue.set(this.btn.editP.btnClicked,'b',0);
     },
     async getStaff(){
       let requests =  [];
-      const trace = perf.trace("getStaff");
-			trace.start();
-      db.collection('users').where('brand','==',this.brandL.split('-')[0]).onSnapshot(function(snapshot){
-        let changes = snapshot.docChanges();
-        var locationList = store.getters.getLocationList;
-        changes.forEach(change => {
+      const t = trace(perf,"getStaff");
+			t.start();
+      const q = query(collection(db, "users"), where("brand", "==", this.brandL.split('-')[0]));
+      const unsubscribe = onSnapshot(q, (snapshot) => {
+        snapshot.docChanges().forEach((change) => {
+          var locationList = store.getters.getLocationList;
           if(change.type === 'added' || change.type === 'modified'){
+            console.log("New city: ", change.doc.data());
             var list = change.doc.data().location,
             [name,role,location] = [change.doc.data().name,change.doc.data().role,[]],
             x = false,
@@ -331,7 +342,27 @@ export default {
           }
         });
       });
-      trace.stop();
+
+      // db.collection('users').where('brand','==',this.brandL.split('-')[0]).onSnapshot(function(snapshot){
+      //   let changes = snapshot.docChanges();
+      //   var locationList = store.getters.getLocationList;
+      //   changes.forEach(change => {
+      //     if(change.type === 'added' || change.type === 'modified'){
+      //       var list = change.doc.data().location,
+      //       [name,role,location] = [change.doc.data().name,change.doc.data().role,[]],
+      //       x = false,
+      //       c = 0;
+      //       for(c in list){
+      //         if(locationList.includes(list[c])){
+      //           x = true;
+      //           location.push(list[c]);
+      //         }
+      //       }
+      //       if(x){requests.push({Name:name,Role:role,Locations:location,id:change.doc.id})}
+      //     }
+      //   });
+      // });
+      t.stop();
       this.staff = requests;
     },
     async updateStaff(id){
@@ -346,25 +377,25 @@ export default {
         }
       }
       var userUpdate = httpsCallable(functions,'userUpdate');
-      const trace = perf.trace("updateStaff");
-			trace.start();
+      const t = trace(perf,"updateStaff");
+			t.start();
       await userUpdate({name:'a'+id, role:role, location:locations}).then(result =>{
         this.hideModal('edit'+id);
         Vue.set(this.btn.upS.btnClicked,'b',0);
       });
-      trace.stop();
+      t.stop();
     },
     async delStaff(id,index){
       Vue.set(this.btn.delS.btnClicked,'b',1);
       var adminDelete = httpsCallable(functions,'adminDelete');
-      const trace = perf.trace("removeStaff");
-			trace.start();
+      const t = trace(perf,"removeStaff");
+			t.start();
       await adminDelete({name:'a'+id}).then(result => {
         this.staff.splice(index, 1);
         this.hideModal('del'+id);
         Vue.set(this.btn.delS.btnClicked,'b',0);
       });
-      trace.stop();
+      t.stop();
     }
   },
   watch:{

@@ -80,8 +80,11 @@
 
 <script>
 import store from '../../store/store'
+import VueApexCharts from 'vue-apexcharts'
 import Vue from 'vue'
 
+Vue.use(VueApexCharts)
+Vue.component('apexchart', VueApexCharts)
 export default {
   name:'charts',
   props:{

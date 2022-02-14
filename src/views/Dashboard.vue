@@ -37,7 +37,7 @@
 
 <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
 <script>
-	import { functions, httpsCallable, db, perf } from "../fire";
+	import { functions, httpsCallable, db, collection, doc, getDoc, getDocs, query, where, perf, trace } from "../fire";
 	import store from '../store/store'
 	import { mapGetters } from 'vuex'
 	import Cards from '../components/dashboard/Cards.vue'
@@ -96,8 +96,8 @@
 				store.commit('healthUpdate', health);
 			},
 			async dateClicked(val){
-				const trace = perf.trace("getStats");
-				trace.start();
+				const t = trace(perf,"getStats");
+				t.start();
 				this.setLoadingState(true,false);
 				this.rangeVal = val;
 				var stats = await getStats(val[0],val[1],this.brandL);
@@ -105,7 +105,7 @@
 				sorted = await sorted.then(result =>{return result});
 				store.commit('statsChanged', sorted);
 				this.setLoadingState(false,true);
-				trace.stop();
+				t.stop();
 			},
 			async renderStats(stats){
 				var hours = exeractVal(stats[5]),
@@ -141,12 +141,42 @@
 			// const data = result.data.header.slice(1,-1);
 			getList = result.data.list;
 		});
+		var mTime = 0;
 		if(getList.length>0){stats = await sortList(getList, s, e, brandL)}
-		else{stats = ['','No data','No data','No data','100%']}
+		else{
+			mTime = await getMTime(s,e,brandL);
+			stats = ['','No data','No data',mTime,'100%']
+		}
 		store.commit('updateStats', getList);
 		return stats;
 	}
 
+	async function getMTime(s,e,brandL){
+		const docRef = doc(db, "status", brandL);
+		const docSnap = await getDoc(docRef);
+		var mTime = 0;
+		if(docSnap.exists()){
+			var list = docSnap.data()['duration'],
+			totalHours = 0;
+			if(s == e){
+				if(typeof docSnap.data()['onTime'][s] !== 'undefined'){
+					var current = docSnap.data()['onTime'],
+					now = Date.now();
+					if(docSnap.data()['state']=="online"){totalHours = now - current[s]}
+					if(list[s]>0){totalHours = totalHours + parseInt(list[s])}
+					mTime = msToTime(totalHours);
+				}else{
+					mTime = 'No Data';
+				}
+			}else{
+				for(var d=parseInt(s);d<=parseInt(e);d++){if(list[d.toString()]){totalHours += parseInt(list[d.toString()])}}
+				mTime = msToTime(totalHours);
+			}
+		}else{
+			mTime = 'No Data';
+		}
+		return mTime
+	}
 	async function sortList(getList, start, end, brandL){
 		var drinkCount = 0,
 		rangeD = start,
@@ -212,32 +242,15 @@
 		var teaTop = sortTop(teaVal);
 		for(x in teaTop){teaRank.push(x)}
 		
-		var machineTime = 0;
-		await db.doc('/status/'+brandL).get().then((doc) => {
-			var list = doc.data()['duration'],
-			totalHours = 0;
-			if(start == end){
-				var current = doc.data()['onTime'],
-				now = Date.now();
-				if(doc.data()['state']=="online"){totalHours = now - current[start]}
-				if(list[start]>0){totalHours = totalHours + parseInt(list[start])}
-				list[start]=totalHours;
-				machineTime = msToTime(totalHours);
-			}else{
-				for(var d=parseInt(start);d<=parseInt(end);d++){if(list[d.toString()]){totalHours += parseInt(list[d.toString()])}}
-				machineTime = msToTime(totalHours);
-			}
-		});
+		var machineTime = await getMTime(start,end,brandL);
 
 		if(teaRank[0]){
 			var topCat = [];
 			var totalCat = {};
 			for(i in itemSum){
-				await db.doc('recipes/'+brandL).collection("Category").where("Online", "array-contains", i).get()
-				.then((querySnapshot) => {
-					querySnapshot.forEach((doc) => {totalCat[doc.id] = (totalCat[doc.id]+parseInt(itemSum[i])) || parseInt(itemSum[i]);
-					});
-				});
+				const q2 = query(collection(db, 'recipes',brandL,"Category"), where("Online", "array-contains", i));
+				const querySnapshot = await getDocs(q2);
+				querySnapshot.forEach((doc) => {totalCat[doc.id] = (totalCat[doc.id]+parseInt(itemSum[i])) || parseInt(itemSum[i])});
 			}
 			var sortCat = sortTop(totalCat);
 			for(t in sortCat){topCat.push(t)}	

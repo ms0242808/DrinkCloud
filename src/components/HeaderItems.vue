@@ -41,7 +41,7 @@
 </template>
 
 <script>
-	import {auth, db, perf} from '../fire'
+	import {auth,signOut, db, collection, query, where, getDocs, perf, trace} from '../fire'
 	import Avatar from 'vue-avatar'
 	import { mapGetters } from 'vuex'
 	import store from '../store/store'
@@ -81,21 +81,21 @@
 		},
 		async created(){
 			var email = this.getEmail;
-			const trace = perf.trace("getLoginData");
-			trace.start();
-			await db.collection("users").where('email','==',email).get().then((querySnapshot) => {
-				querySnapshot.forEach((doc) => {
-					this.user.name = doc.data()['name'];
-					this.user.brand = doc.data()['brand'];
-					this.user.role = doc.data()['role'];
-					this.user.location = doc.data()['location'];
-					this.selected= this.user.location[0];
-					this.user.accType = (doc.data()['brand']==="Drinktec") ? true:false;
-					store.commit('brandChanged', this.user);
-					store.commit('locationChanged', doc.data()['location'][0]);
-				});
+			const t = trace(perf,"getLoginData");
+			t.start();
+			const q = query(collection(db, "users"), where("email", "==", email));
+			const querySnapshot = await getDocs(q);
+			querySnapshot.forEach((doc) => {
+				this.user.name = doc.data()['name'];
+				this.user.brand = doc.data()['brand'];
+				this.user.role = doc.data()['role'];
+				this.user.location = doc.data()['location'];
+				this.selected= this.user.location[0];
+				this.user.accType = (doc.data()['brand']==="Drinktec") ? true:false;
+				store.commit('brandChanged', this.user);
+				store.commit('locationChanged', doc.data()['location'][0]);
 			});
-			trace.stop();
+			t.stop();
 		},
 		mounted(){
 			setTimeout(()=>{this.setLoadingState(false,true)}, 1000)
@@ -112,7 +112,7 @@
 				this.avatarSke = value1;
 				this.avatarShow = value2;
 			},
-			logout(){auth.signOut().then(() => {this.$router.replace('login')})}
+			logout(){signOut(auth).then(() => {this.$router.replace('login')})}
 		}
 	}
 </script>
