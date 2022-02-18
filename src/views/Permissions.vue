@@ -342,26 +342,6 @@ export default {
           }
         });
       });
-
-      // db.collection('users').where('brand','==',this.brandL.split('-')[0]).onSnapshot(function(snapshot){
-      //   let changes = snapshot.docChanges();
-      //   var locationList = store.getters.getLocationList;
-      //   changes.forEach(change => {
-      //     if(change.type === 'added' || change.type === 'modified'){
-      //       var list = change.doc.data().location,
-      //       [name,role,location] = [change.doc.data().name,change.doc.data().role,[]],
-      //       x = false,
-      //       c = 0;
-      //       for(c in list){
-      //         if(locationList.includes(list[c])){
-      //           x = true;
-      //           location.push(list[c]);
-      //         }
-      //       }
-      //       if(x){requests.push({Name:name,Role:role,Locations:location,id:change.doc.id})}
-      //     }
-      //   });
-      // });
       t.stop();
       this.staff = requests;
     },

@@ -189,24 +189,25 @@
         city = this.locations,
         brand = this.brandL.split('-')[0];
         for(x in city){
-          await db.doc('status/'+brand+'-'+city[x]).get().then((doc) => {
-            if(doc.exists){
-              Vue.set(this.mStatus,x,doc.data()['state']);
-              Vue.set(this.mClass,x,'s-on');
-              if(doc.data()['Recipe-Update']){
-                Vue.set(this.rStatus,x,'synced');
-                Vue.set(this.rClass,x,'s-on');
-              }else{
-                Vue.set(this.rStatus,x,'not synced');
-                Vue.set(this.rClass,x,'s-off');
-              }
+          const docRef = doc(db, "status", brand+'-'+city[x]);
+          const docSnap = await getDoc(docRef);
+          if(docSnap.exists()){
+            Vue.set(this.mStatus,x,docSnap.data()['state']);
+            if(docSnap.data()['state']=='online'){Vue.set(this.mClass,x,'s-on')}
+            else{Vue.set(this.mClass,x,'s-off')}
+            if(docSnap.data()['Recipe-Update']){
+              Vue.set(this.rStatus,x,'synced');
+              Vue.set(this.rClass,x,'s-on');
             }else{
-              Vue.set(this.mStatus,x,'offline');
-              Vue.set(this.mClass,x,'s-off');
               Vue.set(this.rStatus,x,'not synced');
               Vue.set(this.rClass,x,'s-off');
             }
-          }).catch((error) => {console.log("Error getting document:", error)});
+          }else{
+            Vue.set(this.mStatus,x,'offline');
+            Vue.set(this.mClass,x,'s-off');
+            Vue.set(this.rStatus,x,'not synced');
+            Vue.set(this.rClass,x,'s-off');
+          }
         }
         this.setLoadingState(false,true);
       },
@@ -217,9 +218,7 @@
       viewStoreDash(item,city){
         console.log(item.locations);
         var val= {brand:item.brand,location:item.locations};
-        if(this.brandL.split('-')[0]!==item.brand){
-          store.commit('brandUpdated', val);
-        }
+        if(this.brandL.split('-')[0]!==item.brand){store.commit('brandUpdated', val)}
         this.viewDash(city);
       },
       accType(){
