@@ -106,7 +106,7 @@
 				store.commit('recipeChanged', recipes);
 				store.commit('onDrinkUpdate', onList);
 				store.commit('offDrinkUpdate', offList);
-				if(header.length === 0){
+				if(recipes.length === 0){
 					this.nodata = true;
 					this.setLoadingState(false,false);
 				}else{
