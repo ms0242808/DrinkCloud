@@ -115,7 +115,7 @@
 				iradar = exeractRadar(stats[9]),
 				ice = exeractVal(stats[10]);
 				var sorted = [
-					stats[1].toString(),stats[2],stats[3],hours[1],hours[0],
+					stats[1].toString(),stats[2],stats[3],hours[0],hours[1],
 					tea[0],tea[1],juice[0],juice[1],
 					sradar[0],sradar[1],iradar[0],iradar[1],
 					ice[0],ice[1]
