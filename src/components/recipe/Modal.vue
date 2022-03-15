@@ -33,7 +33,7 @@
     </div>
     <template #modal-footer>
       <div class="w-100">
-        <b-button variant="outline-success" class="float-right ml-1 text-14" @click="useFunction(fnName,modalRef)" :disabled="btnState == 1 && btnText !== 'Publish' ">{{$t('recipe.'+btnText)}}</b-button>
+        <b-button variant="outline-success" class="float-right ml-1 text-14" @click="useFunction(fnName,modalRef)" :disabled="btnState == 1 && btnText !== 'publish' ">{{$t('recipe.'+btnText)}}</b-button>
         <b-button variant="outline-dark text-14" class="float-right" @click="hideModal(modalRef)">{{$t('recipe.cancel')}}</b-button>
       </div>
     </template>
