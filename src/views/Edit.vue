@@ -12,7 +12,7 @@
 					<h3 class="m-0">{{recipe}}</h3>
 				</b-col>
         <b-col class="no-putters text-end" cols="3">
-					<b-button variant="outline-success" @click="upRecipe()">{{$t('recipe.'+btn.update)}}<b-spinner small v-if="btnClicked['b']"></b-spinner></b-button>
+					<b-button variant="outline-success" @click="upRecipe()">{{btn.update}}<b-spinner small v-if="btnClicked['b']"></b-spinner></b-button>
 				</b-col>
 			</b-row>
 		</b-container>
@@ -55,7 +55,7 @@
               </div>
               <template #modal-footer>
                 <div class="w-100">
-                  <b-button variant="outline-success" class="ml-1 float-right" @click="upSetting()">{{$t('recipe.'+btn.save)}}<b-spinner small v-if="btnClicked['b']"></b-spinner></b-button>
+                  <b-button variant="outline-success" class="ml-1 float-right" @click="upSetting()">{{btn.save}}<b-spinner small v-if="btnClicked['b']"></b-spinner></b-button>
                   <b-button variant="outline-dark" class="float-right" @click="hideModal">{{$t('recipe.cancel')}}</b-button>
                 </div>
               </template>
@@ -91,8 +91,8 @@ export default {
       showSke: true,
       showVal: false,
       btn:{
-        update:'update',
-        save:'save'
+        update:this.$i18n.t('recipe.update'),
+        save:this.$i18n.t('recipe.save')
       },
       btnClicked : [],
       dismissSecs: 5,
@@ -299,7 +299,7 @@ export default {
         this.msg = 'alert error';
         this.showAlert();
       }
-      this.btn.update = 'update';
+      this.btn.update = this.$i18n.t('recipe.update');
       Vue.set(this.btnClicked,'b',0);
       t.stop();
     },
@@ -326,7 +326,7 @@ export default {
         this.variant = 'success';
         this.msg = 'alert update';
         this.showAlert();
-        this.btn.save = 'save';
+        this.btn.save = this.$i18n.t('recipe.save');
         Vue.set(this.btnClicked,'b',0);
       });
       t.stop();
