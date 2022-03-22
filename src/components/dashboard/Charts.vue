@@ -126,7 +126,7 @@ export default {
       };
       return [{
         title: 'overview',
-        type: 'line',
+        type: 'area',
         class:"col-xl-7 mt-2",
         dataL: store.getters.getStats.overviewVal.length,
         options: {
