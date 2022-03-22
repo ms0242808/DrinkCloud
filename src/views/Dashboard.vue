@@ -145,7 +145,7 @@
 		if(getList.length>0){stats = await sortList(getList, s, e, brandL)}
 		else{
 			mTime = await getMTime(s,e,brandL);
-			stats = ['','No data','No data',mTime,'100%']
+			stats = ['','No data','No data','No data','100%'] // mTime
 		}
 		store.commit('updateStats', getList);
 		return stats;
@@ -228,6 +228,8 @@
 		var [counthr,counthm] = [{},{}];
 		counthr = countTime(hr);
 		counthm = countTime(hm);
+		var maxHr = Object.keys(counthr).reduce((a, b) => counthr[a] > counthr[b] ? a : b);
+		maxHr = maxHr + '00 - ' + (parseInt(maxHr)+1) +'00';
 		delete liquidValue.header; // delete object liquid value header
 		for(t in tempValue){
 			var x = t.split('-')[1];
@@ -242,7 +244,7 @@
 		var teaTop = sortTop(teaVal);
 		for(x in teaTop){teaRank.push(x)}
 		
-		var machineTime = await getMTime(start,end,brandL);
+		// var machineTime = await getMTime(start,end,brandL);
 
 		if(teaRank[0]){
 			var topCat = [];
@@ -267,7 +269,7 @@
 		var sugarTop = sortTop(sugarValue);
 		for(x in sugarTop){sugarRank.push(x)}
 
-		return [header,drinkCount,topCat[0],machineTime,health,counthr,teaTop,juiceTop,sugarSize,iceSize,tempValue]
+		return [header,drinkCount,topCat[0],maxHr,health,counthr,teaTop,juiceTop,sugarSize,iceSize,tempValue]
   }
 
   function msToTime(t){

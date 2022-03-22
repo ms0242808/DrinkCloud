@@ -72,7 +72,7 @@ export default {
         icon: 'trophy-fill',
         color: 'text-info'
       },{
-        title: 'working hr',
+        title: 'peak hr',
         value: store.getters.getStats.hrVal,
         border: 'border-left-primary',
         icon: 'hourglass-split',
