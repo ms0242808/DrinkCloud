@@ -88,7 +88,7 @@ export default {
 			rClass: 's-off',
       langs:[
 				{text:'EN',value:'en'},
-				{text:'中文',value:'zh-tw'}
+				{text:'中文',value:'zh-TW'}
 			]
     }
   },
