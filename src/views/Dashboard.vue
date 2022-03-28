@@ -240,6 +240,7 @@
 		for(x in teaVal){
 			var y = parseInt(x.split('tea')[1])-1;
 			if(teaHead[y].substring(0,3) !== 'tea'){delete Object.assign(teaVal,{[teaHead[y]]:teaVal[x]})[x];}
+			else if(teaHead[y].substring(0,3) == 'tea' && teaVal[x] == 0){delete teaVal[teaHead[y]]}
 		}
 		var teaTop = sortTop(teaVal);
 		for(x in teaTop){teaRank.push(x)}
@@ -262,6 +263,7 @@
 		for(x in juiceVal){
 			var y = parseInt(x.split('j')[1])-1;
 			if(jHead[y].substring(0,1) !== 'j'){delete Object.assign(juiceVal,{[jHead[y]]:juiceVal[x]})[x];}
+			else if(jHead[y].substring(0,1) == 'j' && juiceVal[x] == 0){delete juiceVal[jHead[y]]}
 		}
 		var juiceTop = sortTop(juiceVal);
 		for(x in juiceTop){juiceRank.push(x)}
