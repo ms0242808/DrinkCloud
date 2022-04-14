@@ -165,7 +165,29 @@ export default {
         sum: store.getters.getStats.tpieVal.reduce((a, b) => a + b, 0),
         options: {
           labels: store.getters.getStats.tpieLab,
-          noData: nodata
+          noData: nodata,
+          chart: {
+            toolbar: {
+              show: true,
+              offsetX: 0,
+              offsetY: 0,
+              tools: {download: true},
+              export: {
+                csv: {
+                  filename: 'Tea',
+                  columnDelimiter: ',',
+                  headerCategory: 'Tea',
+                  headerValue: 'value',
+                  dateFormatter(timestamp) {
+                    return new Date(timestamp).toDateString()
+                  }
+                },
+                png: {
+                  filename: 'Tea',
+                }
+              }
+            },
+          }
         },
         series: store.getters.getStats.tpieVal
       },{
@@ -176,7 +198,29 @@ export default {
         sum: store.getters.getStats.jpieVal.reduce((a, b) => a + b, 0),
         options: {
           labels: store.getters.getStats.jpieLab,
-          noData: nodata
+          noData: nodata,
+          chart: {
+            toolbar: {
+              show: true,
+              offsetX: 0,
+              offsetY: 0,
+              tools: {download: true},
+              export: {
+                csv: {
+                  filename: 'Juice',
+                  columnDelimiter: ',',
+                  headerCategory: 'Juice',
+                  headerValue: 'value',
+                  dateFormatter(timestamp) {
+                    return new Date(timestamp).toDateString()
+                  }
+                },
+                png: {
+                  filename: 'Juice',
+                }
+              }
+            },
+          }
         },
         series: store.getters.getStats.jpieVal
       },{
@@ -196,7 +240,29 @@ export default {
         }],
         options:{
           labels: ['100%','70%','50%','30%','0%'],
-          noData: nodata
+          noData: nodata,
+          chart: {
+            toolbar: {
+              show: true,
+              offsetX: 0,
+              offsetY: 0,
+              tools: {download: true},
+              export: {
+                csv: {
+                  filename: 'SugarxSize',
+                  columnDelimiter: ',',
+                  headerCategory: 'SugarxSize',
+                  headerValue: 'value',
+                  dateFormatter(timestamp) {
+                    return new Date(timestamp).toDateString()
+                  }
+                },
+                png: {
+                  filename: 'SugarxSize',
+                }
+              }
+            },
+          }
         }
       },{
         title: 'ice custom',
@@ -215,7 +281,29 @@ export default {
         }],
         options:{
           labels: [this.$i18n.t('recipe.Normal Ice'),this.$i18n.t('recipe.Less Ice'),this.$i18n.t('recipe.Ice Free'),this.$i18n.t('recipe.Warm'),this.$i18n.t('recipe.Hot')],
-          noData: nodata
+          noData: nodata,
+          chart: {
+            toolbar: {
+              show: true,
+              offsetX: 0,
+              offsetY: 0,
+              tools: {download: true},
+              export: {
+                csv: {
+                  filename: 'IcexSize',
+                  columnDelimiter: ',',
+                  headerCategory: 'IcexSize',
+                  headerValue: 'value',
+                  dateFormatter(timestamp) {
+                    return new Date(timestamp).toDateString()
+                  }
+                },
+                png: {
+                  filename: 'IcexSize',
+                }
+              }
+            },
+          }
         }
       },{
         title: 'ice options',
@@ -225,7 +313,29 @@ export default {
         sum: store.getters.getStats.ipieVal.reduce((a, b) => a + b, 0),
         options: {
           labels: store.getters.getStats.ipieLab.map((key) => {return this.$i18n.t('recipe.'+key)}),
-          noData: nodata
+          noData: nodata,
+          chart: {
+            toolbar: {
+              show: true,
+              offsetX: 0,
+              offsetY: 0,
+              tools: {download: true},
+              export: {
+                csv: {
+                  filename: 'Ice',
+                  columnDelimiter: ',',
+                  headerCategory: 'Ice',
+                  headerValue: 'value',
+                  dateFormatter(timestamp) {
+                    return new Date(timestamp).toDateString()
+                  }
+                },
+                png: {
+                  filename: 'Ice',
+                }
+              }
+            },
+          }
         },
         series: store.getters.getStats.ipieVal
       }]
