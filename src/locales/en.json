@@ -9,6 +9,7 @@
     "general":"General",
     "overview":"Overview",
     "dashboard":"Dashboard",
+    "inventory":"Inventory",
     "recipe":"Recipe",
     "report":"Report",
     "settings":"Settings",
@@ -71,6 +72,9 @@
     "Ice Free":"Ice Free",
     "Warm":"Warm",
     "Hot":"Hot"
+  },
+  "inv":{
+    "title":"Inventory"
   },
   "stats":{
     "back":"Back",

@@ -25,6 +25,9 @@
             <b-nav-item class="mt-2">
               <router-link to="/dashboard" class="va-m"><font-awesome-icon fixed-width icon="tachometer-alt"/>{{$t('nav.dashboard')}}</router-link>
             </b-nav-item>
+						<b-nav-item class="mt-2">
+              <router-link to="/inventory" class="va-m"><font-awesome-icon fixed-width icon="boxes"/>{{$t('nav.inventory')}}</router-link>
+            </b-nav-item>
             <b-nav-item class="mt-2">
               <router-link to="/recipe" class="va-m"><font-awesome-icon fixed-width icon="file-alt"/>{{$t('nav.recipe')}}</router-link>
             </b-nav-item>
@@ -88,7 +91,7 @@ export default {
 			rClass: 's-off',
       langs:[
 				{text:'EN',value:'en'},
-				{text:'中文',value:'zh-TW'}
+				{text:'中文',value:'zh'}
 			]
     }
   },

@@ -19,6 +19,11 @@ export const routes = [{
 			component: () => import(/* webpackChunkName: "Stats" */ '@/views/Stats.vue'),
 			meta:{title: 'Stats'}
 		},{
+			path:'inventory',
+			name:'Inventory',
+			component: () => import(/* webpackChunkName: "Inventory" */ '@/views/Inventory.vue'),
+			meta:{title: 'Inventory'}
+		},{
 			path:'recipe',
 			name:'Recipe',
 			component: () => import(/* webpackChunkName: "Recipe" */ '@/views/Recipe.vue'),

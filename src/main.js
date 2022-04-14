@@ -6,7 +6,7 @@ import store from './store/store'
 import VueExcelXlsx from "vue-excel-xlsx"
 import PortalVue from 'portal-vue'
 import { library } from '@fortawesome/fontawesome-svg-core'
-import { faBars,faMapMarkerAlt,faUserShield,faSignOutAlt,faStream,faMap,faTachometerAlt,faFileAlt,faTools,faCog,faCheckCircle,faRobot,faPowerOff,faLemon,faLink,faHdd,faServer,faGlobe,faEye,faChartPie,faListOl,faCalendar,faCaretDown,faExchangeAlt,faTrashAlt,faPlus,faUpload,faLongArrowAltRight,faTimes,faIdBadge,faUser,faUserPlus,faEnvelope,faLock,faEdit,faPaperPlane } from '@fortawesome/free-solid-svg-icons'
+import { faBars,faMapMarkerAlt,faUserShield,faSignOutAlt,faStream,faMap,faTachometerAlt,faBoxes,faFileAlt,faTools,faCog,faCheckCircle,faRobot,faPowerOff,faLemon,faLink,faHdd,faServer,faGlobe,faEye,faChartPie,faListOl,faCalendar,faCaretDown,faExchangeAlt,faTrashAlt,faPlus,faUpload,faLongArrowAltRight,faTimes,faIdBadge,faUser,faUserPlus,faEnvelope,faLock,faEdit,faPaperPlane } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 import { BootstrapVue } from 'bootstrap-vue'
 import 'bootstrap/dist/css/bootstrap.css'
@@ -21,7 +21,7 @@ Vue.use(VueRouter)
 Vue.use(VueExcelXlsx)
 Vue.use(PortalVue)
 Vue.use(BootstrapVue)
-library.add(faBars,faMapMarkerAlt,faUserShield,faSignOutAlt,faStream,faMap,faTachometerAlt,faFileAlt,faTools,faCog,faUserShield,faCheckCircle,faRobot,faPowerOff,faLemon,faLink,faHdd,faServer,faGlobe,faEye,faChartPie,faListOl,faCalendar,faCaretDown,faExchangeAlt,faTrashAlt,faPlus,faUpload,faLongArrowAltRight,faTimes,faIdBadge,faUser,faUserPlus,faEnvelope,faLock,faEdit,faPaperPlane)
+library.add(faBars,faMapMarkerAlt,faUserShield,faSignOutAlt,faStream,faMap,faTachometerAlt,faBoxes,faFileAlt,faTools,faCog,faUserShield,faCheckCircle,faRobot,faPowerOff,faLemon,faLink,faHdd,faServer,faGlobe,faEye,faChartPie,faListOl,faCalendar,faCaretDown,faExchangeAlt,faTrashAlt,faPlus,faUpload,faLongArrowAltRight,faTimes,faIdBadge,faUser,faUserPlus,faEnvelope,faLock,faEdit,faPaperPlane)
 Vue.component('font-awesome-icon', FontAwesomeIcon)
 Vue.config.productionTip = false
 
