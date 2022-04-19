@@ -74,7 +74,29 @@
     "Hot":"Hot"
   },
   "inv":{
-    "title":"Inventory"
+    "title":"Inventory",
+    "add":"Add",
+    "catInput":"Type to search or add category...",
+    "companyInput":"Type to search or add company...",
+    "date":"Date",
+    "time":"Time",
+    "quantity":"Quantity",
+    "unit":"Unit",
+    "unitInput":"Type to search or add unit...",
+    "price":"Price",
+    "cancel":"Cancel",
+    "item":"Item",
+    "delete":"Delete",
+    "setting":"Settings",
+    "export":"Export",
+    "search":"Type to search",
+    "category":"Category",
+    "name":"Name",
+    "available":"Available",
+    "used":"Used",
+    "company":"Company",
+    "last_added":"Last added",
+    "action":"Action"
   },
   "stats":{
     "back":"Back",

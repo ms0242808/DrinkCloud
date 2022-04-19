@@ -73,7 +73,29 @@
     "Hot":"熱"
   },
   "inv":{
-    "title":"庫存"
+    "title":"庫存",
+    "add":"新增",
+    "catInput":"輸入文字收尋或新增分類...",
+    "companyInput":"輸入文字收尋或新增廠商...",
+    "date":"日期",
+    "time":"時間",
+    "quantity":"數量",
+    "unit":"單位",
+    "unitInput":"輸入文字收尋或新增單位...",
+    "price":"金額",
+    "cancel":"取消",
+    "item":"商品",
+    "delete":"刪除",
+    "setting":"設定 ",
+    "export":"導出",
+    "search":"輸入文字收尋",
+    "category":"分類",
+    "name":"名稱",
+    "available":"剩餘",
+    "used":"已使用",
+    "company":"廠商",
+    "last_added":"最後更新",
+    "action":"編輯"
   },
   "stats":{
     "back":"返回",
