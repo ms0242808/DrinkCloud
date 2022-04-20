@@ -53,7 +53,7 @@
 </template>
 <script>
 import store from '../../store/store'
-import { functions, httpsCallable, arrayUnion, db, doc, setDoc, updateDoc, collection, query, where, onSnapshot, auth, updatePassword,EmailAuthProvider,reauthenticateWithCredential, perf, trace} from "../../fire"
+import { functions, httpsCallable, increment, arrayUnion, db, doc, setDoc, updateDoc, collection, query, where, onSnapshot, auth, updatePassword,EmailAuthProvider,reauthenticateWithCredential, perf, trace} from "../../fire"
 
 export default {
   name:'modal',
@@ -97,31 +97,39 @@ export default {
       const t = trace(perf,"addInventory");
 			t.start();
       var x = this.dateVal.split('-'),
-      y = this.timeVal.split(':');
-      const newItem = doc(collection(db, "inventory",this.brandL,x[0]+x[1]+x[2]));
-      await setDoc(newItem, {
-        category: this.catVal,
-        item: this.itemVal,
-        company: this.companyVal,
-        date: this.dateVal,
-        time: this.timeVal,
-        quantity: this.quantityVal,
-        unit: this.unitVal,
-        price: this.priceVal,
-        added: x[0]+x[1]+x[2]+y[0]+y[1]
-      });
+      y = this.timeVal.split(':'),
+      z = 0;
+      // const newItem = doc(collection(db, "inventory",this.brandL,x[0]+x[1]+x[2]));
+      // await setDoc(newItem, {
+      //   id:this.catVal+"_"+this.companyVal+"_"+this.itemVal+"_"+this.unitVal,
+      //   category: this.catVal,
+      //   item: this.itemVal,
+      //   company: this.companyVal,
+      //   date: this.dateVal,
+      //   time: this.timeVal,
+      //   quantity: this.quantityVal,
+      //   unit: this.unitVal,
+      //   price: this.priceVal,
+      //   added: x[0]+x[1]+x[2]+y[0]+y[1]
+      // });
+      const newData = doc(db, "inventory", this.brandL);
       if(!this.catList.includes(this.catVal)){
-        const newCat = doc(db, "inventory", this.brandL);
-        await updateDoc(newCat,{category: arrayUnion(this.catVal)});
+        await updateDoc(newData,{category: arrayUnion(this.catVal)});
       }
       if(!this.companyList.includes(this.companyVal)){
-        const newCompany = doc(db, "inventory", this.brandL);
-        await updateDoc(newCompany,{company: arrayUnion(this.companyVal)});
+        await updateDoc(newData,{company: arrayUnion(this.companyVal)});
       }
       if(!this.unitList.includes(this.unitVal)){
-        const newUnit = doc(db, "inventory", this.brandL);
-        await updateDoc(newUnit,{unit: arrayUnion(this.unitVal)});
+        await updateDoc(newData,{unit: arrayUnion(this.unitVal)});
       }
+      // await updateDoc(newData,{[this.catVal+"_"+this.companyVal+"_"+this.itemVal+"_"+this.unitVal]: increment(parseInt(this.quantityVal))});
+      await updateDoc(newData,{
+        [this.catVal+"_"+this.companyVal+"_"+this.itemVal+"_"+this.unitVal]:{
+          ['added']:arrayUnion(this.dateVal+'-'+this.timeVal),
+          ['price']:arrayUnion(this.priceVal),
+          ['quantity']:arrayUnion(this.quantityVal)
+        }
+      },{merge:true})
       this.hideModal('addModal');
       t.stop();
     }
