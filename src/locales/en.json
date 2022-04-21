@@ -78,6 +78,7 @@
     "add":"Add",
     "catInput":"Type to search or add category...",
     "companyInput":"Type to search or add company...",
+    "tele":"Contact number",
     "date":"Date",
     "time":"Time",
     "quantity":"Quantity",
@@ -96,7 +97,9 @@
     "used":"Used",
     "company":"Company",
     "last_added":"Last added",
-    "action":"Action"
+    "view":"View",
+    "edit":"Edit",
+    "added":"Added"
   },
   "stats":{
     "back":"Back",

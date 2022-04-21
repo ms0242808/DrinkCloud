@@ -8,12 +8,16 @@
           <option v-for="cat in catList" :key="cat">{{ cat }}</option>
         </datalist>
       </b-col>
-      <b-col cols="12" class="mt-2">
+      <b-col cols="6" class="mt-2">
         <a class="space">{{$t('inv.company')}}</a>
         <b-form-input v-model="companyVal" list="company-list" :placeholder="$t('inv.companyInput')"></b-form-input>
         <datalist id="company-list">
           <option v-for="co in companyList" :key="co">{{ co }}</option>
         </datalist>
+      </b-col>
+      <b-col cols="6" class="mt-2">
+        <a class="space">{{$t('inv.tele')}}</a>
+        <b-form-input v-model="teleVal" id="invTele" type="number"></b-form-input>
       </b-col>
       <b-col cols="12" class="mt-2">
         <a class="space">{{$t('inv.item')}}</a>
@@ -35,7 +39,7 @@
         <a class="space">{{$t('inv.unit')}}</a>
         <b-form-input v-model="unitVal" list="unit-list" :placeholder="$t('inv.unitInput')"></b-form-input>
         <datalist id="unit-list">
-          <option v-for="un in unitList" :key="un">{{ un }}</option>
+          <option v-for="un in unitList" :key="un+'a'">{{ un }}</option>
         </datalist>
       </b-col>
       <b-col cols="4" class="mt-2">
@@ -63,6 +67,7 @@ export default {
       catVal:'',
       itemVal:'',
       companyVal:'',
+      teleVal:'',
       dateVal:'',
       timeVal:'',
       quantityVal:'',
@@ -77,7 +82,7 @@ export default {
   },
   computed:{
     'btnState':function(){
-      if(this.catVal.length > 0 && this.itemVal.length > 0 && this.companyVal.length > 0 && this.dateVal.length > 0 && this.timeVal.length > 0 && this.quantityVal.length > 0 && this.unitVal.length > 0 && this.priceVal.length > 0){return 0}
+      if(this.catVal.length > 0 && this.itemVal.length > 0 && this.companyVal.length > 0 && this.teleVal.length > 0 && this.dateVal.length > 0 && this.timeVal.length > 0 && this.quantityVal.length > 0 && this.unitVal.length > 0 && this.priceVal.length > 0){return 0}
       else{return 1}
     }
   },
@@ -87,6 +92,7 @@ export default {
       this.catVal='';
       this.itemVal='';
       this.companyVal='';
+      this.teleVal='';
       this.dateVal='';
       this.timeVal='';
       this.quantityVal='';
@@ -96,22 +102,6 @@ export default {
     async addItem(){
       const t = trace(perf,"addInventory");
 			t.start();
-      var x = this.dateVal.split('-'),
-      y = this.timeVal.split(':'),
-      z = 0;
-      // const newItem = doc(collection(db, "inventory",this.brandL,x[0]+x[1]+x[2]));
-      // await setDoc(newItem, {
-      //   id:this.catVal+"_"+this.companyVal+"_"+this.itemVal+"_"+this.unitVal,
-      //   category: this.catVal,
-      //   item: this.itemVal,
-      //   company: this.companyVal,
-      //   date: this.dateVal,
-      //   time: this.timeVal,
-      //   quantity: this.quantityVal,
-      //   unit: this.unitVal,
-      //   price: this.priceVal,
-      //   added: x[0]+x[1]+x[2]+y[0]+y[1]
-      // });
       const newData = doc(db, "inventory", this.brandL);
       if(!this.catList.includes(this.catVal)){
         await updateDoc(newData,{category: arrayUnion(this.catVal)});
@@ -122,12 +112,12 @@ export default {
       if(!this.unitList.includes(this.unitVal)){
         await updateDoc(newData,{unit: arrayUnion(this.unitVal)});
       }
-      // await updateDoc(newData,{[this.catVal+"_"+this.companyVal+"_"+this.itemVal+"_"+this.unitVal]: increment(parseInt(this.quantityVal))});
       await updateDoc(newData,{
         [this.catVal+"_"+this.companyVal+"_"+this.itemVal+"_"+this.unitVal]:{
-          ['added']:arrayUnion(this.dateVal+'-'+this.timeVal),
+          ['added']:arrayUnion(this.dateVal+' '+this.timeVal),
           ['price']:arrayUnion(this.priceVal),
-          ['quantity']:arrayUnion(this.quantityVal)
+          ['quantity']:arrayUnion(this.quantityVal),
+          ['tele']:this.teleVal
         }
       },{merge:true})
       this.hideModal('addModal');

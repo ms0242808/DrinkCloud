@@ -5,8 +5,8 @@
       <b-row>
         <b-col sm="12" lg="6">
           <b-button size="sm" class="mx-1" variant="success" v-b-modal="'addModal'"><font-awesome-icon fixed-width icon="plus"/>{{$t('inv.add')}}</b-button>
-          <b-button size="sm" class="mx-1" variant="outline-danger"><font-awesome-icon fixed-width icon="trash-alt"/>{{$t('inv.delete')}}</b-button>
-          <!-- <b-button size="sm" class="mx-1" variant="outline-dark"><font-awesome-icon fixed-width icon="cog"/>{{$t('inv.setting')}}</b-button> -->
+          <!-- <b-button size="sm" class="mx-1" variant="outline-danger"><font-awesome-icon fixed-width icon="trash-alt"/>{{$t('inv.delete')}}</b-button> -->
+          <b-button size="sm" class="mx-1" variant="outline-dark"><font-awesome-icon fixed-width icon="cog"/>{{$t('inv.setting')}}</b-button>
           <!-- <b-button size="sm" class="mx-1" variant="outline-primary"><font-awesome-icon fixed-width icon="file-download"/>{{$t('inv.export')}}</b-button> -->
         </b-col>
         <b-col sm="12" lg="6">
@@ -18,19 +18,30 @@
         </b-col>
       </b-row>
       <b-table striped hover responsive :items="invList" :fields="fields" :filter="filter" ref="table" class="mt-3">
-        <template #cell(Action)="data">
-          <b-button-group size="sm">
-            <b-button variant="outline-primary" @click="data.toggleDetails"><font-awesome-icon fixed-width icon="eye"/></b-button>
-          </b-button-group>
+        <template #cell(View)="data">
+          <b-button size="sm" variant="outline-primary" @click="data.toggleDetails"><font-awesome-icon fixed-width icon="eye"/></b-button>
         </template>
         <template #row-details="data">
           <b-card>
-            <b-row class="mb-2">
-              <b-col sm="4" class="text-sm-center"><b>Quantity</b></b-col>
-              <b-col sm="4" class="text-sm-center"><b>Price</b></b-col>
-              <b-col sm="4" class="text-sm-center"><b>Added</b></b-col>
-              <template v-for="(i) in data.item.details">
-                <b-col sm="4" class="text-sm-center mt-1  " :key="i"><b>{{i}}</b></b-col>
+            <b-card-header>
+              <b-row>
+                <b-col cols="6">
+                  <b>{{$t('inv.tele')}}: {{data.item.Company_tele}}</b>
+                </b-col>
+                <b-col cols="6">
+                  <b-button size="sm" class="mx-1 float-right" variant="outline-danger"><font-awesome-icon fixed-width icon="trash-alt"/>{{$t('inv.delete')}}</b-button>
+                  <b-button size="sm" class="mx-1 float-right" variant="outline-info" v-b-modal="'editModal'"><font-awesome-icon fixed-width icon="edit"/>{{$t('inv.edit')}}</b-button>
+                </b-col>
+              </b-row>
+            </b-card-header>
+            <b-row class="mb-2 mt-2">
+              <b-col cols="3"></b-col>
+              <b-col cols="3" class="text-sm-center"><b>{{$t('inv.quantity')}}</b></b-col>
+              <b-col cols="3" class="text-sm-center"><b>{{$t('inv.price')}}</b></b-col>
+              <b-col cols="3" class="text-sm-center"><b>{{$t('inv.added')}}</b></b-col>
+              <template v-for="(i,n) in data.item.details">
+                <b-col cols="3" :key="n" v-if="n % 3 ===0"><b-checkbox :id="n+'_'+data.item.id" v-model="selected" :value="n+data.item.id">{{n+"_"+data.item.id}}</b-checkbox></b-col>
+                <b-col cols="3" class="text-sm-center mt-1" :key="i+n+'a'"><b>{{i}}</b></b-col>
               </template>
             </b-row>
           </b-card>
@@ -65,7 +76,8 @@ export default {
       filter: null,
       catList:[],
       companyList:[],
-      unitList:[]
+      unitList:[],
+      selected:[]
     }
   },
   computed:{
@@ -82,12 +94,12 @@ export default {
         {"key":"Used",label:this.$i18n.t('inv.used')},
         {"key":"Company_name",label:this.$i18n.t('inv.company')},
         {"key":"Last_added",label:this.$i18n.t('inv.last_added')},
-        {"key":"Action",label:this.$i18n.t('inv.action')}
+        {"key":"View",label:this.$i18n.t('inv.view')}
       ]
     }
   },
   methods:{
-    async getinputList(){
+    async getinvList(){
       const t = trace(perf,"getInv");
 			t.start();
       const unsubscribe = onSnapshot(doc(db, "inventory", this.brandL), async (doc) => {
@@ -113,8 +125,11 @@ export default {
               Used:'-',
               Company_name:y[1],
               Last_added:added,
-              details: all
+              Company_tele:doc.data()[x]['tele'] || "N/A",
+              details: all,
+              id:x
             });
+            console.log(request);
           }
         }
         this.invList = request;
@@ -125,11 +140,11 @@ export default {
   watch:{
     getLocation(val){
       this.brandL = val;
-      // this.loadTable();
+      this.getinvList();
     }
   },
   mounted(){
-    this.getinputList();
+    this.getinvList();
     // this.getCatTable();
     // if(this.brandL == '-'){
     //   this.brandL = this.getLocation;
