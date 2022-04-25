@@ -1,5 +1,5 @@
 <template>
-  <b-modal ref="addModal" id="addModal" :title="$t('inv.add')" @hide="hideModal('addModal')" centered> 
+  <b-modal ref="editModal" id="editModal" :title="$t('inv.add')" @hide="hideModal('editModal')" centered> 
     <b-row>
       <b-col cols="12" class="mt-2">
         <a class="space">{{$t('inv.category')}}</a>
@@ -50,7 +50,7 @@
     <template #modal-footer>
       <div class="w-100">
         <b-button variant="outline-success" class="float-right ml-1 text-14" @click="addItem()" :disabled="btnState == 1">{{$t('inv.add')}}</b-button>
-        <b-button variant="outline-dark text-14" class="float-right" @click="hideModal('addModal')">{{$t('inv.cancel')}}</b-button>
+        <b-button variant="outline-dark text-14" class="float-right" @click="hideModal('editModal')">{{$t('inv.cancel')}}</b-button>
       </div>
     </template>
   </b-modal>
@@ -60,7 +60,7 @@ import store from '../../store/store'
 import { functions, httpsCallable, increment, arrayUnion, db, doc, setDoc, updateDoc, collection, query, where, onSnapshot, auth, updatePassword,EmailAuthProvider,reauthenticateWithCredential, perf, trace} from "../../fire"
 
 export default {
-  name:'modal',
+  name:'edit_modal',
   data(){
     return{
       brandL: store.getters.getLocation,
@@ -99,30 +99,30 @@ export default {
       this.unitVal='';
       this.priceVal='';
     },
-    async addItem(){
-      const t = trace(perf,"addInventory");
-			t.start();
-      const newData = doc(db, "inventory", this.brandL);
-      if(!this.catList.includes(this.catVal)){
-        await updateDoc(newData,{category: arrayUnion(this.catVal)});
-      }
-      if(!this.companyList.includes(this.companyVal)){
-        await updateDoc(newData,{company: arrayUnion(this.companyVal)});
-      }
-      if(!this.unitList.includes(this.unitVal)){
-        await updateDoc(newData,{unit: arrayUnion(this.unitVal)});
-      }
-      await updateDoc(newData,{
-        [this.catVal+"_"+this.companyVal+"_"+this.itemVal+"_"+this.unitVal]:{
-          ['added']:arrayUnion(this.dateVal+' '+this.timeVal),
-          ['price']:arrayUnion(this.priceVal),
-          ['quantity']:arrayUnion(this.quantityVal),
-          ['tele']:this.teleVal
-        }
-      },{merge:true})
-      this.hideModal('addModal');
-      t.stop();
-    }
+    // async addItem(){
+    //   const t = trace(perf,"addInventory");
+		// 	t.start();
+    //   const newData = doc(db, "inventory", this.brandL);
+    //   if(!this.catList.includes(this.catVal)){
+    //     await updateDoc(newData,{category: arrayUnion(this.catVal)});
+    //   }
+    //   if(!this.companyList.includes(this.companyVal)){
+    //     await updateDoc(newData,{company: arrayUnion(this.companyVal)});
+    //   }
+    //   if(!this.unitList.includes(this.unitVal)){
+    //     await updateDoc(newData,{unit: arrayUnion(this.unitVal)});
+    //   }
+    //   await updateDoc(newData,{
+    //     [this.catVal+"_"+this.companyVal+"_"+this.itemVal+"_"+this.unitVal]:{
+    //       ['added']:arrayUnion(this.dateVal+' '+this.timeVal),
+    //       ['price']:arrayUnion(this.priceVal),
+    //       ['quantity']:arrayUnion(this.quantityVal),
+    //       ['tele']:this.teleVal
+    //     }
+    //   },{merge:true})
+    //   this.hideModal('addModal');
+    //   t.stop();
+    // }
   }
 }
 </script>

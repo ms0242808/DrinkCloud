@@ -19,7 +19,7 @@
       </b-row>
       <b-table striped hover responsive :items="invList" :fields="fields" :filter="filter" ref="table" class="mt-3">
         <template #cell(View)="data">
-          <b-button size="sm" variant="outline-primary" @click="data.toggleDetails"><font-awesome-icon fixed-width icon="eye"/></b-button>
+          <b-button size="sm" variant="outline-primary" @click="toggleDetails(data)"><font-awesome-icon fixed-width icon="eye"/></b-button>
         </template>
         <template #row-details="data">
           <b-card>
@@ -29,8 +29,8 @@
                   <b>{{$t('inv.tele')}}: {{data.item.Company_tele}}</b>
                 </b-col>
                 <b-col cols="6">
-                  <b-button size="sm" class="mx-1 float-right" variant="outline-danger"><font-awesome-icon fixed-width icon="trash-alt"/>{{$t('inv.delete')}}</b-button>
-                  <b-button size="sm" class="mx-1 float-right" variant="outline-info" v-b-modal="'editModal'"><font-awesome-icon fixed-width icon="edit"/>{{$t('inv.edit')}}</b-button>
+                  <b-button :disabled="data.item.delete" v-b-modal="'delModal'" size="sm" class="mx-1 float-right" variant="outline-danger"><font-awesome-icon fixed-width icon="trash-alt"/>{{$t('inv.delete')}}</b-button>
+                  <b-button :disabled="data.item.edit" v-b-modal="'editModal'" size="sm" class="mx-1 float-right" variant="outline-info" hidden><font-awesome-icon fixed-width icon="edit"/>{{$t('inv.edit')}}</b-button>
                 </b-col>
               </b-row>
             </b-card-header>
@@ -40,15 +40,17 @@
               <b-col cols="3" class="text-sm-center"><b>{{$t('inv.price')}}</b></b-col>
               <b-col cols="3" class="text-sm-center"><b>{{$t('inv.added')}}</b></b-col>
               <template v-for="(i,n) in data.item.details">
-                <b-col cols="3" :key="n" v-if="n % 3 ===0"><b-checkbox :id="n+'_'+data.item.id" v-model="selected" :value="n+data.item.id">{{n+"_"+data.item.id}}</b-checkbox></b-col>
+                <b-col cols="3" :key="n" v-if="n % 3 ===0"><b-checkbox :id="n+'_'+data.item.id" v-model="data.item.selected" :value="n+'_'+data.item.id" class="float-right" @change="check($event,data.item)"></b-checkbox></b-col>
                 <b-col cols="3" class="text-sm-center mt-1" :key="i+n+'a'"><b>{{i}}</b></b-col>
               </template>
             </b-row>
           </b-card>
+          <DelModal :data="data"/>
+          <EditModal :data="data"/>
         </template>
       </b-table>
     </div>
-    <Modal :catList="catList" :companyList="companyList" :unitList="unitList"/>
+    <AddModal :data="invList" :catList="catList" :companyList="companyList" :unitList="unitList"/>
   </div>
   <!--
     https://www.mimo.work/help/category/consumables
@@ -61,13 +63,17 @@
 <script>
 import store from '../store/store'
 import { mapGetters } from 'vuex'
-import Modal from '../components/inventory/Modal.vue'
+import AddModal from '../components/inventory/AddModal.vue'
+import DelModal from '../components/inventory/Delmodal.vue'
+import EditModal from '../components/inventory/Editmodal.vue'
 import { functions, httpsCallable, db, doc, setDoc, updateDoc, collection, query, where, onSnapshot, getDocs, perf, trace} from "../fire"
 
 export default {
   name: 'Inventory',
   components:{
-    Modal
+    AddModal,
+    EditModal,
+    DelModal
   },
   data(){
     return{
@@ -127,14 +133,36 @@ export default {
               Last_added:added,
               Company_tele:doc.data()[x]['tele'] || "N/A",
               details: all,
-              id:x
+              id:x,
+              selected:[],
+              delete:true,
+              edit:true
             });
-            console.log(request);
           }
         }
         this.invList = request;
       });
       t.stop();
+    },
+    async check(e,data){
+      this.$nextTick(() => {
+        if(data.selected.length>1){
+          data.delete = false;
+          data.edit = true;
+        }else if(data.selected.length==1){
+          data.delete = false;
+          data.edit = false;
+        }else{
+          data.delete = true;
+          data.edit = true;
+        }
+      })
+    },
+    async toggleDetails(row){
+      row.toggleDetails();
+      row.item.selected = [];
+      row.item.delete = true;
+      row.item.edit = true;
     }
   },
   watch:{
