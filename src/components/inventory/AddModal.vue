@@ -1,6 +1,7 @@
 <template>
   <b-modal ref="addModal" id="addModal" :title="$t('inv.add')" @hide="hideModal('addModal')" centered> 
     <b-row>
+      {{data}}
       <b-col cols="12" class="mt-2">
         <a class="space">{{$t('inv.category')}}</a>
         <b-form-input v-model="catVal" list="cat-list" :placeholder="$t('inv.catInput')"></b-form-input>
@@ -103,39 +104,47 @@ export default {
     async addItem(){
       const t = trace(perf,"addInventory");
       t.start();
-      // const newData = doc(db, "inventory", this.brandL);
-      // if(!this.catList.includes(this.catVal)){
-      //   await updateDoc(newData,{category: arrayUnion(this.catVal)});
-      // }
-      // if(!this.companyList.includes(this.companyVal)){
-      //   await updateDoc(newData,{company: arrayUnion(this.companyVal)});
-      // }
-      // if(!this.unitList.includes(this.unitVal)){
-      //   await updateDoc(newData,{unit: arrayUnion(this.unitVal)});
-      // }
+      const newData = doc(db, "inventory", this.brandL);
+      if(!this.catList.includes(this.catVal)){
+        await updateDoc(newData,{category: arrayUnion(this.catVal)});
+      }
+      if(!this.companyList.includes(this.companyVal)){
+        await updateDoc(newData,{company: arrayUnion(this.companyVal)});
+      }
+      if(!this.unitList.includes(this.unitVal)){
+        await updateDoc(newData,{unit: arrayUnion(this.unitVal)});
+      }
       var a = 0;
+      var [j,k,l,m] = [[],[],[],[]];
       for(a in this.data){
         if(this.data[a].id === this.catVal+"_"+this.companyVal+"_"+this.itemVal+"_"+this.unitVal){
-          var [j,k,l] = [[],[],[]];
-          for(var y=0; y<this.data[a].details.length; y+=3){
-            j.push(this.data[a].details[y]);
-            k.push(this.data[a].details[y+1]);
-            l.push(this.data[a].details[y+2]);
-          }
-          j.push(this.quantityVal);
-          k.push(this.priceVal);
-          l.push(this.dateVal+' '+this.timeVal);
-          console.log(this.data[a].id,j,k,l,serverTimestamp());
-          // await setDoc(newData,{
-          //   [this.catVal+"_"+this.companyVal+"_"+this.itemVal+"_"+this.unitVal]:{
-          //     ['added']:arrayUnion(...l),
-          //     ['price']:arrayUnion(...k),
-          //     ['quantity']:arrayUnion(...j),
-          //     ['tele']:this.teleVal
-          //   }
-          // },{merge:true})
+          // for(var y=0; y<this.data[a].details.length; y+=3){
+          //   j.push(this.data[a].details[y]);
+          //   k.push(this.data[a].details[y+1]);
+          //   l.push(this.data[a].details[y+2]);
+          // }
+          // console.log('hi',this.data[a].d);
+          // if(this.data[a].d){
+          //   m.push(this.data[a].d.pop());
+          // }
+          // j.push(this.quantityVal);
+          // k.push(this.priceVal);
+          // l.push(this.dateVal+' '+this.timeVal);
+          // this.data[a].d.pop();
+          m.push(JSON.parse(JSON.stringify(this.data[a].d)));
         }
       }
+      var n = new Date().getTime().toString();
+      m.push(n+"_"+this.quantityVal+"_"+this.priceVal+"_"+this.dateVal+' '+this.timeVal);
+      console.log(m);
+      // await updateDoc(newData,{
+      //   [this.catVal+"_"+this.companyVal+"_"+this.itemVal+"_"+this.unitVal]:{
+      //     ['data']:arrayUnion(...m),
+      //     // ['price']:arrayUnion(...k),
+      //     // ['quantity']:arrayUnion(...j),
+      //     ['tele']:this.teleVal
+      //   }
+      // },{merge:true})
       this.hideModal('addModal');
       t.stop();
       

@@ -119,8 +119,17 @@ export default {
           if(x !== 'category' && x !== 'company' && x !=='unit'){
             y = x.split('_');
             var all = [],
-            n = 0;
+            data = [],
+            n = 0,
+            i = 0;
             for(n in doc.data()[x]['price']){all.push(doc.data()[x]['quantity'][n],doc.data()[x]['price'][n],doc.data()[x]['added'][n])}
+            data = doc.data()[x]['data'];
+            for(i in data){
+              var j = data[i].split('_');
+              //1650962402349_3_1_2022-04-02 12:12
+              //0 _ 1 _ 2 _ 3
+              data.push(j[1],j[2],j[3]);
+            }
             var added = doc.data()[x]['added'].pop(),
             sum = doc.data()[x]['quantity'].reduce((a, b) => parseInt(a) + parseInt(b), 0);
             request.push({
@@ -136,7 +145,8 @@ export default {
               id:x,
               selected:[],
               delete:true,
-              edit:true
+              edit:true,
+              d:data
             });
           }
         }
