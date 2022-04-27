@@ -41,8 +41,8 @@
     "drinks made":"飲品製作",
     "top1":"分類第 1",
     "working hr":"機器運轉時數",
-    "machine h":"機器健康",
     "peak hr":"熱門時段",
+    "machine h":"機器健康",
     "Today":"今天",
     "Yesterday":"昨天",
     "This Week":"本週",
@@ -95,10 +95,12 @@
     "available":"剩餘",
     "used":"已使用",
     "company":"廠商",
-    "last_added":"最後更新",
+    "last_added":"最新添加",
     "view":"查看",
     "edit":"編輯",
-    "added":"添加時間"
+    "added":"添加時間",
+    "del_msg":"您確定要刪除此資料嗎?",
+    "del_check":"是, 我要刪除此資料"
   },
   "stats":{
     "back":"返回",

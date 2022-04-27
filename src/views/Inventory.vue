@@ -5,8 +5,7 @@
       <b-row>
         <b-col sm="12" lg="6">
           <b-button size="sm" class="mx-1" variant="success" v-b-modal="'addModal'"><font-awesome-icon fixed-width icon="plus"/>{{$t('inv.add')}}</b-button>
-          <!-- <b-button size="sm" class="mx-1" variant="outline-danger"><font-awesome-icon fixed-width icon="trash-alt"/>{{$t('inv.delete')}}</b-button> -->
-          <b-button size="sm" class="mx-1" variant="outline-dark"><font-awesome-icon fixed-width icon="cog"/>{{$t('inv.setting')}}</b-button>
+          <b-button size="sm" class="mx-1" variant="outline-dark" hidden><font-awesome-icon fixed-width icon="cog"/>{{$t('inv.setting')}}</b-button>
           <!-- <b-button size="sm" class="mx-1" variant="outline-primary"><font-awesome-icon fixed-width icon="file-download"/>{{$t('inv.export')}}</b-button> -->
         </b-col>
         <b-col sm="12" lg="6">
@@ -17,7 +16,7 @@
           </b-form-group>
         </b-col>
       </b-row>
-      <b-table striped hover responsive :items="invList" :fields="fields" :filter="filter" ref="table" class="mt-3">
+      <b-table striped hover responsive :sort-by.sync="sortBy" :sort-desc.sync="sortDesc" :items="invList" :fields="fields" :filter="filter" ref="table" class="mt-3">
         <template #cell(View)="data">
           <b-button size="sm" variant="outline-primary" @click="toggleDetails(data)"><font-awesome-icon fixed-width icon="eye"/></b-button>
         </template>
@@ -40,7 +39,7 @@
               <b-col cols="3" class="text-sm-center"><b>{{$t('inv.price')}}</b></b-col>
               <b-col cols="3" class="text-sm-center"><b>{{$t('inv.added')}}</b></b-col>
               <template v-for="(i,n) in data.item.details">
-                <b-col cols="3" :key="n" v-if="n % 3 ===0"><b-checkbox :id="n+'_'+data.item.id" v-model="data.item.selected" :value="n+'_'+data.item.id" class="float-right" @change="check($event,data.item)"></b-checkbox></b-col>
+                <b-col cols="3" :key="n" v-if="n % 3 ===0"><b-checkbox :id="n+'_'+data.item.id" v-model="data.item.selected" :value="(n===0)? n+'@'+data.item.d[n]:(n/3)+'@'+data.item.d[(n/3)]" class="float-right" @change="check($event,data.item)"></b-checkbox></b-col>
                 <b-col cols="3" class="text-sm-center mt-1" :key="i+n+'a'"><b>{{i}}</b></b-col>
               </template>
             </b-row>
@@ -52,12 +51,6 @@
     </div>
     <AddModal :data="invList" :catList="catList" :companyList="companyList" :unitList="unitList"/>
   </div>
-  <!--
-    https://www.mimo.work/help/category/consumables
-    https://www.behance.net/gallery/55390583/Inventory-management-dashboard
-    刪除耗材或分類 -> modal with warning text & delete button
-    變更耗材分類名稱或耗材名稱 -> modal with text input & update button
-  -->
 </template>
 
 <script>
@@ -66,7 +59,7 @@ import { mapGetters } from 'vuex'
 import AddModal from '../components/inventory/AddModal.vue'
 import DelModal from '../components/inventory/Delmodal.vue'
 import EditModal from '../components/inventory/Editmodal.vue'
-import { functions, httpsCallable, db, doc, setDoc, updateDoc, collection, query, where, onSnapshot, getDocs, perf, trace} from "../fire"
+import { db, doc, onSnapshot, perf, trace} from "../fire"
 
 export default {
   name: 'Inventory',
@@ -83,7 +76,9 @@ export default {
       catList:[],
       companyList:[],
       unitList:[],
-      selected:[]
+      selected:[],
+      sortBy: 'Last_added',
+      sortDesc: true,
     }
   },
   computed:{
@@ -96,8 +91,8 @@ export default {
         {"key":"Category",label:this.$i18n.t('inv.category')},
         {"key":"Name",label:this.$i18n.t('inv.name')},
         {"key":"Available",label:this.$i18n.t('inv.available')},
-        {"key":"Unit",label:this.$i18n.t('inv.unit')},
         {"key":"Used",label:this.$i18n.t('inv.used')},
+        {"key":"Unit",label:this.$i18n.t('inv.unit')},
         {"key":"Company_name",label:this.$i18n.t('inv.company')},
         {"key":"Last_added",label:this.$i18n.t('inv.last_added')},
         {"key":"View",label:this.$i18n.t('inv.view')}
@@ -118,20 +113,17 @@ export default {
         for(x in doc.data()){
           if(x !== 'category' && x !== 'company' && x !=='unit'){
             y = x.split('_');
-            var all = [],
-            data = [],
-            n = 0,
+            var data = doc.data()[x]['data'],
+            val = [],
             i = 0;
-            for(n in doc.data()[x]['price']){all.push(doc.data()[x]['quantity'][n],doc.data()[x]['price'][n],doc.data()[x]['added'][n])}
-            data = doc.data()[x]['data'];
+            var added = '',
+            sum = 0;
             for(i in data){
               var j = data[i].split('_');
-              //1650962402349_3_1_2022-04-02 12:12
-              //0 _ 1 _ 2 _ 3
-              data.push(j[1],j[2],j[3]);
+              val.push(j[1],j[2],j[3]);
+              sum +=parseInt(j[1]);
             }
-            var added = doc.data()[x]['added'].pop(),
-            sum = doc.data()[x]['quantity'].reduce((a, b) => parseInt(a) + parseInt(b), 0);
+            added = val[val.length-1];
             request.push({
               Category:y[0],
               Name:y[2],
@@ -141,7 +133,7 @@ export default {
               Company_name:y[1],
               Last_added:added,
               Company_tele:doc.data()[x]['tele'] || "N/A",
-              details: all,
+              details: val,
               id:x,
               selected:[],
               delete:true,

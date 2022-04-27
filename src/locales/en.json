@@ -44,7 +44,6 @@
     "peak hr":"Popular period",
     "machine h":"Machine health",
     "Today":"Today",
-    "Todays":"Todays",
     "Yesterday":"Yesterday",
     "This Week":"This Week",
     "This Month":"This Month",
@@ -75,7 +74,7 @@
   },
   "inv":{
     "title":"Inventory",
-    "add":"Add",
+    "add":"ADD",
     "catInput":"Type to search or add category...",
     "companyInput":"Type to search or add company...",
     "tele":"Contact number",
@@ -99,7 +98,9 @@
     "last_added":"Last added",
     "view":"View",
     "edit":"Edit",
-    "added":"Added"
+    "added":"Added",
+    "del_msg":"Are you sure you want to delete this record?",
+    "del_check":"Yes, I want to delete this record"
   },
   "stats":{
     "back":"Back",

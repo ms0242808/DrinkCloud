@@ -1,9 +1,10 @@
 <template>
   <b-modal ref="delModal" id="delModal" :title="$t('inv.delete')" @hide="hideModal('delModal')" centered> 
-    <a><b>Are you sure you want to delete this record?</b></a>
+    <p class="text-dark"><b>{{$t('inv.del_msg')}}</b></p>
+    <b-checkbox v-model="check" class="text-dark"><b>{{$t('inv.del_check')}}</b></b-checkbox>
     <template #modal-footer>
       <div class="w-100">
-        <b-button variant="outline-danger" class="float-right ml-1 text-14" @click="delItem(data)" :disabled="btnState == 0">{{$t('inv.delete')}}</b-button>
+        <b-button variant="danger" class="float-right ml-1 text-14" @click="delItem(data)" :disabled="btnState == 1">{{$t('inv.delete')}}</b-button>
         <b-button variant="outline-dark text-14" class="float-right" @click="hideModal('delModal')">{{$t('inv.cancel')}}</b-button>
       </div>
     </template>
@@ -11,67 +12,53 @@
 </template>
 <script>
 import store from '../../store/store'
-import { arrayUnion, db, doc, updateDoc, perf, trace} from "../../fire"
+import { arrayUnion, db, doc, updateDoc, deleteField, perf, trace} from "../../fire"
 
 export default {
   name:'del_modal',
   data(){
     return{
       brandL: store.getters.getLocation,
-      catVal:'',
-      itemVal:'',
-      companyVal:'',
-      teleVal:'',
-      dateVal:'',
-      timeVal:'',
-      quantityVal:'',
-      unitVal:'',
-      priceVal:'',
+      check:false
     }
   },
   props:{
-    data: {type:Object},
-    catList: {type: Array},
-    companyList: {type: Array},
-    unitList: {type: Array}
+    data: {type:Object}
   },
   computed:{
     'btnState':function(){
-      if(this.catVal.length > 0 && this.itemVal.length > 0 && this.companyVal.length > 0 && this.teleVal.length > 0 && this.dateVal.length > 0 && this.timeVal.length > 0 && this.quantityVal.length > 0 && this.unitVal.length > 0 && this.priceVal.length > 0){return 0}
+      if(this.check){return 0}
       else{return 1}
     }
   },
   methods:{
     hideModal(id){
       this.$bvModal.hide(id);
+      this.check = false;
     },
     async delItem(data){
       const t = trace(perf,"delInventory");
 			t.start();
       const newData = doc(db, "inventory", this.brandL);
       var x = 0,
-      y =  0,
-      [a,b,c] = [[],[],[]],
-      val = data.item.details,
-      sel = '';
+      val = data.item.selected,
+      newVal = data.item.d;
       for(x in data.item.selected){
-        var v = parseInt(data.item.selected[x].split('_')[0]);
-        sel = (x>0 && v>0) ? v-3 :v;
-        val.splice(sel,3);
+        var n = parseInt(val[x].split('@'));
+        newVal.splice(n,1);
       }
-      for(y; y<val.length; y+=3){
-        a.push(val[y]);
-        b.push(val[y+1]);
-        c.push(val[y+2]);
+      if(newVal.length>0){
+        await updateDoc(newData,{
+          [data.item.id]:{
+            ['data']:arrayUnion(...newVal),
+            ['tele']:data.item.Company_tele
+          }
+        },{merge:true});
+      }else{
+        await updateDoc(newData,{
+          [data.item.id]:deleteField()
+        });
       }
-      await updateDoc(newData,{
-        [data.item.id]:{
-          ['added']:arrayUnion(...c),
-          ['price']:arrayUnion(...b),
-          ['quantity']:arrayUnion(...a),
-          ['tele']:data.item.Company_tele
-        }
-      },{merge:true});
       this.hideModal('delModal');
       t.stop();
     }
