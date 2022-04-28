@@ -11,17 +11,17 @@
 				</b-col>
         <b-col class="no-putters text-end" cols="3">
           <vue-excel-xlsx :data="rednerTable" :columns="columns" :filename="'Stats'+dateRange" :sheetname="dateRange" class="btn btn-outline-success btn-sm">
-            {{$t('stats.export')}}
+            <font-awesome-icon fixed-width icon="file-download"/> {{$t('stats.export')}}
           </vue-excel-xlsx>
 				</b-col>
 			</b-row>
       <div class="mt-3 text-dark">
         <b-row>
-          <b-col cols="6">
+          <b-col sm="12" lg="6">
             <b>{{$t('stats.total')}} {{rednerTable.length}}</b>
           </b-col>
-          <b-col cols="6">
-            <b-form-group :label="$t('stats.search')" label-for="searchInp" label-cols-sm="3" label-align-sm="right" label-size="sm" class="mb-2 w-50 float-right">
+          <b-col sm="12" lg="6">
+            <b-form-group :label="$t('stats.search')" label-for="searchInp" label-cols-sm="3" label-align-sm="right" label-size="sm" class="mb-2">
               <b-input-group size="sm">
                 <b-form-input id="searchInp" v-model="filter" type="search"></b-form-input>
               </b-input-group>
