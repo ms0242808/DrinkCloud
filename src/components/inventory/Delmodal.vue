@@ -4,7 +4,7 @@
     <b-checkbox v-model="check" class="text-dark"><b>{{$t('inv.del_check')}}</b></b-checkbox>
     <template #modal-footer>
       <div class="w-100">
-        <b-button variant="danger" class="float-right ml-1 text-14" @click="delItem(data)" :disabled="btnState == 1">{{$t('inv.delete')}}</b-button>
+        <b-button variant="danger" class="float-right ml-1 text-14" @click="delItem(data)" :disabled="btnState == 1"><b>{{$t('inv.delete')}}</b></b-button>
         <b-button variant="outline-dark text-14" class="float-right" @click="hideModal('delModal')">{{$t('inv.cancel')}}</b-button>
       </div>
     </template>

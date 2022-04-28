@@ -4,9 +4,11 @@
     <div class="mt-3">
       <b-row>
         <b-col sm="12" lg="6">
-          <b-button size="sm" class="mx-1" variant="success" v-b-modal="'addModal'"><font-awesome-icon fixed-width icon="plus"/>{{$t('inv.add')}}</b-button>
-          <b-button size="sm" class="mx-1" variant="outline-dark" hidden><font-awesome-icon fixed-width icon="cog"/>{{$t('inv.setting')}}</b-button>
-          <!-- <b-button size="sm" class="mx-1" variant="outline-primary"><font-awesome-icon fixed-width icon="file-download"/>{{$t('inv.export')}}</b-button> -->
+          <b-button size="sm" class="mx-1" variant="success" v-b-modal="'addModal'"><font-awesome-icon fixed-width icon="plus"/> {{$t('inv.add')}}</b-button>
+          <b-button size="sm" class="mx-1" variant="outline-dark" v-b-modal="'setModal'"><font-awesome-icon fixed-width icon="cog"/> {{$t('inv.setting')}}</b-button>
+          <vue-excel-xlsx :data="epList" :columns="columns" :filename="$t('inv.title')" sheetname="sheet1" class="btn btn-outline-primary btn-sm mx-1">
+            <font-awesome-icon fixed-width icon="file-download"/> {{$t('inv.export')}}
+          </vue-excel-xlsx>
         </b-col>
         <b-col sm="12" lg="6">
           <b-form-group label-cols-sm="3" label-align-sm="right" label-size="sm" class="mb-0">
@@ -50,6 +52,7 @@
       </b-table>
     </div>
     <AddModal :data="invList" :catList="catList" :companyList="companyList" :unitList="unitList"/>
+    <SetModal :data="invList"/>
   </div>
 </template>
 
@@ -59,19 +62,22 @@ import { mapGetters } from 'vuex'
 import AddModal from '../components/inventory/AddModal.vue'
 import DelModal from '../components/inventory/Delmodal.vue'
 import EditModal from '../components/inventory/Editmodal.vue'
+import SetModal from '../components/inventory/SettingModal.vue'
 import { db, doc, onSnapshot, perf, trace} from "../fire"
 
 export default {
   name: 'Inventory',
   components:{
     AddModal,
+    DelModal,
     EditModal,
-    DelModal
+    SetModal
   },
   data(){
     return{
       brandL: store.getters.getLocation,
       invList:[],
+      epList:[],
       filter: null,
       catList:[],
       companyList:[],
@@ -86,6 +92,18 @@ export default {
       'getLocation',
       'getLocationList'
     ]),
+    'columns':function(){
+      return [
+        {label:this.$i18n.t('inv.category'),field: "Category"},
+        {label:this.$i18n.t('inv.company'),field: "Company_name"},
+        {label:this.$i18n.t('inv.tele'),field: "Company_tele"},
+        {label:this.$i18n.t('inv.name'),field: "Name"},
+        {label:this.$i18n.t('inv.unit'),field: "Unit"},
+        {label:this.$i18n.t('inv.quantity'),field: "Quantity"},
+        {label:this.$i18n.t('inv.price'),field: "Price"},
+        {label:this.$i18n.t('inv.last_added'),field: "Last_added"}
+      ]
+    },
     'fields':function(){
       return [
         {"key":"Category",label:this.$i18n.t('inv.category')},
@@ -109,19 +127,22 @@ export default {
         this.companyList = doc.data()['company'];
         this.unitList = doc.data()['unit'];
         var x = 0,
-        y = '';
+        y = '',
+        ep = [];
         for(x in doc.data()){
           if(x !== 'category' && x !== 'company' && x !=='unit'){
             y = x.split('_');
             var data = doc.data()[x]['data'],
             val = [],
-            i = 0;
-            var added = '',
+            i = 0,
+            tele = doc.data()[x]['tele'] || "N/A",
+            added = '',
             sum = 0;
             for(i in data){
               var j = data[i].split('_');
               val.push(j[1],j[2],j[3]);
               sum +=parseInt(j[1]);
+              ep.push({Category:y[0],Company_name:y[1],Company_tele:tele,Name:y[2],Unit:y[3],Quantity:j[1],Price:j[2],Last_added:j[3]});
             }
             added = val[val.length-1];
             request.push({
@@ -132,17 +153,19 @@ export default {
               Used:'-',
               Company_name:y[1],
               Last_added:added,
-              Company_tele:doc.data()[x]['tele'] || "N/A",
+              Company_tele:tele,
               details: val,
               id:x,
               selected:[],
+              produce:doc.data()[x]['produce'],
               delete:true,
               edit:true,
-              d:data
+              d:data,
             });
           }
         }
         this.invList = request;
+        this.epList = ep;
       });
       t.stop();
     },

@@ -49,7 +49,7 @@
     </b-row>
     <template #modal-footer>
       <div class="w-100">
-        <b-button variant="outline-success" class="float-right ml-1 text-14" @click="addItem()" :disabled="btnState == 1">{{$t('inv.add')}}</b-button>
+        <b-button variant="outline-success" class="float-right ml-1 text-14" @click="addItem()" :disabled="btnState == 1"><b>{{$t('inv.add')}}</b></b-button>
         <b-button variant="outline-dark text-14" class="float-right" @click="hideModal('addModal')">{{$t('inv.cancel')}}</b-button>
       </div>
     </template>
