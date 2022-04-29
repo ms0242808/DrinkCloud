@@ -100,7 +100,10 @@
     "edit":"Edit",
     "added":"Added",
     "del_msg":"Are you sure you want to delete this record?",
-    "del_check":"Yes, I want to delete this record"
+    "del_check":"Yes, I want to delete this record",
+    "produce":"Produce",
+    "exclude":"Exclude",
+    "save":"Save"
   },
   "stats":{
     "back":"Back",

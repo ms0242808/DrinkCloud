@@ -158,6 +158,7 @@ export default {
               id:x,
               selected:[],
               produce:doc.data()[x]['produce'],
+              ogVal:doc.data()[x]['produce'],
               delete:true,
               edit:true,
               d:data,
