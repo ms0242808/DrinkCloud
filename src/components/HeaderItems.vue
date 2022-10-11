@@ -61,7 +61,8 @@
 					brand: '',
 					role: '',
 					location: [],
-					accType: false
+					accType: false,
+					machine: []
 				},
 				selected: '',
 				avatarSke: true,
@@ -92,6 +93,7 @@
 				this.user.location = doc.data()['location'];
 				this.selected= this.user.location[0];
 				this.user.accType = (doc.data()['brand']==="Drinktec") ? true:false;
+				this.user.machine = doc.data()['machine'];
 				store.commit('brandChanged', this.user);
 				store.commit('locationChanged', doc.data()['location'][0]);
 			});

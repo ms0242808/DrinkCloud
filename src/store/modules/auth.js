@@ -7,7 +7,8 @@ const state = {
   brand: '',
   location: [],
   selected: '',
-  accType: false
+  accType: false,
+  machine:[]
 };
 const getters = {
   getEmail: state => {
@@ -31,6 +32,9 @@ const getters = {
   getAccType:state => {
     return state.accType
   },
+  getMachineType:state => {
+    return state.machine
+  }
 };
 const actions = {
 };
@@ -48,6 +52,7 @@ const mutations = {
     state.role = val.role;
     state.location = val.location;
     state.accType = val.accType;
+    state.machine = val.machine;
   },
   brandUpdated(state,val){
     state.brand = val.brand;
@@ -58,6 +63,9 @@ const mutations = {
   },
   userNameChanged(state,val){
     state.name = val;
+  },
+  machineChanged(state,val){
+    state.machine = val;
   }
 };
 export default {

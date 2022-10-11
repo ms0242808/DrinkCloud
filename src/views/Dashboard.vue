@@ -11,11 +11,35 @@
 			</b-row>
 		</b-container>
 
-		<div class="mt-2 noMaxWidth container no-padding">
-			<Cards :showSke="showSke" :showStats="showStats" :madeVal="madeVal" :topVal="topVal" :hrVal="hrVal" :healthVal="healthVal"></Cards>
+		<div v-if="machineType[0] && machineType[1]" class="no-putters mt-2 noMaxWidth container no-padding">
+			<h5>tea cooker</h5>
+			<hr>
+		</div>
+		
+		<div v-if="machineType[1]" class="noMaxWidth container no-padding">
+			<p>area1</p>
+			<p>card 1 - number of tea cooked</p>
+			<p>card 2 - water used</p>
+			<p>card 3 - most cooked tea</p>
+			<p>card 4 - machine health</p>
+		</div>
+	
+		<div v-if="machineType[1]" class="noMaxWidth container no-padding">
+			<p>area 2</p>
+			<p>line - hr of number of tea cooked</p>
+			<p>pie - times of tea cooked</p>
 		</div>
 
-		<div class="noMaxWidth container no-padding">
+		<div v-if="machineType[0] && machineType[1]" class="no-putters mt-2 noMaxWidth container no-padding">
+			<h5>omica</h5>
+			<hr>
+		</div>
+
+		<div v-if="machineType[0]" class="mt-2 noMaxWidth container no-padding">
+			<Cards :showSke="showSke" :showStats="showStats" :madeVal="madeVal" :topVal="topVal" :hrVal="hrVal" :healthVal="healthVal" :omica="true" :robotics="false"></Cards>
+		</div>
+
+		<div v-if="machineType[0]" class="noMaxWidth container no-padding">
 			<Charts :showSke="showSke"
 			:rangeVal="rangeVal"
 			:showStats="showStats" 
@@ -74,7 +98,19 @@
 		computed:{
 			...mapGetters([
 				'getLocation'
-			])
+			]),
+			'machineType':function(){
+				var omica = false,
+				robotics = false,
+				machine = store.getters.getMachineType,
+				m = '';
+				for(m in machine){
+					if(machine[m] == "omica"){omica = true}
+					else if(machine[m] == "robotics"){robotics = true}
+				} 
+				console.log(machine);
+				return [omica,robotics]
+			}
 		},
 		watch:{
 			getLocation(val){
