@@ -35,6 +35,17 @@
 			...mapGetters([
 				'getLocation'
 			]),
+			'machineType':function(){
+				var omica = false,
+				robotics = false,
+				machine = store.getters.getMachineType,
+				m = '';
+				for(m in machine){
+					if(machine[m] == "omica"){omica = true}
+					else if(machine[m] == "robotics"){robotics = true}
+				}
+				return [omica,robotics]
+			},
 			allCount:function(){
 				var recipes = store.getters.getRecipe.recipeVal,
 				countCat = recipes.length,
