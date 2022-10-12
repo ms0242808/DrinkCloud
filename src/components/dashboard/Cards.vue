@@ -15,12 +15,7 @@
       <b-card class="mb-2" :class="item.border" :style="cardStyle(index)" v-show="skele[1]">
         <b-row class="align-items-center">
           <b-col class="col-auto">
-            <!-- leaf, water, trophy, shield -->
-            <template v-if="index==0 && omica"><BIconCupStraw :class="item.color" font-scale="2"/></template>
-            <!-- <template v-if="index==0 && robotics"><font-awesome-icon :class="item.color" icon="fa-solid fa-leaf" /></template> -->
-            <template v-else-if="index==1 && omica"><BIconTrophyFill :class="item.color" font-scale="2"/></template>
-            <template v-else-if="index==2 && omica"><BIconHourglassSplit :class="item.color" font-scale="2"/></template>
-            <template v-else-if="index==3 && omica"><BIconShieldFillCheck :class="item.color" font-scale="2"/></template>
+            <component :is="item.icon" :class="item.color" font-scale="2"/>
           </b-col>
           <b-col class="col">
             <b-card-title :title="$t('dashboard.'+item.title)"></b-card-title>
@@ -39,14 +34,16 @@
 
 <script>
 import store from '../../store/store'
-import { BIconCupStraw,BIconTrophyFill,BIconHourglassSplit,BIconShieldFillCheck } from 'bootstrap-vue'
+import { BIconCupStraw,BIconTrophyFill,BIconHourglassSplit,BIconShieldFillCheck,BIconDropletFill,BIconPaintBucket } from 'bootstrap-vue'
 export default {
   name:'cards',
   components: {
     BIconCupStraw,
     BIconTrophyFill,
     BIconHourglassSplit,
-    BIconShieldFillCheck
+    BIconShieldFillCheck,
+    BIconPaintBucket,
+    BIconDropletFill
   },
   props:{
     showSke: {type: Boolean },
@@ -56,93 +53,97 @@ export default {
     hrVal: { type: String },
     healthVal: { type: String },
     omica: {type: Boolean},
-    robotics: {type: Boolean}
+    robotics: {type: Boolean},
+    cookedVal : { type: String },
+    waterVal : { type: String },
+    mostCooked : { type: String },
+    cookerHp : { type: String }
   },
   computed:{
     'skele':function(){
       return [this.showSke,this.showStats]
     },
     'statsCard':function(){
-      var [stats1,stats2] = [[],[]];
+      var stats = [];
       if(this.omica){
-        stats1 =[{
+        stats =[{
           title: 'drinks made',
           value: this.madeVal,
           border: 'border-left-secondary',
-          icon: 'cup-straw',
+          icon: 'BIconCupStraw',
           color: 'text-secondary'
         },{
           title: 'top1',
           value: this.topVal,
           border: 'border-left-info',
-          icon: 'trophy-fill',
+          icon: 'BIconTrophyFill',
           color: 'text-info'
         },{
           title: 'peak hr',
           value: this.hrVal,
           border: 'border-left-primary',
-          icon: 'hourglass-split',
+          icon: 'BIconHourglassSplit',
           color: 'text-primary'
         },{
           title: 'machine h',
           value: this.healthVal,
           border: 'border-left-success',
-          icon: 'shield-fill-check',
+          icon: 'BIconShieldFillCheck',
           color: 'text-success'
         }]
       }else if(this.robotics){
-        stats2 = [{
+        stats = [{
           title: 'tea cooked',
-          value: '',//store.getters.getStats.madeVal,
-          border: 'border-left-secondary',
-          icon: 'leaf',//'cup-straw',
-          color: 'text-secondary'
+          value: this.cookedVal,//store.getters.getStats.madeVal,
+          border: 'border-left-info',
+          icon: 'BIconPaintBucket',//'cup-straw',
+          color: 'text-info fontIcon'
         },{
           title: 'water used',
-          value: '',//store.getters.getStats.hrVal,
+          value: this.waterVal,//store.getters.getStats.hrVal,
           border: 'border-left-primary',
-          icon: 'water',//'hourglass-split',
-          color: 'text-primary'
+          icon: 'BIconDropletFill',//'hourglass-split',
+          color: 'text-primary fontIcon'
         },{
-          title: 'top1',
-          value: '',//store.getters.getStats.topVal,
-          border: 'border-left-info',
-          icon: 'trophy-fill',
-          color: 'text-info'
+          title: 'top1 tea',
+          value: this.mostCooked,//store.getters.getStats.topVal,
+          border: 'border-left-secondary',
+          icon: 'BIconTrophyFill',
+          color: 'text-secondary'
         },{
           title: 'machine h',
-          value: '',//store.getters.getStats.healthVal,
+          value: this.cookerHp,//store.getters.getStats.healthVal,
           border: 'border-left-success',
-          icon: 'shield-fill-check',
+          icon: 'BIconShieldFillCheck',
           color: 'text-success'
         }]
       }
-      //return [stats1, stats2]
-      return [{
-        title: 'drinks made',
-        value: store.getters.getStats.madeVal,
-        border: 'border-left-secondary',
-        icon: 'cup-straw',
-        color: 'text-secondary'
-      },{
-        title: 'top1',
-        value: store.getters.getStats.topVal,
-        border: 'border-left-info',
-        icon: 'trophy-fill',
-        color: 'text-info'
-      },{
-        title: 'peak hr',
-        value: store.getters.getStats.hrVal,
-        border: 'border-left-primary',
-        icon: 'hourglass-split',
-        color: 'text-primary'
-      },{
-        title: 'machine h',
-        value: store.getters.getStats.healthVal,
-        border: 'border-left-success',
-        icon: 'shield-fill-check',
-        color: 'text-success'
-      }]
+      return stats
+      // return [{
+      //   title: 'drinks made',
+      //   value: store.getters.getStats.madeVal,
+      //   border: 'border-left-secondary',
+      //   icon: 'cup-straw',
+      //   color: 'text-secondary'
+      // },{
+      //   title: 'top1',
+      //   value: store.getters.getStats.topVal,
+      //   border: 'border-left-info',
+      //   icon: 'trophy-fill',
+      //   color: 'text-info'
+      // },{
+      //   title: 'peak hr',
+      //   value: store.getters.getStats.hrVal,
+      //   border: 'border-left-primary',
+      //   icon: 'hourglass-split',
+      //   color: 'text-primary'
+      // },{
+      //   title: 'machine h',
+      //   value: store.getters.getStats.healthVal,
+      //   border: 'border-left-success',
+      //   icon: 'shield-fill-check',
+      //   color: 'text-success'
+      // }]
     }
   },
   methods:{
@@ -190,5 +191,8 @@ export default {
 .card-title{
 	font-size: .7rem !important;
   font-weight: bold;
+}
+.fontIcon{
+  font-size: 1.5rem;
 }
 </style>

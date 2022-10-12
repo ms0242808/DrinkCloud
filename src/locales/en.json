@@ -38,6 +38,11 @@
   },
   "dashboard":{
     "title":"Dashboard",
+    "tea cooker": "Tea cooker",
+    "tea cooked": "Tea cooked",
+    "water used": "Water usage",
+    "top1 tea": "Most cooked tea",
+    "omica": "Omica",
     "drinks made":"Drinks made",
     "top1":"Top 1 Category",
     "working hr":"Machine working hrs",

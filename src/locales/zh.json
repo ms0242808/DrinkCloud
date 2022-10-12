@@ -38,6 +38,11 @@
   },
   "dashboard":{
     "title":"儀錶板",
+    "tea cooker": "煮茶機",
+    "tea cooked": "煮茶次數",
+    "water used": "用水量",
+    "top1 tea": "煮最多次",
+    "omica": "調飲機",
     "drinks made":"飲品製作",
     "top1":"分類第 1",
     "working hr":"機器運轉時數",

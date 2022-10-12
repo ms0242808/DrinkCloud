@@ -12,26 +12,28 @@
 		</b-container>
 
 		<div v-if="machineType[0] && machineType[1]" class="no-putters mt-2 noMaxWidth container no-padding">
-			<h5>tea cooker</h5>
+			<h5 class="text-secondary"><font-awesome-icon fixed-width icon="dumpster-fire"></font-awesome-icon> {{$t('dashboard.tea cooker')}}</h5>
 			<hr>
 		</div>
 		
 		<div v-if="machineType[1]" class="noMaxWidth container no-padding">
-			<p>area1</p>
-			<p>card 1 - number of tea cooked</p>
-			<p>card 2 - water used</p>
-			<p>card 3 - most cooked tea</p>
-			<p>card 4 - machine health</p>
+			<Cards :showSke="showSke" :showStats="showStats" :cookedVal="cookedVal" :waterVal="waterVal" :mostCooked="hrVal" :cookerHp="cookerHp" :omica="false" :robotics="true"></Cards>
 		</div>
 	
 		<div v-if="machineType[1]" class="noMaxWidth container no-padding">
-			<p>area 2</p>
-			<p>line - hr of number of tea cooked</p>
-			<p>pie - times of tea cooked</p>
+			<Charts :showSke="showSke"
+			:rangeVal="rangeVal"
+			:showStats="showStats" 
+			:cookoverviewVal= 'cookoverviewVal'
+			:cookoverviewLab= 'cookoverviewLab'
+			:cookpieVal= 'cookpieVal'
+			:cookpieLab= 'cookpieLab'
+			:omica="false" :robotics="true"
+			></Charts>
 		</div>
-
-		<div v-if="machineType[0] && machineType[1]" class="no-putters mt-2 noMaxWidth container no-padding">
-			<h5>omica</h5>
+		
+		<div v-if="machineType[0] && machineType[1]" class="no-putters mt-5 noMaxWidth container no-padding">
+			<h5 class="text-secondary"><font-awesome-icon fixed-width icon="robot"></font-awesome-icon> {{$t('dashboard.omica')}}</h5>
 			<hr>
 		</div>
 
@@ -54,6 +56,7 @@
 			:iradarVal2= 'iradarVal2'
 			:ipieVal= 'ipieVal'
 			:ipieLab= 'ipieLab'
+			:omica="true" :robotics="false"
 			></Charts>
 		</div>
   </div>
@@ -77,6 +80,14 @@
 				showStats: false,
 				brandL:'',
 				rangeVal: store.getters.getDateRange,
+				cookedVal: 'No data',
+				waterVal: 'No data',
+				mostCooked: 'No data',
+				cookerHp: '100%',
+				cookoverviewVal: [],
+				cookoverviewLab: [],
+				cookpieVal: [],
+				cookpieLab: [],
 				madeVal: store.getters.getStats.madeVal,
 				topVal: store.getters.getStats.topVal,
 				hrVal: store.getters.getStats.hrVal,
@@ -107,8 +118,7 @@
 				for(m in machine){
 					if(machine[m] == "omica"){omica = true}
 					else if(machine[m] == "robotics"){robotics = true}
-				} 
-				console.log(machine);
+				}
 				return [omica,robotics]
 			}
 		},
