@@ -1,6 +1,21 @@
 <template>
   <div class="wrapper">
 		<b-container class="mt-2 noMaxWidth">
+			<b-row>
+				<b-col class="no-putters container" cols="5">
+					<h3>{{$t('recipe.title')}}</h3>
+				</b-col>
+				<b-col class="no-putters" cols="7">
+					<b-button-group class="float-right" v-if="machineType[0] && machineType[1]">
+						<!-- <b-skeleton width="80px" height="30px"></b-skeleton> -->
+					</b-button-group>
+					<div class="float-right dflex">
+						<b-button class="ml-1 mt-1 f-12" variant="outline-info" @click="swapMachine()"><font-awesome-icon fixed-width icon="sync"/> {{$t('dashboard.'+machineName)}}</b-button>
+					</div>
+				</b-col>
+			</b-row>
+		</b-container>
+		<b-container class="mt-2 noMaxWidth">
 			<RHeader :showSke="showSke" :nodata="nodata" :showVal="showVal" :totalCat="allCount[0]" :totalDri="allCount[1]" :catList="catList" :ingList="ingList"/>
 		</b-container>
 		<div class="mt-3">
@@ -28,7 +43,8 @@
 				showVal: false,
 				recipes: store.getters.getRecipe.recipeVal,
 				brandL: '',
-				nodata: false
+				nodata: false,
+				machineName: 'tea cooker',
 			}
 		},
 		computed:{
@@ -41,7 +57,7 @@
 				machine = store.getters.getMachineType,
 				m = '';
 				for(m in machine){
-					if(machine[m] == "omica"){omica = true}
+					if(machine[m] == "omica"){omica = true;}
 					else if(machine[m] == "robotics"){robotics = true}
 				}
 				return [omica,robotics]
@@ -77,6 +93,16 @@
 			setLoadingState(v1,v2){
 				this.showSke = v1;
 				this.showVal = v2;
+			},
+			async swapMachine(){
+				switch(this.machineName){
+					case("omica"):
+						this.machineName = "tea cooker";
+						break;
+					case("tea cooker"):
+						this.machineName = "omica";
+						break;
+				}
 			},
 			async loadRecipe(){
 				const t = trace(perf,"getRecipe");
