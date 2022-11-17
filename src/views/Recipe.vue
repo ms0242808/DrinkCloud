@@ -15,12 +15,17 @@
 				</b-col>
 			</b-row>
 		</b-container>
-		<b-container class="mt-2 noMaxWidth">
-			<RHeader :showSke="showSke" :nodata="nodata" :showVal="showVal" :totalCat="allCount[0]" :totalDri="allCount[1]" :catList="catList" :ingList="ingList"/>
-		</b-container>
-		<div class="mt-3">
-			<Cards :showSke="showSke" :showVal="showVal" :recipes="recipes" :nodata="nodata"/>
-		</div>
+		<template v-if="machineName=='omica'">
+			<b-container class="mt-2 noMaxWidth">
+				<RHeader :showSke="showSke" :nodata="nodata" :showVal="showVal" :totalCat="allCount[0]" :totalDri="allCount[1]" :catList="catList" :ingList="ingList"/>
+			</b-container>
+			<div class="mt-3">
+				<Cards :showSke="showSke" :showVal="showVal" :recipes="recipes" :nodata="nodata"/>
+			</div>
+		</template>
+		<template v-else-if="machineName=='tea cooker'">
+			<Cooker :showSke="showSke"/>
+		</template>
   </div>
 </template>
 
@@ -30,12 +35,14 @@
   import { functions, httpsCallable, perf, trace } from "../fire";
   import Cards from '../components/recipe/Cards.vue'
 	import RHeader from '../components/recipe/Header.vue'
+	import Cooker from '../components/recipe/Cooker.vue'
 
 	export default {
 		name: 'Recipe',
 		components:{
 			RHeader,
-			Cards
+			Cards,
+			Cooker
 		},
 		data(){
 			return {
