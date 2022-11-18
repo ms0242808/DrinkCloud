@@ -232,7 +232,13 @@
     "coldwater":"Cold Water",
     "hotwater":"Hot Water",
     "L":"Large",
-    "M":"Regular"
+    "M":"Regular",
+    "water":"Water",
+    "cook_temp":"Cook temperature",
+    "cool_temp":"Cool temperature",
+    "cook_time":"Cook time",
+    "stir1_time":"Stir1 time",
+    "stir2_time":"Stir2 time"
   },
   "report":{
     "title":"Report",

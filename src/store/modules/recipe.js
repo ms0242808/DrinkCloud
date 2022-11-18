@@ -2,11 +2,15 @@ const state = {
   recipeVal:[],
   header:[],
   onDrink:[],
-  offDrink:[]
+  offDrink:[],
+  cookVal:[]
 };
 const getters = {
   getRecipe: state =>{
     return state
+  },
+  getCook: state =>{
+    return state.cookVal
   }
 };
 const actions = {
@@ -24,6 +28,9 @@ const mutations = {
   },
   offDrinkUpdate(state,val){
     state.offDrink = val;
+  },
+  cookChanged(state,val){
+    state.cookVal = val;
   }
 };
 export default {

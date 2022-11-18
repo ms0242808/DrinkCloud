@@ -1,8 +1,16 @@
 <template>
   <b-card-group deck>
-    <!-- v-for="(item, index) in recipeVal" v-bind:key="index" v-show="skele[1]" class="w-100 no-gutters noMaxWidth container" -->
-    <b-row class="w-100 no-gutters container noMaxWidth">
-      <b-col class="mt-2" lg="3" sm="12" v-for="(item,index) in cookRecipe " :key="index">
+    <b-row class="w-100 no-gutters container noMaxWidth no-putters">
+      <b-col cols="12">
+        <div class="float-right pd-r-15"><!--skele[0]-->
+          <b-skeleton width="60px" height="30px" v-show="false"></b-skeleton>
+          <b-button v-b-modal.publish v-show="!editShow" class="ml-1 mt-1 f-12" variant="outline-success" @click="saveCook()">{{$t('recipe.save')}}</b-button><!--skele[1]-->
+          <b-button v-b-modal.publish v-show="!editShow" class="ml-1 mt-1 f-12" variant="outline-dark" @click="cancelEdit('c')">{{$t('recipe.cancel')}}</b-button><!--skele[1]-->
+          <b-button v-b-modal.publish v-show="editShow" class="ml-1 mt-1 f-12" variant="outline-success" @click="cookEdit()"><font-awesome-icon fixed-width icon="edit"/> {{$t('recipe.edit')}}</b-button><!--skele[1]-->          
+          <!-- <b-button v-b-modal.publish v-show="true" class="ml-1 mt-1 f-12" variant="outline-primary" @click="showModal('publish','publish','publish msg','publish')"><font-awesome-icon fixed-width icon="upload"/> {{$t('recipe.publish')}}</b-button>skele[1] -->
+        </div>
+      </b-col>
+      <b-col class="mt-2" lg="3" sm="12" v-for="(item,index) in newCook " :key="index">
         <b-card class="mt-2">
           <b-skeleton v-show="false" height="400px"></b-skeleton><!--skele[0]-->
           <b-row v-show="true"> <!--skele[1]-->
@@ -10,47 +18,47 @@
               <h6 class="text-dark cookHead">{{item.name}}</h6>
             </b-col>
             <b-col cols="12" class="mt-2">
-              <label class="text-dark inputL">Water</label>
-              <b-input :value="item.water"></b-input>
+              <label class="text-dark inputL">{{$t('recipe.water')}}</label>
+              <b-form-input class="cookInput" type="number" v-model="item.water" :value="item.water" :disabled="isDisabled"></b-form-input>
             </b-col>
             <b-col cols="12" class="mt-2">
-              <label class="text-dark inputL">Cook temp</label>
-              <b-input :value="item.cook_time"></b-input>
+              <label class="text-dark inputL">{{$t('recipe.cook_temp')}}</label>
+              <b-form-input class="cookInput" type="number" v-model="item.temp_cook" :value="item.temp_cook" :disabled="isDisabled"></b-form-input>
             </b-col>
             <b-col cols="12" class="mt-2">
-              <label class="text-dark inputL">Cool temp</label>
-              <b-input :value="item.temp_cool"></b-input>
+              <label class="text-dark inputL">{{$t('recipe.cool_temp')}}</label>
+              <b-form-input class="cookInput" type="number" v-model="item.temp_cool" :value="item.temp_cool" :disabled="isDisabled"></b-form-input>
             </b-col>
             <b-col cols="12" class="mt-2">
-              <label class="text-dark inputL">Cook time</label>
+              <label class="text-dark inputL">{{$t('recipe.cook_time')}}</label>
               <b-row>
                 <b-col cols="6">
-                  <b-input width="30" :value="item.cook_time.split('-')[0]"></b-input>
+                  <b-form-input class="cookInput" type="number" @change="timeChange(index,'cook_time','min')" :value="item.cook_time.split('-')[0]" :disabled="isDisabled" max="10" min="0"></b-form-input>
                 </b-col>
                 <b-col cols="6">
-                  <b-input :value="item.cook_time.split('-')[1]"></b-input>
+                  <b-form-input class="cookInput" type="number" @change="timeChange(index,'cook_time','sec')" :value="item.cook_time.split('-')[1]" :disabled="isDisabled"></b-form-input>
                 </b-col>
               </b-row>
             </b-col>
             <b-col cols="12" class="mt-2">
-              <label class="text-dark inputL">Stir time 1</label>
+              <label class="text-dark inputL">{{$t('recipe.stir1_time')}}</label>
               <b-row>
                 <b-col cols="6">
-                  <b-input width="30" :value="item.stir1_time.split('-')[0]"></b-input>
+                  <b-form-input class="cookInput" type="number" @change="timeChange(index,'stir1_time','min')" :value="item.stir1_time.split('-')[0]" :disabled="isDisabled"></b-form-input>
                 </b-col>
                 <b-col cols="6">
-                  <b-input :value="item.stir1_time.split('-')[1]"></b-input>
+                  <b-form-input class="cookInput" type="number" @change="timeChange(index,'stir1_time','sec')" :value="item.stir1_time.split('-')[1]" :disabled="isDisabled"></b-form-input>
                 </b-col>
               </b-row>
             </b-col>
             <b-col cols="12" class="mt-2">
-              <label class="text-dark inputL">Stir time 2</label>
+              <label class="text-dark inputL">{{$t('recipe.stir2_time')}}</label>
               <b-row>
                 <b-col cols="6">
-                  <b-input width="30" :value="item.stir2_time.split('-')[0]"></b-input>
+                  <b-form-input class="cookInput" type="number" @change="timeChange(index,'stir2_time','min')" :value="item.stir2_time.split('-')[0]" :disabled="isDisabled"></b-form-input>
                 </b-col>
                 <b-col cols="6">
-                  <b-input :value="item.stir2_time.split('-')[1]"></b-input>
+                  <b-form-input class="cookInput" type="number" @change="timeChange(index,'stir2_time','sec')" :value="item.stir2_time.split('-')[1]" :disabled="isDisabled"></b-form-input>
                 </b-col>
               </b-row>
             </b-col>
@@ -71,7 +79,10 @@ export default {
     return{
       brandL: store.getters.getLocation,
       addShow: false,
-      cookRecipe: []
+      cookRecipe: [],
+      newCook:[],
+      isDisabled: true,
+      editShow: true
     }
   },
   props:{
@@ -87,8 +98,16 @@ export default {
     //   return store.getters.getRecipe.recipeVal
     // },
   },
-  async created(){
+  watch:{
+    getLocation(val){
+      this.brandL = val;
+      this.loadRecipe();
+    }
+  },
+  async mounted(){
     this.getCook();
+    //get brandL
+    //save, publish
   },
   methods:{
     hideModal(id){
@@ -96,16 +115,59 @@ export default {
       this.switchSel = '0';
     },
     async getCook(){
-      var brandL = "Slash-Taipei";
+      var x = store.getters.getCook;
+      if(x.length>1){
+        this.newCook = x;
+        var i,j;
+        for(i in x){
+          var y = {};
+          for(j in x[i]){Object.assign(y,{[j]:x[i][j]})}
+          this.cookRecipe.push(y);
+        }
+      }else{
+        var brandL = "Slash-Taipei";
 
-      for(var n=1; n<9; n++){
-        const q = query(collection(db, "cookrecipes/"+brandL+"/recipe"+n),orderBy("added","desc"),limit(1));
-        const querySnapshot = await getDocs(q);
-        querySnapshot.forEach((doc) => {
-          this.cookRecipe.push(doc.data());
-        });
+        for(var n=1; n<9; n++){
+          const q = query(collection(db, "cookrecipes/"+brandL+"/recipe"+n),orderBy("added","desc"),limit(1));
+          const querySnapshot = await getDocs(q);
+          querySnapshot.forEach((doc) => {
+            this.cookRecipe.push(doc.data());
+            this.newCook.push(doc.data());
+          });
+        }
+        store.commit('cookChanged', this.newCook);
       }
       //{ "stir1_time": "0-30", "cook_time": "2-0", "name": "泡沫紅茶", "added": "20221102000542", "id": "recipe1", "stir2_time": "0-30", "temp_cool": "40", "water": "4000", "temp_cook": "95" }
+    },
+    async cookEdit(){
+      this.isDisabled = false;
+      this.editShow = false;
+    },
+    async cancelEdit(c){
+      this.isDisabled = true;
+      this.editShow = true;
+      var i,j;
+      for(i in this.cookRecipe){
+        for(j in this.cookRecipe[i]){
+          if(c=="c"){this.newCook[i][j] = this.cookRecipe[i][j]}
+          else{this.cookRecipe[i][j] = this.newCook[i][j]}
+        }
+      }
+    },
+    async timeChange(index,item,mors){
+      var val = event.target.value;
+      if(val!==null){
+        if(mors=="min"){
+          this.newCook[index][item] = val+'-'+this.newCook[index][item].split('-')[1];
+        }else{
+          if(val.length<2){val = '0'+val.toString()}
+          this.newCook[index][item] = this.newCook[index][item].split('-')[0]+'-'+val;
+        }
+      }
+    },
+    async saveCook(){
+      this.cancelEdit("s");
+      store.commit('cookChanged', this.newCook);
     }
     // async delRecipe(tea,item){
     //   const t = trace(perf,"removeRecipe");
@@ -207,5 +269,17 @@ a,.text-i{
     margin-left: 0;
     margin-right: 0;
   }
+  .pd-r-15{
+    padding-right: 15px;
+  }
+}
+.form-control:disabled, .form-control[readonly]{
+  border: none;
+  border-radius: 7px;
+}
+.cookInput{
+  border: none;
+  border-bottom: 1px solid;
+  border-radius: 0;
 }
 </style>

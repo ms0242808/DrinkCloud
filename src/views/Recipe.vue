@@ -24,6 +24,9 @@
 			</div>
 		</template>
 		<template v-else-if="machineName=='tea cooker'">
+			<b-container class="mt-2 noMaxWidth no-putters">
+				<RHeader :machineName="machineName"/>
+			</b-container>
 			<Cooker :showSke="showSke"/>
 		</template>
   </div>
