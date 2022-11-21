@@ -4,10 +4,10 @@
       <b-col cols="12">
         <div class="float-right pd-r-15"><!--skele[0]-->
           <b-skeleton width="60px" height="30px" v-show="false"></b-skeleton>
-          <b-button v-b-modal.publish v-show="!editShow" class="ml-1 mt-1 f-12" variant="outline-success" @click="saveCook()">{{$t('recipe.save')}}</b-button><!--skele[1]-->
+          <b-button v-b-modal.publish v-show="!editShow" class="ml-1 mt-1 f-12" variant="outline-success" @click="saveCook()" :disabled="btnDisabled">{{$t('recipe.save')}}</b-button><!--skele[1]-->
           <b-button v-b-modal.publish v-show="!editShow" class="ml-1 mt-1 f-12" variant="outline-dark" @click="cancelEdit('c')">{{$t('recipe.cancel')}}</b-button><!--skele[1]-->
           <b-button v-b-modal.publish v-show="editShow" class="ml-1 mt-1 f-12" variant="outline-success" @click="cookEdit()"><font-awesome-icon fixed-width icon="edit"/> {{$t('recipe.edit')}}</b-button><!--skele[1]-->          
-          <!-- <b-button v-b-modal.publish v-show="true" class="ml-1 mt-1 f-12" variant="outline-primary" @click="showModal('publish','publish','publish msg','publish')"><font-awesome-icon fixed-width icon="upload"/> {{$t('recipe.publish')}}</b-button>skele[1] -->
+          <b-button v-b-modal.publish v-show="publish&&editShow" class="ml-1 mt-1 f-12" variant="outline-primary" @click="showModal('publish','publish','publish msg','publish')"><font-awesome-icon fixed-width icon="upload"/> {{$t('recipe.publish')}}</b-button><!-- skele[1] -->
         </div>
       </b-col>
       <b-col class="mt-2" lg="3" sm="12" v-for="(item,index) in newCook " :key="index">
@@ -19,15 +19,15 @@
             </b-col>
             <b-col cols="12" class="mt-2">
               <label class="text-dark inputL">{{$t('recipe.water')}}</label>
-              <b-form-input class="cookInput" type="number" v-model="item.water" :value="item.water" :disabled="isDisabled"></b-form-input>
+              <b-form-input class="cookInput" type="number" @change="valChange()" v-model="item.water" :value="item.water" :disabled="isDisabled"></b-form-input>
             </b-col>
             <b-col cols="12" class="mt-2">
               <label class="text-dark inputL">{{$t('recipe.cook_temp')}}</label>
-              <b-form-input class="cookInput" type="number" v-model="item.temp_cook" :value="item.temp_cook" :disabled="isDisabled"></b-form-input>
+              <b-form-input class="cookInput" type="number" @change="valChange()" v-model="item.temp_cook" :value="item.temp_cook" :disabled="isDisabled"></b-form-input>
             </b-col>
             <b-col cols="12" class="mt-2">
               <label class="text-dark inputL">{{$t('recipe.cool_temp')}}</label>
-              <b-form-input class="cookInput" type="number" v-model="item.temp_cool" :value="item.temp_cool" :disabled="isDisabled"></b-form-input>
+              <b-form-input class="cookInput" type="number" @change="valChange()" v-model="item.temp_cool" :value="item.temp_cool" :disabled="isDisabled"></b-form-input>
             </b-col>
             <b-col cols="12" class="mt-2">
               <label class="text-dark inputL">{{$t('recipe.cook_time')}}</label>
@@ -82,6 +82,8 @@ export default {
       cookRecipe: [],
       newCook:[],
       isDisabled: true,
+      btnDisabled: true,
+      publishBtn: false,
       editShow: true
     }
   },
@@ -97,6 +99,18 @@ export default {
     // 'recipeVal':function(){
     //   return store.getters.getRecipe.recipeVal
     // },
+    'publish':function(){//change to input value c
+      var i,j;
+      // this.publishBtn = true;
+      var btn = false;
+      for(i in this.cookRecipe){
+        for(j in this.cookRecipe[i]){
+          if(this.newCook[i][j] != this.cookRecipe[i][j]){ btn = true;}
+        }
+      }
+      console.log(btn);
+      return btn
+    }
   },
   watch:{
     getLocation(val){
@@ -153,6 +167,16 @@ export default {
           else{this.cookRecipe[i][j] = this.newCook[i][j]}
         }
       }
+      this.valChange();
+    },
+    async valChange(){
+      var i,j;
+      this.btnDisabled = true;
+      for(i in this.cookRecipe){
+        for(j in this.cookRecipe[i]){
+          if(this.newCook[i][j] != this.cookRecipe[i][j]){return this.btnDisabled = false;}
+        }
+      }
     },
     async timeChange(index,item,mors){
       var val = event.target.value;
@@ -164,10 +188,45 @@ export default {
           this.newCook[index][item] = this.newCook[index][item].split('-')[0]+'-'+val;
         }
       }
+      this.valChange();
     },
     async saveCook(){
       this.cancelEdit("s");
       store.commit('cookChanged', this.newCook);
+      // this.publishBtn = true;
+      
+      // var addCookerRecipe = httpsCallable(functions,'addCookerRecipe');
+      var i,j;
+      for(i in this.newCook){
+        var update = false;
+        for(j in this.newCook[i]){
+          if(this.newCook[i][j] != this.cookRecipe[i][j]){
+            update = true;
+          }
+        }
+        if(update){
+          //update function with addStats -> updated field (remove maybe)
+          // await addCookerRecipe({docPath:'cookrecipes/'+this.brandL,
+          //   uploadDate: uploadDate,
+          //   uploadTime: uploadTime,
+          //   id: i+1, //recipe id
+          //   name: this.newCook[i].name,
+          //   water: this.newCook[i].water,
+          //   temp_cook: this.newCook[i].temp_cook,
+          //   temp_cool: this.newCook[i].temp_cool,
+          //   cook_time: this.newCook[i].cook_time,
+          //   stir1_time: this.newCook[i].stir1_time,
+          //   stir2_time: this.newCook[i].stir2_time
+          // }).then(result => {
+          //   // this.$refs['setModal'].hide();
+          //   // this.variant = 'success';
+          //   // this.msg = 'alert update';
+          //   // this.showAlert();
+          //   // this.btn.save = this.$i18n.t('recipe.save');
+          //   // Vue.set(this.btnClicked,'b',0);
+          // });
+        }
+      }
     }
     // async delRecipe(tea,item){
     //   const t = trace(perf,"removeRecipe");
