@@ -27,7 +27,7 @@
 			<b-container class="mt-2 noMaxWidth no-putters">
 				<RHeader :machineName="machineName"/>
 			</b-container>
-			<Cooker :showSke="showSke"/>
+			<Cooker :brandL="brandL"/>
 		</template>
   </div>
 </template>

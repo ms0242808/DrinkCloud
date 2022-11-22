@@ -40,7 +40,7 @@
   </b-modal>
 </template>
 <script>
-import { functions, httpsCallable, perf, trace } from "../../fire";
+import { functions, httpsCallable, perf, trace, db, updateDoc, doc } from "../../fire";
 import store from '../../store/store'
 export default {
   name:'modal',
@@ -164,6 +164,18 @@ export default {
       var publishRecipe = httpsCallable(functions,'publishRecipe');
       await publishRecipe({docPath:'recipes/'+this.brandL,brand:this.brandL}).then(result => {
         this.hideModal(modalRef);
+      });
+      t.stop();
+    },
+    async publishCook(){
+      const t = trace(perf,"publishCookRecipe");
+      t.start();
+      const cookRecipe = doc(db,"cookrecipes",this.brandL);
+      await updateDoc(cookRecipe, {
+        publish:true
+      }).then(result => {
+        this.hideModal('publish');
+        store.commit('cookPublish', false);
       });
       t.stop();
     }
