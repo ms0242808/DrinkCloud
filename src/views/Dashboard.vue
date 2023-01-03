@@ -70,6 +70,9 @@
 	import Cards from '../components/dashboard/Cards.vue'
 	import Charts from '../components/dashboard/Charts.vue'
 	import DatePicker from '../components/dashboard/DatePicker.vue'
+	import moment from 'moment'
+	import Vue from 'vue'
+	Vue.prototype.moment = moment
 	
 	export default {
 		name: 'Dashboard',
@@ -142,16 +145,18 @@
 				store.commit('healthUpdate', health);
 			},
 			async dateClicked(val){
-				const t = trace(perf,"getStats");
-				t.start();
-				this.setLoadingState(true,false);
-				this.rangeVal = val;
-				var stats = await getStats(val[0],val[1],this.brandL);
-				var sorted = this.renderStats(stats);
-				sorted = await sorted.then(result =>{return result});
-				store.commit('statsChanged', sorted);
+				// const t = trace(perf,"getStats");
+				// t.start();
+				// this.setLoadingState(true,false);
+				// this.rangeVal = val;
+				// var stats = await getStats(val[0],val[1],this.brandL); //need to fix next year data by moment
+				var cookStats = await getCookerStats(val[0],val[1],this.brandL);
+				console.log(cookStats);
+				// var sorted = this.renderStats(stats);
+				// sorted = await sorted.then(result =>{return result});
+				// store.commit('statsChanged', sorted);
 				this.setLoadingState(false,true);
-				t.stop();
+				// t.stop();
 			},
 			async renderStats(stats){
 				var hours = exeractVal(stats[5]),
@@ -177,6 +182,49 @@
 				this.dateClicked(this.rangeVal);
 			}
 		}
+	}
+
+	async function getCookerStats(s,e,brandL){
+		var start = moment(s),
+		end = moment(e).add(1, 'day'),
+		cooked_count = 0,
+		water_count = 0,
+		cooked = [];
+		try{
+			while(!start.isSame(end)){
+				var d = start.format('YYYYMMDD');
+				// console.log(d);
+				const querySnapshot = await getDocs(collection(db,"/teacooker/"+brandL+"/"+d));
+				querySnapshot.forEach(async (docs)=>{
+					var docRef = doc(db,"/teacooker/"+brandL+"/"+d,docs.id);
+					var docSnap = await getDoc(docRef);
+					if(docSnap.exists()) {
+						if(docSnap.data()['type']=="cook"){
+							console.log(docSnap.data()['name']);
+							cooked_count +=1;
+							water_count += parseInt(docSnap.data()['water']);
+							cooked.push(docSnap.data()['name']);
+						}
+					} else {
+						console.log("No such document!");
+					}
+					// console.log(docSnap.data());
+				});
+				
+				if(start.format("MMDD")=="1231"){
+					var next = parseInt(start.format("YYYY"))+1;
+					start = moment(next.toString()+"0101"); // change to next year
+				}else{
+					start.add(1, 'day');
+				}
+			}
+		}catch(e){
+			console.log(e);
+		}
+		
+		// console.log("cooker stats",s,e,brandL);
+		// console.log({cooked: cooked, cooked_count:cooked_count,water_count:water_count});
+		return {cooked: cooked, cooked_count:cooked_count,water_count:water_count};
 	}
 
 	async function getStats(s,e,brandL){
