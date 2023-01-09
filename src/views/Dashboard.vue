@@ -17,7 +17,7 @@
 		</div>
 		
 		<div v-if="machineType[1]" class="noMaxWidth container no-padding">
-			<Cards :showSke="showSke" :showStats="showStats" :cookedVal="cookedVal" :waterVal="waterVal" :mostCooked="hrVal" :cookerHp="cookerHp" :omica="false" :robotics="true"></Cards>
+			<Cards :showSke="showSke" :showStats="showStats" :cookedVal="cookedVal" :waterVal="waterVal" :mostCooked="mostCooked" :cookerHp="cookerHp" :omica="false" :robotics="true"></Cards>
 		</div>
 	
 		<div v-if="machineType[1]" class="noMaxWidth container no-padding">
@@ -145,18 +145,24 @@
 				store.commit('healthUpdate', health);
 			},
 			async dateClicked(val){
-				// const t = trace(perf,"getStats");
-				// t.start();
-				// this.setLoadingState(true,false);
-				// this.rangeVal = val;
-				// var stats = await getStats(val[0],val[1],this.brandL); //need to fix next year data by moment
+				const t = trace(perf,"getStats");
+				t.start();
+				this.setLoadingState(true,false);
+				this.rangeVal = val;
+				var stats = await getStats(val[0],val[1],this.brandL); //need to fix next year data by moment
 				var cookStats = await getCookerStats(val[0],val[1],this.brandL);
-				console.log(cookStats);
-				// var sorted = this.renderStats(stats);
-				// sorted = await sorted.then(result =>{return result});
-				// store.commit('statsChanged', sorted);
+				this.cookedVal = cookStats.cooked_count.toString();
+				this.waterVal = cookStats.water_count.toString();
+				this.mostCooked = cookStats.most_cooked.toString()==""?"No Data":cookStats.most_cooked.toString()+": "+cookStats.max;
+				this.cookpieVal = cookStats.pieVal;
+				this.cookpieLab = cookStats.pieLab;
+				this.cookoverviewVal = cookStats.hrVal;
+				this.cookoverviewLab = cookStats.hrLab;
+				var sorted = this.renderStats(stats);
+				sorted = await sorted.then(result =>{return result});
+				store.commit('statsChanged', sorted);
 				this.setLoadingState(false,true);
-				// t.stop();
+				t.stop();
 			},
 			async renderStats(stats){
 				var hours = exeractVal(stats[5]),
@@ -184,33 +190,60 @@
 		}
 	}
 
+	function wrap(){
+    return new Promise((resolve) => setTimeout(resolve, 500));
+	}
+
 	async function getCookerStats(s,e,brandL){
 		var start = moment(s),
 		end = moment(e).add(1, 'day'),
+		max = 0,
 		cooked_count = 0,
 		water_count = 0,
-		cooked = [];
+		tea_cooked = {},
+		most_cooked = [],
+		cooked = [],
+		stats = {},
+		fastCleanVal=[],
+		fullCleanVal=[],
+		cookedVal=[],
+		pieVal = [],
+		pieLab = [],
+		hr_cooked = {},
+		hrVal = [],
+		hrLab = [];
 		try{
 			while(!start.isSame(end)){
 				var d = start.format('YYYYMMDD');
-				// console.log(d);
 				const querySnapshot = await getDocs(collection(db,"/teacooker/"+brandL+"/"+d));
 				querySnapshot.forEach(async (docs)=>{
 					var docRef = doc(db,"/teacooker/"+brandL+"/"+d,docs.id);
 					var docSnap = await getDoc(docRef);
-					if(docSnap.exists()) {
+					if(docSnap.exists()){
 						if(docSnap.data()['type']=="cook"){
-							console.log(docSnap.data()['name']);
 							cooked_count +=1;
 							water_count += parseInt(docSnap.data()['water']);
 							cooked.push(docSnap.data()['name']);
+							tea_cooked[docSnap.data()['name']] = (tea_cooked[docSnap.data()['name']] || 0) + 1;
+							hr_cooked[docSnap.id.substring(0,2)] = (hr_cooked[docSnap.id.substring(0,2)] || 0) + 1;
+							if(tea_cooked[docSnap.data()['name']] > max){ 
+								max = tea_cooked[docSnap.data()['name']];
+							}
+							cookedVal.push(docSnap.data()['id']+"!@"+docSnap.id+"!@"+docSnap.data()['name']+"!@"+docSnap.data()['water']);
+						}else if(docSnap.data()['type']=="fastClean"){
+							fastCleanVal.push(docSnap.data()['id']+"!@"+docSnap.id);
+						}else if(docSnap.data()['type']=="fullClean"){
+							fullCleanVal.push(docSnap.data()['id']+"!@"+docSnap.id);
 						}
-					} else {
+					}else{
 						console.log("No such document!");
 					}
-					// console.log(docSnap.data());
 				});
-				
+				stats[d] = {
+					fastClean:fastCleanVal,
+					fullClean:fullCleanVal,
+					cooked:cookedVal
+				};
 				if(start.format("MMDD")=="1231"){
 					var next = parseInt(start.format("YYYY"))+1;
 					start = moment(next.toString()+"0101"); // change to next year
@@ -220,11 +253,19 @@
 			}
 		}catch(e){
 			console.log(e);
+		}finally{
+			await wrap();
+			for(var c in tea_cooked){
+				if(tea_cooked[c]==max){most_cooked.push(c)}
+				pieVal.push(tea_cooked[c]);
+				pieLab.push(c);
+			}
+			for(var b in hr_cooked){
+				hrVal.push(hr_cooked[b]);
+				hrLab.push(b);
+			}
+			return {cooked: cooked, cooked_count:cooked_count,water_count:water_count,tea_cooked:tea_cooked,max:max,most_cooked:most_cooked,pieVal:pieVal,pieLab:pieLab,hrVal:hrVal,hrLab:hrLab};
 		}
-		
-		// console.log("cooker stats",s,e,brandL);
-		// console.log({cooked: cooked, cooked_count:cooked_count,water_count:water_count});
-		return {cooked: cooked, cooked_count:cooked_count,water_count:water_count};
 	}
 
 	async function getStats(s,e,brandL){
@@ -271,16 +312,61 @@
 		}
 		return mTime
 	}
-	async function sortList(getList, start, end, brandL){
+	async function sortList(getList, s, e, brandL){
 		var drinkCount = 0,
-		rangeD = start,
+		rangeD = s,
 		title = ['Cold Water','Hot Water','Ice','Sugar 100%','Sugar 30%','Sugar 50%','Sugar 70%','data0','size-L','size-M','temp-0','temp-1','temp-2','temp-3','temp-4','topping-0','topping-1','total'],
 		[liquidValue,tempValue,sugarValue,sizeValue,toppingValue,teaRank,teaVal,juiceVal,juiceRank,milkVal,sugarRank,sugarSize,iceSize,itemSum] = [{},{},{},{},{},[],{},{},[],{},[],{},{},{}];
 		var [hr,hm] = [[],[]];
 		var [header,teaHead,jHead] = ['','',''];
 		var [l,i,j,k,t,x,header,health] = ['','','','','','','',''];
 		if(getList.length>0){
-			for(var x=start;x<=end;x++){
+			var start = moment(s),
+			end = moment(e);
+			// while(!start.isSame(end)){
+			// 	var d = start.format('YYYYMMDD');
+			// 	rangeD = d;
+			// 		for(l in getList){//l=index
+			// 			for(i in getList[l][rangeD]){//i=index
+			// 				for(j in getList[l][rangeD][i]){ //j=title/name
+			// 					for(k in getList[l][rangeD][i][j]){ //k=index
+			// 						if(j=="0Header" && k==0){header=getList[l][rangeD][i]["0Header"][k];}//get header
+			// 						var slug = getList[l][rangeD][i][j][k].split(':');//0=before, 1=after
+			// 						if(i==0 && slug[0]=="total"){drinkCount=drinkCount+parseInt(slug[1]);} //get drink total
+			// 						if(!title.includes(slug[0]) && i == 0){liquidValue[slug[0]] = (liquidValue[slug[0]]+parseInt(slug[1])) || parseInt(slug[1]);} //get liquid value
+			// 						tempValue = countValue(i,slug,"-","temp",tempValue); //get tempValue
+			// 						sugarValue = countValue(i,slug,'-',"Sugar",sugarValue);//get sugarValue
+			// 						sizeValue = countValue(i,slug,"-","size",sizeValue);//get sizeValue
+			// 						toppingValue = countValue(i,slug,"-","topping",toppingValue);//get toppingValue
+			// 						if(slug[0].substring(0,3)=="tea"){teaVal[slug[0]]=slug[1]}
+			// 						if(slug[0].substring(0,1)=="j"){juiceVal[slug[0]]=slug[1]}
+			// 						if(slug[0].substring(0,4)=="milk"){milkVal[slug[0]]=slug[1]}
+			// 						if(slug.length == 4){// get hour min total console.log(slug);
+			// 							hr.push(slug[0]);
+			// 							hm.push(slug[0]+slug[1]);
+			// 						}
+			// 						if(j!=="0Header"){
+			// 							var splitData = getList[l][rangeD][i][j][k].split(',');
+			// 							if(splitData.length>1){//1: size; 2: ice; 5: sugar
+			// 								iceSize[splitData[1]+'I'+splitData[2]] = (iceSize[Object.keys(countCustom(splitData[2],splitData[1],'I'))]+1) || 1;
+			// 								sugarSize[splitData[1]+'S'+splitData[5]] = (sugarSize[Object.keys(countCustom(splitData[5],splitData[1],'S'))]+1) || 1;
+			// 							}
+			// 						}
+			// 						console.log(hr,hm);
+			// 					}
+			// 					if(j!=="0Header"){itemSum[j] = getList[l][rangeD][i][j].pop().replace('total:', '')}
+			// 				}
+			// 			}
+			// 		}
+			// 	if(start.format("MMDD")=="1231"){
+			// 		var next = parseInt(start.format("YYYY"))+1;
+			// 		start = moment(next.toString()+"0101");
+			// 	}else{
+			// 		start.add(1, 'day');
+			// 	}
+			// }
+			// console.log(tempValue,sugarValue,sizeValue,toppingValue,hr,hm,iceSize,sugarSize);
+			for(var x=s;x<=e;x++){
 				var last2 = x.toString().slice(-2);
 				if(last2<32 && last2 != 0){
 					rangeD = x;

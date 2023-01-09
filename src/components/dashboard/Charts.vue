@@ -351,42 +351,51 @@ export default {
       }else if(this.robotics){
         stats = [{
           title: 'overview',
-          type: 'area',
+          type:'bar',
           class:"col-xl-7 mt-2",
-          dataL: this.cookoverviewVal.length,
+          series: [{data:this.cookoverviewVal}],
           options: {
+            labels: this.cookoverviewLab,
             noData: nodata,
-            chart: {
-              id: 'overviewLine',
-              zoom: {
-                enabled: false
+            tooltip: {enabled: false},
+            legend:{show:true},
+            xaxis:{
+              title:{
+                text:this.$i18n.t('dashboard.Hour')
               }
             },
-            dataLabels: {
-              enabled: false
+            yaxis:{
+              title:{
+                text:this.$i18n.t('dashboard.tea cooked')
+              }
             },
-            stroke: {
-              curve: 'smooth'
-            },
-            grid: {
-              row: {
-                colors: ['#f3f3f3', 'transparent'],
-                opacity: 0.5
+            chart: {
+              toolbar: {
+                show: true,
+                offsetX: 0,
+                offsetY: 0,
+                tools: {download: true},
+                export: {
+                  csv: {
+                    filename: 'Tea cooker overview',
+                    columnDelimiter: ',',
+                    headerCategory: 'Tea cooker overview',
+                    headerValue: 'value',
+                    dateFormatter(timestamp) {
+                      return new Date(timestamp).toDateString()
+                    }
+                  },
+                  png: {
+                    filename: 'Tea cooker overview',
+                  }
+                }
               },
-            },
-            xaxis: {
-              categories: this.cookoverviewLab
             }
-          },
-          series: [{
-            name: this.$i18n.t('dashboard.Cups'),
-            data: this.cookoverviewVal
-          }]
+          }
         },{
           title: 'tea cooked',
           type:'donut',
           class:"col-xl-5 mt-2",
-          dataL: this.cookoverviewVal.length,
           sum: this.cookpieVal.reduce((a, b) => a + b, 0),
           options: {
             labels: this.cookpieLab,
