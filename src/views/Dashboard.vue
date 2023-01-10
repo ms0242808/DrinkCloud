@@ -28,6 +28,7 @@
 			:cookoverviewLab= 'cookoverviewLab'
 			:cookpieVal= 'cookpieVal'
 			:cookpieLab= 'cookpieLab'
+			:cookpotVal="cookpotVal"
 			:omica="false" :robotics="true"
 			></Charts>
 		</div>
@@ -91,6 +92,7 @@
 				cookoverviewLab: [],
 				cookpieVal: [],
 				cookpieLab: [],
+				cookpotVal: [],
 				madeVal: store.getters.getStats.madeVal,
 				topVal: store.getters.getStats.topVal,
 				hrVal: store.getters.getStats.hrVal,
@@ -158,6 +160,7 @@
 				this.cookpieLab = cookStats.pieLab;
 				this.cookoverviewVal = cookStats.hrVal;
 				this.cookoverviewLab = cookStats.hrLab;
+				this.cookpotVal = cookStats.pot_cooked;
 				var sorted = this.renderStats(stats);
 				sorted = await sorted.then(result =>{return result});
 				store.commit('statsChanged', sorted);
@@ -197,21 +200,9 @@
 	async function getCookerStats(s,e,brandL){
 		var start = moment(s),
 		end = moment(e).add(1, 'day'),
-		max = 0,
-		cooked_count = 0,
-		water_count = 0,
-		tea_cooked = {},
-		most_cooked = [],
-		cooked = [],
-		stats = {},
-		fastCleanVal=[],
-		fullCleanVal=[],
-		cookedVal=[],
-		pieVal = [],
-		pieLab = [],
-		hr_cooked = {},
-		hrVal = [],
-		hrLab = [];
+		[max,cooked_count,water_count] = [0,0,0],
+		[tea_cooked,stats,hr_cooked,pot_count] = [{},{},{},{}],
+		[most_cooked,cooked,fastCleanVal,fullCleanVal,cookedVal,pieVal,pieLab,hrVal,hrLab,teaname,pot_cooked,potVal] = [[],[],[],[],[],[],[],[],[],[],[],[]];
 		try{
 			while(!start.isSame(end)){
 				var d = start.format('YYYYMMDD');
@@ -230,6 +221,8 @@
 								max = tea_cooked[docSnap.data()['name']];
 							}
 							cookedVal.push(docSnap.data()['id']+"!@"+docSnap.id+"!@"+docSnap.data()['name']+"!@"+docSnap.data()['water']);
+							potVal.push(docSnap.data()['id']+"!@"+docSnap.data()['name']);
+							if(!teaname.includes(docSnap.data()['name'])){teaname.push(docSnap.data()['name'])}
 						}else if(docSnap.data()['type']=="fastClean"){
 							fastCleanVal.push(docSnap.data()['id']+"!@"+docSnap.id);
 						}else if(docSnap.data()['type']=="fullClean"){
@@ -255,6 +248,13 @@
 			console.log(e);
 		}finally{
 			await wrap();
+			potVal.forEach(async function(x){pot_count[x] = (pot_count[x] || 0) + 1;});
+			for(var tea in teaname){
+				pot_cooked.push({
+					name:teaname[tea],
+					data:[pot_count["cooker1!@"+teaname[tea]]||0,pot_count["cooker2!@"+teaname[tea]]||0,pot_count["cooker3!@"+teaname[tea]]||0]
+				})
+			}
 			for(var c in tea_cooked){
 				if(tea_cooked[c]==max){most_cooked.push(c)}
 				pieVal.push(tea_cooked[c]);
@@ -262,9 +262,10 @@
 			}
 			for(var b in hr_cooked){
 				hrVal.push(hr_cooked[b]);
-				hrLab.push(b);
+				hrLab.push(parseInt(b));
 			}
-			return {cooked: cooked, cooked_count:cooked_count,water_count:water_count,tea_cooked:tea_cooked,max:max,most_cooked:most_cooked,pieVal:pieVal,pieLab:pieLab,hrVal:hrVal,hrLab:hrLab};
+			hrLab.sort((x, y) => {if (x > 0 && y > 0) {return x - y;}return y - x;});
+			return {cooked: cooked, cooked_count:cooked_count,water_count:water_count,tea_cooked:tea_cooked,max:max,most_cooked:most_cooked,pieVal:pieVal,pieLab:pieLab,hrVal:hrVal,hrLab:hrLab,pot_cooked:pot_cooked};
 		}
 	}
 
@@ -323,6 +324,9 @@
 		if(getList.length>0){
 			var start = moment(s),
 			end = moment(e);
+			// for(start; start.diff(end, 'days') <= 0; start.add(1, 'days')){
+					
+			// }
 			// while(!start.isSame(end)){
 			// 	var d = start.format('YYYYMMDD');
 			// 	rangeD = d;

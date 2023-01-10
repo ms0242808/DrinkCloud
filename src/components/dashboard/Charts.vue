@@ -108,7 +108,8 @@ export default {
     cookoverviewVal : { type: Array },
     cookoverviewLab : { type: Array },
     cookpieVal : { type: Array },
-    cookpieLab : { type: Array }
+    cookpieLab : { type: Array },
+    cookpotVal : { type: Array }
   },
   data(){
     return {
@@ -353,11 +354,11 @@ export default {
           title: 'overview',
           type:'bar',
           class:"col-xl-7 mt-2",
-          series: [{data:this.cookoverviewVal}],
+          series: [{name:this.$i18n.t('dashboard.tea cooked'),data:this.cookoverviewVal}],
           options: {
-            labels: this.cookoverviewLab,
+            labels: (this.cookoverviewLab=="")?[""]:this.cookoverviewLab,
             noData: nodata,
-            tooltip: {enabled: false},
+            tooltip: {enabled: true},
             legend:{show:true},
             xaxis:{
               title:{
@@ -424,224 +425,53 @@ export default {
             }
           },
           series: this.cookpieVal
+        },{
+          title: 'pot bar',
+          type:'bar',
+          class:"col-xl-12 mt-2",
+          series: this.cookpotVal,
+          options: {
+            labels: (this.cookpotVal=="")?[""]:[this.$i18n.t('dashboard.pot')+" 1",this.$i18n.t('dashboard.pot')+" 2",this.$i18n.t('dashboard.pot')+" 3"],
+            noData: nodata,
+            tooltip: {enabled: true},
+            legend:{show:true},
+            xaxis:{
+              title:{
+                text:this.$i18n.t('dashboard.pot')
+              }
+            },
+            yaxis:{
+              title:{
+                text:this.$i18n.t('dashboard.tea cooked')
+              }
+            },
+            chart: {
+              stacked: true,
+              toolbar: {
+                show: true,
+                offsetX: 0,
+                offsetY: 0,
+                tools: {download: true},
+                export: {
+                  csv: {
+                    filename: 'Tea cooker overview',
+                    columnDelimiter: ',',
+                    headerCategory: 'Tea cooker overview',
+                    headerValue: 'value',
+                    dateFormatter(timestamp) {
+                      return new Date(timestamp).toDateString()
+                    }
+                  },
+                  png: {
+                    filename: 'Tea cooker overview',
+                  }
+                }
+              },
+            }
+          }
         }];
       }
       return stats
-      // return [{
-      //   title: 'overview',
-      //   type: 'area',
-      //   class:"col-xl-7 mt-2",
-      //   dataL: store.getters.getStats.overviewVal.length,
-      //   options: {
-      //     noData: nodata,
-      //     chart: {
-      //       id: 'overviewLine',
-      //       zoom: {
-      //         enabled: false
-      //       }
-      //     },
-      //     dataLabels: {
-      //       enabled: false
-      //     },
-      //     stroke: {
-      //       curve: 'smooth'
-      //     },
-      //     grid: {
-      //       row: {
-      //         colors: ['#f3f3f3', 'transparent'],
-      //         opacity: 0.5
-      //       },
-      //     },
-      //     xaxis: {
-      //       categories: store.getters.getStats.overviewLab
-      //     }
-      //   },
-      //   series: [{
-      //     name: this.$i18n.t('dashboard.Cups'),
-      //     data: store.getters.getStats.overviewVal
-      //   }]
-      // },{
-      //   title: 'tea usage',
-      //   type:'donut',
-      //   class:"col-xl-5 mt-2",
-      //   dataL: store.getters.getStats.tpieVal.length,
-      //   sum: store.getters.getStats.tpieVal.reduce((a, b) => a + b, 0),
-      //   options: {
-      //     labels: store.getters.getStats.tpieLab,
-      //     noData: nodata,
-      //     chart: {
-      //       toolbar: {
-      //         show: true,
-      //         offsetX: 0,
-      //         offsetY: 0,
-      //         tools: {download: true},
-      //         export: {
-      //           csv: {
-      //             filename: 'Tea',
-      //             columnDelimiter: ',',
-      //             headerCategory: 'Tea',
-      //             headerValue: 'value',
-      //             dateFormatter(timestamp) {
-      //               return new Date(timestamp).toDateString()
-      //             }
-      //           },
-      //           png: {
-      //             filename: 'Tea',
-      //           }
-      //         }
-      //       },
-      //     }
-      //   },
-      //   series: store.getters.getStats.tpieVal
-      // },{
-      //   title: 'juice usage',
-      //   type:'donut',
-      //   class:"col-xl-5 mt-2",
-      //   dataL: store.getters.getStats.jpieVal.length,
-      //   sum: store.getters.getStats.jpieVal.reduce((a, b) => a + b, 0),
-      //   options: {
-      //     labels: store.getters.getStats.jpieLab,
-      //     noData: nodata,
-      //     chart: {
-      //       toolbar: {
-      //         show: true,
-      //         offsetX: 0,
-      //         offsetY: 0,
-      //         tools: {download: true},
-      //         export: {
-      //           csv: {
-      //             filename: 'Juice',
-      //             columnDelimiter: ',',
-      //             headerCategory: 'Juice',
-      //             headerValue: 'value',
-      //             dateFormatter(timestamp) {
-      //               return new Date(timestamp).toDateString()
-      //             }
-      //           },
-      //           png: {
-      //             filename: 'Juice',
-      //           }
-      //         }
-      //       },
-      //     }
-      //   },
-      //   series: store.getters.getStats.jpieVal
-      // },{
-      //   title: 'sugar custom',
-      //   type:'radar',
-      //   class:"col-xl-7 mt-2",
-      //   dataL: store.getters.getStats.sradarVal1.length + store.getters.getStats.sradarVal2.length,
-      //   height:"300",
-      //   series: [{
-      //     name: this.$i18n.t("recipe.L"),
-      //     data: store.getters.getStats.sradarVal1,
-      //     sum: store.getters.getStats.sradarVal1.reduce((a, b) => a + b, 0)
-      //   },{
-      //     name: this.$i18n.t("recipe.M"),
-      //     data: store.getters.getStats.sradarVal2,
-      //     sum: store.getters.getStats.sradarVal2.reduce((a, b) => a + b, 0)
-      //   }],
-      //   options:{
-      //     labels: ['100%','70%','50%','30%','0%'],
-      //     noData: nodata,
-      //     chart: {
-      //       toolbar: {
-      //         show: true,
-      //         offsetX: 0,
-      //         offsetY: 0,
-      //         tools: {download: true},
-      //         export: {
-      //           csv: {
-      //             filename: 'SugarxSize',
-      //             columnDelimiter: ',',
-      //             headerCategory: 'SugarxSize',
-      //             headerValue: 'value',
-      //             dateFormatter(timestamp) {
-      //               return new Date(timestamp).toDateString()
-      //             }
-      //           },
-      //           png: {
-      //             filename: 'SugarxSize',
-      //           }
-      //         }
-      //       },
-      //     }
-      //   }
-      // },{
-      //   title: 'ice custom',
-      //   type:'radar',
-      //   class:"col-xl-7 mt-2",
-      //   dataL: store.getters.getStats.iradarVal1.length + store.getters.getStats.iradarVal2.length,
-      //   height:"300",
-      //   series: [{
-      //     name: this.$i18n.t("recipe.L"),
-      //     data: store.getters.getStats.iradarVal1,
-      //     sum: store.getters.getStats.iradarVal1.reduce((a, b) => a + b, 0)
-      //   },{
-      //     name: this.$i18n.t("recipe.M"),
-      //     data: store.getters.getStats.iradarVal2,
-      //     sum: store.getters.getStats.iradarVal2.reduce((a, b) => a + b, 0)
-      //   }],
-      //   options:{
-      //     labels: [this.$i18n.t('recipe.Normal Ice'),this.$i18n.t('recipe.Less Ice'),this.$i18n.t('recipe.Ice Free'),this.$i18n.t('recipe.Warm'),this.$i18n.t('recipe.Hot')],
-      //     noData: nodata,
-      //     chart: {
-      //       toolbar: {
-      //         show: true,
-      //         offsetX: 0,
-      //         offsetY: 0,
-      //         tools: {download: true},
-      //         export: {
-      //           csv: {
-      //             filename: 'IcexSize',
-      //             columnDelimiter: ',',
-      //             headerCategory: 'IcexSize',
-      //             headerValue: 'value',
-      //             dateFormatter(timestamp) {
-      //               return new Date(timestamp).toDateString()
-      //             }
-      //           },
-      //           png: {
-      //             filename: 'IcexSize',
-      //           }
-      //         }
-      //       },
-      //     }
-      //   }
-      // },{
-      //   title: 'ice options',
-      //   type:'donut',
-      //   class:"col-xl-5 mt-2",
-      //   dataL: store.getters.getStats.ipieVal.length,
-      //   sum: store.getters.getStats.ipieVal.reduce((a, b) => a + b, 0),
-      //   options: {
-      //     labels: store.getters.getStats.ipieLab.map((key) => {return this.$i18n.t('recipe.'+key)}),
-      //     noData: nodata,
-      //     chart: {
-      //       toolbar: {
-      //         show: true,
-      //         offsetX: 0,
-      //         offsetY: 0,
-      //         tools: {download: true},
-      //         export: {
-      //           csv: {
-      //             filename: 'Ice',
-      //             columnDelimiter: ',',
-      //             headerCategory: 'Ice',
-      //             headerValue: 'value',
-      //             dateFormatter(timestamp) {
-      //               return new Date(timestamp).toDateString()
-      //             }
-      //           },
-      //           png: {
-      //             filename: 'Ice',
-      //           }
-      //         }
-      //       },
-      //     }
-      //   },
-      //   series: store.getters.getStats.ipieVal
-      // }]
     }
   },
   methods:{
