@@ -32,6 +32,28 @@
 			:omica="false" :robotics="true"
 			></Charts>
 		</div>
+
+		<div v-if="machineType[1]" class="no-putters mt-2 noMaxWidth container no-padding mt-3">
+			<b-card v-show="cook_table_skele">
+        <b-card-text>
+          <b-skeleton height="350px" />
+        </b-card-text>
+      </b-card>
+			<b-table class="pot_table" v-show="!cook_table_skele" responsive striped hover :items="cookStats" sticky-header="true" :fields=fields>
+				<template #cell(id)="data">
+					<p v-if="data.value">{{$t('dashboard.'+data.value)}}</p>
+					<p v-else>-</p>
+				</template>
+				<template #cell(type)="data">
+					<p v-if="data.value">{{$t('dashboard.'+data.value)}}</p>
+					<p v-else>-</p>
+				</template>
+				<template #cell()="data">
+					<p v-if="data.value">{{ data.value }}</p>
+					<p v-else>-</p>
+				</template>
+			</b-table>
+		</div>
 		
 		<div v-if="machineType[0] && machineType[1]" class="no-putters mt-5 noMaxWidth container no-padding">
 			<h5 class="text-secondary"><font-awesome-icon fixed-width icon="robot"></font-awesome-icon> {{$t('dashboard.omica')}}</h5>
@@ -93,6 +115,8 @@
 				cookpieVal: [],
 				cookpieLab: [],
 				cookpotVal: [],
+				cookStats:[],
+				cook_table_skele:true,
 				madeVal: store.getters.getStats.madeVal,
 				topVal: store.getters.getStats.topVal,
 				hrVal: store.getters.getStats.hrVal,
@@ -125,7 +149,29 @@
 					else if(machine[m] == "robotics"){robotics = true}
 				}
 				return [omica,robotics]
-			}
+			},
+			'fields':function(){
+				var fields = [{
+					key:'date',
+					label:this.$i18n.t('dashboard.date')
+				},{
+					key:'time',
+					label:this.$i18n.t('dashboard.time')
+				},{
+					key:'id',
+					label:this.$i18n.t('dashboard.pot')
+				},{
+					key:'type',
+					label:this.$i18n.t('dashboard.type')
+				},{
+					key:'name',
+					label:this.$i18n.t('dashboard.name')
+				}, {
+					key:'water',
+					label:this.$i18n.t('dashboard.water')
+				}];
+				return fields
+			},
 		},
 		watch:{
 			getLocation(val){
@@ -138,6 +184,7 @@
 			setLoadingState(v1,v2){
 				this.showSke = v1;
 				this.showStats = v2;
+				this.cook_table_skele = v1;
 			},
 			async getHealth(){
 				var getHealth =  httpsCallable(functions,'getMHealth');
@@ -161,6 +208,7 @@
 				this.cookoverviewVal = cookStats.hrVal;
 				this.cookoverviewLab = cookStats.hrLab;
 				this.cookpotVal = cookStats.pot_cooked;
+				this.cookStats = cookStats.cookStats;
 				var sorted = this.renderStats(stats);
 				sorted = await sorted.then(result =>{return result});
 				store.commit('statsChanged', sorted);
@@ -202,7 +250,7 @@
 		end = moment(e).add(1, 'day'),
 		[max,cooked_count,water_count] = [0,0,0],
 		[tea_cooked,stats,hr_cooked,pot_count] = [{},{},{},{}],
-		[most_cooked,cooked,fastCleanVal,fullCleanVal,cookedVal,pieVal,pieLab,hrVal,hrLab,teaname,pot_cooked,potVal] = [[],[],[],[],[],[],[],[],[],[],[],[]];
+		[most_cooked,cooked,fastCleanVal,fullCleanVal,cookedVal,pieVal,pieLab,hrVal,hrLab,teaname,pot_cooked,potVal,cookStats] = [[],[],[],[],[],[],[],[],[],[],[],[],[]];
 		try{
 			while(!start.isSame(end)){
 				var d = start.format('YYYYMMDD');
@@ -211,6 +259,7 @@
 					var docRef = doc(db,"/teacooker/"+brandL+"/"+d,docs.id);
 					var docSnap = await getDoc(docRef);
 					if(docSnap.exists()){
+						cookStats.push(docSnap.data());
 						if(docSnap.data()['type']=="cook"){
 							cooked_count +=1;
 							water_count += parseInt(docSnap.data()['water']);
@@ -265,7 +314,7 @@
 				hrLab.push(parseInt(b));
 			}
 			hrLab.sort((x, y) => {if (x > 0 && y > 0) {return x - y;}return y - x;});
-			return {cooked: cooked, cooked_count:cooked_count,water_count:water_count,tea_cooked:tea_cooked,max:max,most_cooked:most_cooked,pieVal:pieVal,pieLab:pieLab,hrVal:hrVal,hrLab:hrLab,pot_cooked:pot_cooked};
+			return {cooked: cooked, cooked_count:cooked_count,water_count:water_count,tea_cooked:tea_cooked,max:max,most_cooked:most_cooked,pieVal:pieVal,pieLab:pieLab,hrVal:hrVal,hrLab:hrLab,pot_cooked:pot_cooked,cookStats:cookStats};
 		}
 	}
 
@@ -561,5 +610,10 @@
 }
 .noMaxWidth{
 	max-width: unset !important;
+}
+
+.pot_table{
+	border-radius: 5px;
+	box-shadow: 3px 3px 6px 0px rgba(45,45,45,0.1);
 }
 </style>

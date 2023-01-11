@@ -40,7 +40,7 @@
   </b-modal>
 </template>
 <script>
-import { functions, httpsCallable, perf, trace, db, updateDoc, doc } from "../../fire";
+import { functions, httpsCallable, perf, trace, db, updateDoc, doc, getDoc } from "../../fire";
 import store from '../../store/store'
 export default {
   name:'modal',
@@ -171,12 +171,20 @@ export default {
       const t = trace(perf,"publishCookRecipe");
       t.start();
       const cookRecipe = doc(db,"cookrecipes",this.brandL);
-      await updateDoc(cookRecipe, {
-        publish:true
-      }).then(result => {
-        this.hideModal('publish');
-        store.commit('cookPublish', false);
-      });
+      try {
+        const doc = await getDoc(cookRecipe);
+        var update = doc.data()["updated"];
+        update[0] = false;
+        await updateDoc(cookRecipe, {
+          updated:update,
+          publish:true
+        }).then(result => {
+          this.hideModal('publish');
+          store.commit('cookPublish', false);
+        });
+      }catch (e){
+        console.log("Error getting cached document:", e);
+      }
       t.stop();
     }
   }

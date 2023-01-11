@@ -7,7 +7,7 @@
           <b-button v-show="!editShow&&skele[1]" class="ml-1 mt-1 f-12" variant="outline-success" @click="saveCook()" :disabled="btnDisabled">{{$t('recipe.save')}}</b-button>
           <b-button v-show="!editShow&&skele[1]" class="ml-1 mt-1 f-12" variant="outline-dark" @click="cancelEdit('c')">{{$t('recipe.cancel')}}</b-button>
           <b-button v-show="editShow&&skele[1]" class="ml-1 mt-1 f-12" variant="outline-success" @click="cookEdit()"><font-awesome-icon fixed-width icon="edit"/> {{$t('recipe.edit')}}</b-button>
-          <b-button v-b-modal.publish v-show="publishBtn&&editShow&&skele[1]" class="ml-1 mt-1 f-12" variant="outline-primary" ><font-awesome-icon fixed-width icon="upload"/> {{$t('recipe.publish')}}</b-button>
+          <b-button v-b-modal.publish v-show="publishBtn&&editShow&&skele[1]" class="ml-1 mt-1 f-12" variant="outline-primary"><font-awesome-icon fixed-width icon="upload"/> {{$t('recipe.publish')}}</b-button>
         </div>
       </b-col>
       <b-col class="mt-2" lg="3" sm="12" v-for="(item,index) in newCook " :key="index">
@@ -71,7 +71,7 @@
 </template>
 
 <script>
-import { functions, httpsCallable, perf, trace, collection, query, getDocs,db,orderBy,limit } from "../../fire";
+import { functions, httpsCallable, perf, trace, collection, query, getDocs,db,orderBy,limit,doc,updateDoc } from "../../fire";
 import store from '../../store/store'
 import Modal from '../recipe/Modal.vue'
 import moment from 'moment'
