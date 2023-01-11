@@ -25,7 +25,7 @@
             <b-nav-item class="mt-2">
               <router-link to="/dashboard" class="va-m"><font-awesome-icon fixed-width icon="tachometer-alt"/>{{$t('nav.dashboard')}}</router-link>
             </b-nav-item>
-						<b-nav-item class="mt-2">
+						<b-nav-item class="mt-2" v-show="false">
               <router-link to="/inventory" class="va-m"><font-awesome-icon fixed-width icon="boxes"/>{{$t('nav.inventory')}}</router-link>
             </b-nav-item>
             <b-nav-item class="mt-2">
