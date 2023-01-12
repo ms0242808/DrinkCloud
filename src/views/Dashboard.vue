@@ -16,7 +16,7 @@
 			<hr>
 		</div>
 		
-		<div v-if="machineType[1]" class="noMaxWidth container no-padding">
+		<div v-if="machineType[1]" class="noMaxWidth container no-padding mt-2">
 			<Cards :showSke="showSke" :showStats="showStats" :cookedVal="cookedVal" :waterVal="waterVal" :mostCooked="mostCooked" :cookerHp="cookerHp" :omica="false" :robotics="true"></Cards>
 		</div>
 	
@@ -39,13 +39,25 @@
           <b-skeleton height="350px" />
         </b-card-text>
       </b-card>
-			<b-table class="pot_table" v-show="!cook_table_skele" responsive striped hover :items="cookStats" sticky-header="true" :fields=fields>
+			<b-table class="pot_table" v-show="!cook_table_skele" responsive striped hover :items="cookStats" sticky-header="350px" :fields=fields>
+				<template #cell(date)="data">
+					<p v-if="data.value">{{ moment(data.value).format("YYYY/MM/DD") }}</p>
+					<p v-else>-</p>
+				</template>
+				<template #cell(time)="data">
+					<p v-if="data.value">{{ moment(data.value,"HHmmss").format("HH:mm:ss") }}</p>
+					<p v-else>-</p>
+				</template>
 				<template #cell(id)="data">
 					<p v-if="data.value">{{$t('dashboard.'+data.value)}}</p>
 					<p v-else>-</p>
 				</template>
 				<template #cell(type)="data">
 					<p v-if="data.value">{{$t('dashboard.'+data.value)}}</p>
+					<p v-else>-</p>
+				</template>
+				<template #cell(water)="data">
+					<p v-if="data.value">{{ new Intl.NumberFormat().format(data.value) }}</p>
 					<p v-else>-</p>
 				</template>
 				<template #cell()="data">
@@ -201,7 +213,7 @@
 				var stats = await getStats(val[0],val[1],this.brandL); //need to fix next year data by moment
 				var cookStats = await getCookerStats(val[0],val[1],this.brandL);
 				this.cookedVal = cookStats.cooked_count.toString();
-				this.waterVal = cookStats.water_count.toString();
+				this.waterVal = new Intl.NumberFormat().format(cookStats.water_count).toString();
 				this.mostCooked = cookStats.most_cooked.toString()==""?"No Data":cookStats.most_cooked.toString()+": "+cookStats.max;
 				this.cookpieVal = cookStats.pieVal;
 				this.cookpieLab = cookStats.pieLab;

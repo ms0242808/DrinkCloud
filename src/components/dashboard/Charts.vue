@@ -15,7 +15,7 @@
             <b-col cols="6">{{$t('dashboard.'+item.title)}}</b-col>
             <b-col cols="6">
               <b-button variant="transparent" v-if="index==0 && item.dataL>0" class="float-right text-dark no-pad" @click="$router.push('/dashboard/stats/'+dateRange)"><font-awesome-icon fixed-width icon="eye"/></b-button>              
-              <b-button v-else-if="index>0" class="float-right no-pad" variant="transparent" @click="toggleView(index)"><font-awesome-icon fixed-width icon="chart-pie" v-show="switchV[index-1]"/><font-awesome-icon fixed-width icon="list-ol" v-show="!switchV[index-1]"/></b-button>
+              <b-button v-else-if="index>0 && item.title !== 'pot bar'" class="float-right no-pad" variant="transparent" @click="toggleView(index)"><font-awesome-icon fixed-width icon="chart-pie" v-show="switchV[index-1]"/><font-awesome-icon fixed-width icon="list-ol" v-show="!switchV[index-1]"/></b-button>
             </b-col> 
           </b-row>
         </template>
@@ -61,10 +61,10 @@
                       </b-col>
                     </template>
                     <b-col cols="12"><hr></b-col>
-                    <b-col cols="6">
+                    <b-col cols="6" v-if="item.title !== 'pot bar'">
                       <a>{{$t('dashboard.Total')}}</a>
                     </b-col>
-                    <b-col cols="6">
+                    <b-col cols="6" v-if="item.title !== 'pot bar'">
                       <a class="float-right text-dark">{{item.sum}}</a>
                     </b-col>
                   </b-row>
