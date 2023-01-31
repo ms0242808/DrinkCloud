@@ -39,15 +39,15 @@
             <b-nav-item class="mt-2">
               <router-link to="/permissions" class="va-m"><font-awesome-icon fixed-width icon="user-shield"/>{{$t('nav.permissions')}}</router-link>
             </b-nav-item>
-						<hr class="sidebar-divider">
-            <div><font-awesome-icon fixed-width icon="check-circle"/><small class="text-uppercase">{{$t('nav.status')}}</small></div>
-            <b-nav-item class="mt-2">
+						<hr class="sidebar-divider" v-show="false">
+            <div v-show="false"><font-awesome-icon fixed-width icon="check-circle"/><small class="text-uppercase">{{$t('nav.status')}}</small></div>
+            <b-nav-item class="mt-2" v-show="false">
 							<div class="d-flex flex-justify-between text-bold">
 								<router-link to="/dashboard" class="va-m text-white p-t-b-0"><font-awesome-icon fixed-width icon="robot"/>{{$t('nav.machine')}}</router-link>
 								<router-link to="/dashboard" class="va-m text-white p-t-b-0" :class="mClass">{{$t('nav.'+mStatus)}} <font-awesome-icon fixed-width icon="power-off"/></router-link>
 							</div>
             </b-nav-item>
-						<b-nav-item>
+						<b-nav-item v-show="false">
 							<div class="d-flex flex-justify-between text-bold">
 								<router-link to="/recipe" class="va-m text-white p-t-b-0"><font-awesome-icon fixed-width icon="lemon"/>{{$t('nav.recipe')}}</router-link>
 								<router-link to="/recipe" class="va-m text-white p-t-b-0" :class="rClass">{{$t('nav.'+rStatus)}} <font-awesome-icon fixed-width icon="link"/></router-link>
