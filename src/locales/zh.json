@@ -252,7 +252,8 @@
     "cool_temp":"冷卻溫度",
     "cook_time":"浸泡時間",
     "stir1_time":"第1次攪拌 時間",
-    "stir2_time":"第2次攪拌 時間"
+    "stir2_time":"第2次攪拌 時間",
+    "name":"名稱"
   },
   "report":{
     "title":"回報",

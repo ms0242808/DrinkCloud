@@ -1,0 +1,31 @@
+[debug] [2023-01-31T03:54:18.666Z] ----------------------------------------------------------------------
+[debug] [2023-01-31T03:54:18.667Z] Command:       /usr/local/bin/node /usr/local/bin/firebase deploy --only hosting:drinkteccloud -m alpha v23.0.4
+[debug] [2023-01-31T03:54:18.668Z] CLI Version:   11.20.0
+[debug] [2023-01-31T03:54:18.668Z] Platform:      darwin
+[debug] [2023-01-31T03:54:18.668Z] Node Version:  v18.12.1
+[debug] [2023-01-31T03:54:18.669Z] Time:          Tue Jan 31 2023 03:54:18 GMT+0000 (Greenwich Mean Time)
+[debug] [2023-01-31T03:54:18.669Z] ----------------------------------------------------------------------
+[debug] 
+[debug] [2023-01-31T03:54:18.707Z] Object ".remoteconfig" in "firebase.json" is missing required property: {"missingProperty":"template"}
+[debug] [2023-01-31T03:54:18.710Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2023-01-31T03:54:18.710Z] > authorizing via signed-in user (info@drinktec.com.tw)
+[debug] [2023-01-31T03:54:18.710Z] [iam] checking project omica-cloud for permissions ["firebase.projects.get","firebasehosting.sites.update"]
+[debug] [2023-01-31T03:54:18.711Z] > refreshing access token with scopes: []
+[debug] [2023-01-31T03:54:18.712Z] >>> [apiv2][query] POST https://www.googleapis.com/oauth2/v3/token [none]
+[debug] [2023-01-31T03:54:18.712Z] >>> [apiv2][body] POST https://www.googleapis.com/oauth2/v3/token [omitted]
+[debug] [2023-01-31T03:54:18.841Z] <<< [apiv2][status] POST https://www.googleapis.com/oauth2/v3/token 200
+[debug] [2023-01-31T03:54:18.841Z] <<< [apiv2][body] POST https://www.googleapis.com/oauth2/v3/token [omitted]
+[debug] [2023-01-31T03:54:18.853Z] >>> [apiv2][query] POST https://cloudresourcemanager.googleapis.com/v1/projects/omica-cloud:testIamPermissions [none]
+[debug] [2023-01-31T03:54:18.853Z] >>> [apiv2][(partial)header] POST https://cloudresourcemanager.googleapis.com/v1/projects/omica-cloud:testIamPermissions x-goog-quota-user=projects/omica-cloud
+[debug] [2023-01-31T03:54:18.853Z] >>> [apiv2][body] POST https://cloudresourcemanager.googleapis.com/v1/projects/omica-cloud:testIamPermissions {"permissions":["firebase.projects.get","firebasehosting.sites.update"]}
+[debug] [2023-01-31T03:54:19.700Z] <<< [apiv2][status] POST https://cloudresourcemanager.googleapis.com/v1/projects/omica-cloud:testIamPermissions 200
+[debug] [2023-01-31T03:54:19.700Z] <<< [apiv2][body] POST https://cloudresourcemanager.googleapis.com/v1/projects/omica-cloud:testIamPermissions {"permissions":["firebase.projects.get","firebasehosting.sites.update"]}
+[debug] [2023-01-31T03:54:19.701Z] >>> [apiv2][query] GET https://firebase.googleapis.com/v1beta1/projects/omica-cloud [none]
+[debug] [2023-01-31T03:54:20.069Z] <<< [apiv2][status] GET https://firebase.googleapis.com/v1beta1/projects/omica-cloud 200
+[debug] [2023-01-31T03:54:20.069Z] <<< [apiv2][body] GET https://firebase.googleapis.com/v1beta1/projects/omica-cloud {"projectId":"omica-cloud","projectNumber":"404980456265","displayName":"omica-cloud","name":"projects/omica-cloud","resources":{"hostingSite":"omica-cloud","realtimeDatabaseInstance":"omica-cloud-default-rtdb","storageBucket":"omica-cloud.appspot.com","locationId":"asia-east2"},"state":"ACTIVE","etag":"1_cee66bf6-1217-4482-a41a-ace7df921a7a"}
+[info] 
+[info] === Deploying to 'omica-cloud'...
+[info] 
+[info] i  deploying hosting 
+[debug] [2023-01-31T03:54:20.074Z] >>> [apiv2][query] POST https://firebasehosting.googleapis.com/v1beta1/projects/-/sites/drinktec-cloud/versions [none]
+[debug] [2023-01-31T03:54:20.074Z] >>> [apiv2][body] POST https://firebasehosting.googleapis.com/v1beta1/projects/-/sites/drinktec-cloud/versions {"status":"CREATED","labels":{"deployment-tool":"cli-firebase"}}

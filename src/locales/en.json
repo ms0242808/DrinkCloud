@@ -252,7 +252,8 @@
     "cool_temp":"Cool temperature",
     "cook_time":"Cook time",
     "stir1_time":"Stir1 time",
-    "stir2_time":"Stir2 time"
+    "stir2_time":"Stir2 time",
+    "name":"Name"
   },
   "report":{
     "title":"Report",

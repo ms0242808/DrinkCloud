@@ -15,7 +15,9 @@
           <b-skeleton v-show="skele[0]" height="400px"></b-skeleton>
           <b-row v-show="skele[1]">
             <b-col cols="12">
-              <h6 class="text-dark cookHead">{{item.name}}</h6>
+              <h6 class="text-dark cookHead" v-show="isDisabled">{{item.name}}</h6>
+              <label class="text-dark inputL" v-show="!isDisabled">{{$t('recipe.name')}}</label>
+              <b-form-input class="cookInput" type="text" @change="valChange()" v-model="item.name" :value="item.name" :disabled="isDisabled" v-show="!isDisabled"></b-form-input>
             </b-col>
             <b-col cols="12" class="mt-2">
               <label class="text-dark inputL">{{$t('recipe.water')}}</label>

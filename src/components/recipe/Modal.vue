@@ -173,6 +173,7 @@ export default {
       const cookRecipe = doc(db,"cookrecipes",this.brandL);
       try {
         const doc = await getDoc(cookRecipe);
+        console.log(doc.data());
         var update = doc.data()["updated"];
         update[0] = false;
         await updateDoc(cookRecipe, {
